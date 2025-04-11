@@ -1,0 +1,59 @@
+
+
+<!-- Main Wrapper -->
+<main class="main-wrapper">
+  <div class="container-fluid">
+    <div class="inner-contents">
+      <div class="page-header d-flex align-items-center justify-content-between mr-bottom-30">
+        <div class="left-part">
+          <p class="text-gray mb-0">Veuillez remplir les informations ci-dessous pour modifier checkIn et checkOut d'un employee.</p>
+        </div>
+        <div class="right-part">
+          <form class="search-form w-auto" action="https://wpthemebooster.com/demo/themeforest/html/kleon/search.php">
+            <input type="text" name="search" class="bg-white form-control" placeholder="Search">
+            <button type="submit" class="btn"><img src="assets/img/svg/search.svg" alt=""></button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Formulaire d'ajout -->
+      <div class="card border-0 p-5">
+        <div class="card-header bg-transparent border-0 p-0 d-flex align-items-center justify-content-between gap-3">
+          <h6 class="mb-0">Détails de presence </h6>
+        </div>
+
+        <div class="card-body p-0 pt-4">
+          <form (ngSubmit)="onSubmit()" #presenceForm="ngForm">
+            <div class="form-group">
+              <label class="form-label" for="employeeId">Employé</label>
+              <input type="text" class="form-control" id="employeeId" [(ngModel)]="presence.employeeId" name="employeeId" placeholder="ID de l'employé" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="salary">Date</label>
+              <input type="date" class="form-control" id="salary" [(ngModel)]="presence.date" name="hire date" placeholder="Salaire" required />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="checkInTime">Heure d'entrée</label>
+                <input type="time" class="form-control" id="checkInTime" [(ngModel)]="presence.checkInTime" name="checkInTime" />
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label" for="checkOutTime">Heure de sortie</label>
+                <input type="time" class="form-control" id="checkOutTime" [(ngModel)]="presence.checkOutTime" name="checkOutTime" />
+              </div>
+              
+
+              <button type="submit" class="btn btn-primary">
+                {{ isEditMode ? 'Mettre à jour' : 'Ajouter' }}
+              </button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<app-admin-footer></app-admin-footer>

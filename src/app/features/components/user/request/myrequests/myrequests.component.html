@@ -1,0 +1,105 @@
+<main class="main">
+    <section class="section-box">
+      <div class="box-head-single">
+        <div class="container">
+          <h3>My Requests</h3>
+          <ul class="breadcrumbs">
+            <li><a href="#">Home</a></li>
+            <li>Requests</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+<section class="section-box mt-50">
+    <div class="container">
+      <div class="row mb-4">
+        <div class="col-md-7">
+          <span class="text-small">Showing <strong>{{ requests.length }}</strong> of <strong>{{ requests.length }}</strong> Requests</span>
+        </div>
+      </div>
+  
+      <!-- Affichage du formulaire d'édition si isEditing est vrai -->
+      <div *ngIf="isEditing">
+        <div class="row">
+          <div class="col-md-6 mb-4">
+            <div class="card shadow-sm h-100 position-relative border-0 rounded-3 p-3">
+              <div class="card-body">
+                <h5 class="card-title mb-2">Edit Request</h5>
+                <form [formGroup]="editRequestForm" (ngSubmit)="submitEditRequest()">
+                  <div class="form-group">
+                    <label for="type">Request Type</label>
+                    <input id="type" class="form-control" formControlName="type" required />
+                  </div>
+                  <div class="form-group">
+                    <label for="startDate">Start Date</label>
+                    <input id="startDate" type="date" class="form-control" formControlName="startDate" required />
+                  </div>
+                  <div class="form-group">
+                    <label for="endDate">End Date</label>
+                    <input id="endDate" type="date" class="form-control" formControlName="endDate" required />
+                  </div>
+                  <div class="form-group">
+                    <label for="justification">Justification</label>
+                    <textarea id="justification" class="form-control" formControlName="justification"></textarea>
+                  </div>
+                  <div class="form-group">
+                    <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Affichage de la liste des demandes si isEditing est faux -->
+      <div *ngIf="!isEditing">
+        <div class="row">
+          <div class="col-md-6 mb-4" *ngFor="let request of requests">
+            <div class="card shadow-sm h-100 position-relative border-0 rounded-3 p-3">
+              <!-- Status badge -->
+              <div class="position-absolute top-0 end-0 m-3">
+                <span class="badge"
+                  [ngClass]="{
+                    'bg-success': request.status === 'APPROVED',
+                    'bg-danger': request.status === 'REJECTED',
+                    'bg-warning text-dark': request.status === 'PENDING'
+                  }">
+                  {{ request.status }}
+                </span>
+              </div>
+              <!-- Main content -->
+              <div class="card-body">
+                <h5 class="card-title mb-2">{{ request.type }}</h5>
+                <p class="text-muted mb-2">
+                  <i class="bi bi-calendar3 me-2"></i>
+                  From {{ request.startDate | date }} to {{ request.endDate | date }}
+                </p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <p class="mb-0"><strong>Justification:</strong> {{ request.justification || 'No justification provided' }}</p>
+                  <div class="btn-group">
+                    
+                    <button class="btn btn-sm btn-outline-primary" title="Edit" (click)="editRequest(request.id)">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" title="Delete" (click)="deleteRequest(request.id)">
+                        <i class="bi bi-trash"></i>
+                    </button>
+  
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+  
+      <!-- Template si aucune demande -->
+      <ng-template #noRequests>
+        <p class="text-muted">No leave requests found.</p>
+      </ng-template>
+    </div>
+  </section>
+</main>

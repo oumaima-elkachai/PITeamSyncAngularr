@@ -1,0 +1,54 @@
+<app-admin-sidebar></app-admin-sidebar>
+
+<main class="main-wrapper">
+  <div class="container-fluid">
+    <div class="inner-contents">
+      <div class="page-header d-flex align-items-center justify-content-between mr-bottom-30">
+
+    
+
+
+<div class="card-body p-0 pt-4">
+<div class="card-body">
+    <div class="table-responsive">
+      <table class="defaultTable text-center w-100">
+        <thead>
+          <tr>
+            <th>Employee Name</th>
+            <th>Type</th>
+            <th>Duration</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let req of requests">
+            <td>
+              <div class="employee d-flex gap-3">
+                <div class="description">
+                  
+                  <td>{{ req.employee?.name }}</td>
+                  
+                </div>
+              </div>
+            </td>
+            
+            <td>{{ req.type }}</td>
+            <td>{{ req.startDate | date }} - {{ req.endDate | date }}</td>
+            <td>
+                <ng-container [ngSwitch]="req.status">
+                  <span *ngSwitchCase="'APPROVED'" class="btn btn-success disabled">Approved</span>
+                  <span *ngSwitchCase="'REJECTED'" class="btn btn-danger disabled">Rejected</span>
+                  <span *ngSwitchDefault>
+                    <button class="btn btn-primary me-2" (click)="updateStatus(req, 'APPROVED')">Approve</button>
+                    <button class="btn btn-outline-danger" (click)="updateStatus(req, 'REJECTED')">Reject</button>
+                  </span>
+                </ng-container>
+              </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+  

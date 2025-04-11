@@ -1,0 +1,67 @@
+<app-admin-sidebar></app-admin-sidebar>
+
+<main class="main-wrapper">
+  <div class="container-fluid">
+    <div class="inner-contents">
+      <div class="page-header d-flex align-items-center justify-content-between mr-bottom-30">
+
+        <div class="left-part">
+          <h2 class="text-dark"> Attendance List</h2>
+          <!--p class="text-gray mb-0">Historique des présences des employés.</p-->
+        </div>
+      </div>
+
+      <div class="card border-0 p-5">
+        <div class="card-header bg-transparent border-0 p-0 d-flex align-items-center justify-content-between gap-3">
+          <h6 class="mb-0">Détails des Présences</h6>
+        </div>
+
+        <div class="card-body p-0 pt-4">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Employee</th>
+                <th>Date</th>
+                <th>CheckIn</th>
+                <th>CheckOut</th>
+                <th>Heures Travaillées</th>
+                <th>Heures Supplémentaires</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let presence of presences">
+                <td>
+                  <small class="text-muted d-block">ID: {{ presence.employeeId || 'N/A' }}</small>
+                  <div>{{ getEmployeeName(presence.employeeId) }}</div>
+                </td>
+                <td>{{ presence.date | date:'dd/MM/yyyy' }}</td>
+                <td>
+                  <span *ngIf="presence.checkInTime; else naBlock">
+                    {{ presence.checkInTime  }}
+                  </span>
+                  <ng-template #naBlock>N/A</ng-template>
+                </td>
+                <td>
+                  <span *ngIf="presence.checkOutTime; else naBlock">
+                    {{ presence.checkOutTime}}
+                  </span>
+                  <ng-template #naBlock>N/A</ng-template>
+                </td>
+                <td>{{ presence.hoursWorked }}</td>
+                <td>{{ presence.overtimeHours }}</td>
+                <td>
+                  <button class="btn btn-warning" (click)="onEdit(presence)">Update</button>
+                  
+                  <button class="btn btn-danger" (click)="onDelete(presence.id!)">Delete</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+

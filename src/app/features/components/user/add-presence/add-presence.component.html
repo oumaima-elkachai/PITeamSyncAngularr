@@ -1,0 +1,72 @@
+<main class="main">
+    <section class="section-box">
+      <div class="box-head-single">
+        <div class="container">
+          <h3>Attendance Registration</h3>
+          <ul class="breadcrumbs">
+            <li><a href="#">Home</a></li>
+            <li>Attendance</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  
+    <section class="section-box mt-50 mb-60">
+      <div class="container">
+        <div class="row">
+          <div class="box-newsletter">
+            <h5 class="text-md-newsletter">Record your</h5>
+            <h6 class="text-lg-newsletter">daily attendance</h6>
+  
+            <div class="box-form-newsletter mt-50">
+                <form class="form-newsletter">
+                    <div class="mb-3">
+                      <input type="text" class="input-newsletter" id="employeeId"
+                        [(ngModel)]="presence.employeeId" name="employeeId"
+                        placeholder="employee ID" is required />
+                    </div>
+                  
+                    <div class="mb-3">
+                      <input type="date" class="input-newsletter" [(ngModel)]="presence.date" name="date" required />
+                    </div>
+                  
+                    <div class="mb-3 d-flex gap-2 align-items-center">
+                      <button type="button" class="btn btn-success" (click)="checkIn()" [disabled]="!presence.employeeId">
+                        🟢 Check-in
+                      </button>
+                      
+                      <span *ngIf="presence.checkInTime">Time : {{ presence.checkInTime }}</span>
+                    </div>
+                  
+                    <div class="mb-3 d-flex gap-2 align-items-center">
+                      <button type="button" class="btn btn-warning" (click)="checkOut()" [disabled]="!presence.employeeId">
+                        🔴 Check-out
+                      </button>
+                      
+                      <span *ngIf="presence.checkOutTime">Time : {{ presence.checkOutTime }}</span>
+                      
+ 
+                    </div>
+                  </form>
+                  
+                   <!-- Message Check-in -->
+                   <div *ngIf="checkInMessage" class="alert alert-success mt-3">
+                    {{ checkInMessage }}
+                 </div>
+
+                    <!-- Message Check-out -->
+                    <div *ngIf="checkOutMessage" class="alert alert-info mt-3">
+                        {{ checkOutMessage }}
+                     </div>
+  
+              
+                 
+  
+                 
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  

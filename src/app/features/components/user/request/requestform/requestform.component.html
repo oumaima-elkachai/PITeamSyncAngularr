@@ -1,0 +1,87 @@
+<main class="main">
+  <section class="section-box">
+    <div class="box-head-single">
+      <div class="container">
+        <h3>Leave Request Form</h3>
+        <ul class="breadcrumbs">
+          <li><a href="#">Home</a></li>
+          <li>Leave Request</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Formulaire stylisé -->
+  <div class="card-body pt-3">
+    <form [formGroup]="form" (ngSubmit)="submitRequest()">
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="form-group">
+            <label class="form-label">Leave Type</label>
+            <select class="form-control" formControlName="type" required>
+              <option value="" disabled>Select leave type</option>
+              <option value="Sick Leave">Sick Leave</option>
+              <option value="Paid Leave">Paid Leave</option>
+              <option value="Unpaid Leave">Unpaid Leave</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="form-group">
+            <label class="form-label">Employee ID</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="employeeId"
+              placeholder="Enter employee ID"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="form-group">
+            <label class="form-label">Start Date</label>
+            <input
+              type="date"
+              class="form-control"
+              formControlName="startDate"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="form-group">
+            <label class="form-label">End Date</label>
+            <input
+              type="date"
+              class="form-control"
+              formControlName="endDate"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="col-lg-12">
+          <div class="form-group">
+            <label class="form-label">Justification</label>
+            <textarea
+              class="form-control"
+              formControlName="justification"
+              placeholder="Enter justification"
+              rows="3"
+            ></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
+          Submit Request
+        </button>
+      </div>
+    </form>
+  </div>
+</main>
