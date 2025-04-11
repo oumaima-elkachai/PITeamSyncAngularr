@@ -1,0 +1,17 @@
+<!-- task-list.component.html -->
+<div class="box-filters-job mt-15 mb-10">
+    <div class="row">
+      <div class="col-lg-7">
+        <span class="text-small">Showing <strong>41-60 </strong>of <strong>944</strong> jobs</span>
+      </div>
+      <div class="col-lg-5 text-lg-end mt-sm-15">
+        <!-- Sorting controls... -->
+      </div>
+    </div>
+  </div>
+  
+  <div class="row job-listing-grid-2">
+    <div *ngFor="let job of jobList" class="col-lg-4 col-md-6 mb-4">
+      <app-task-card [task]="job"></app-task-card>
+    </div>
+  </div>
