@@ -1,0 +1,94 @@
+
+<main class="main-wrapper">
+  <div class="container-fluid">
+    <div class="inner-contents">
+      <div class="page-header d-flex align-items-center justify-content-between mr-bottom-30">
+        <div class="left-part">
+          <h2 class="text-dark">Ajouter un Paiement</h2>
+          <p class="text-gray mb-0">Veuillez remplir les informations ci-dessous pour ajouter un nouveau paiement.</p>
+        </div>
+      </div>
+
+      <div class="card border-0 p-5">
+        <div class="card-header bg-transparent border-0 p-0 d-flex align-items-center justify-content-between gap-3">
+          <h6 class="mb-0">Détails du Paiement</h6>
+        </div>
+
+        <div class="card-body p-0 pt-4">
+          <form [formGroup]="paymentForm" (ngSubmit)="onSubmit()">
+              <!-- Employé -->
+              <div class="form-group">
+                <label>Employé</label>
+                <select formControlName="employeeId" class="form-control">
+                  <option value="">-- Sélectionner un employé --</option>
+                  <option *ngFor="let emp of employees" [value]="emp['id']">{{ emp['name'] }}</option>
+                </select>
+                <div class="text-danger" *ngIf="submitted && (f['employeeId'].touched || f['employeeId'].dirty) && f['employeeId'].invalid">
+                  Veuillez sélectionner un employé.
+                </div>
+              </div>
+
+            <!-- Méthode de Paiement -->
+            <div class="form-group">
+              <label>Méthode de Paiement</label>
+              <select formControlName="paymentMethod" class="form-control">
+                <option value="">-- Sélectionner méthode de paiement --</option>
+                <option *ngFor="let method of paymentMethods" [value]="method">{{ method }}</option>
+              </select>
+              <div class="text-danger" *ngIf="submitted && f['paymentMethod'].invalid">
+                Veuillez choisir une méthode de paiement.
+              </div>
+            </div>
+
+            <!-- Statut -->
+            <div class="form-group">
+              <label>Statut du Paiement</label>
+              <select formControlName="status" class="form-control">
+                <option value="">-- Sélectionner statut de paiement --</option>
+                <option *ngFor="let status of paymentStatuses" [value]="status">{{ status }}</option>
+              </select>
+              <div class="text-danger" *ngIf="submitted && f['status'].invalid">
+                Veuillez sélectionner un statut pour le paiement.
+              </div>
+            </div>
+            <!-- Description -->
+            <div class="form-group">
+              <label>Description</label>
+              <textarea formControlName="description" class="form-control" rows="3" placeholder="Facultatif..."></textarea>
+            </div>
+
+            <!-- Paiement Récurrent -->
+            <div class="form-check mb-3">
+              <input type="checkbox" formControlName="isRecurring" class="form-check-input" id="recurringCheck">
+              <label class="form-check-label" for="recurringCheck">Paiement récurrent</label>
+            </div>
+
+            <!-- Fréquence de Récurrence -->
+            <div class="form-group" *ngIf="paymentForm.get('isRecurring')?.value">
+              <label>Fréquence de Récurrence</label>
+              <select formControlName="recurrenceFrequency" class="form-control">
+                <option value="">-- Sélectionner Fréquence de Récurrence --</option>
+                <option *ngFor="let freq of recurrenceFrequencies" [value]="freq">{{ freq }}</option>
+              </select>
+              <div class="text-danger" *ngIf="submitted && f['recurrenceFrequency'].invalid">
+                Veuillez sélectionner une fréquence de récurrence.
+              </div>
+            </div>
+
+            <!-- Bouton -->
+            <div class="button_group mt-3">
+              <button class="btn btn-primary" type="submit" [disabled]="loading || paymentForm.invalid">
+                {{ loading ? 'Enregistrement...' : 'Ajouter le Paiement' }}
+              </button>
+            </div>
+          </form>
+
+          <!-- Messages -->
+          <div *ngIf="successMessage" class="alert alert-success mt-3">{{ successMessage }}</div>
+          <div *ngIf="errorMessage" class="alert alert-danger mt-3">{{ errorMessage }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+

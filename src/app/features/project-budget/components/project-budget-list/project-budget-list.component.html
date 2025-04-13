@@ -1,0 +1,79 @@
+<app-admin-header></app-admin-header>
+<app-admin-sidebar></app-admin-sidebar>
+
+<!-- Main Wrapper -->
+<main class="main-wrapper">
+  <div class="container-fluid">
+    <div class="inner-contents">
+      <div class="page-header d-flex align-items-center justify-content-between mr-bottom-30">
+        <div class="left-part">
+          <h2 class="text-dark">Liste des Budgets de Projets</h2>
+          <p class="text-gray mb-0">Voici la liste des budgets des projets enregistrés.</p>
+        </div>
+        <div class="right-part">
+          <form class="search-form w-auto">
+            <input type="text" name="search" class="bg-white form-control" placeholder="Rechercher">
+            <button type="submit" class="btn"><img src="assets/img/svg/search.svg" alt=""></button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Table des budgets de projets -->
+      <div class="card border-0 p-5">
+        <div class="card-header bg-transparent border-0 p-0 d-flex align-items-center justify-content-between gap-3">
+          <h6 class="mb-0">Détails des Budgets de Projets</h6>
+        </div>
+
+        <div class="card-body p-0 pt-4">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Nom du Projet</th>
+                <th>Montant Alloué</th>
+                <th>Fonds Utilisés</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let projectBudget of budgets">
+                <td>{{ projectBudget.projet.name}}</td>
+                <td>
+                  <span class="text-purple fw-bold">
+                    {{ projectBudget.allocatedFunds | currency:'EUR' }}
+                  </span>
+                </td>
+                <td>
+                  <span class="text-purple fw-bold">
+                    {{ projectBudget.usedFunds  | currency:'EUR' }}
+                  </span>
+                </td>
+                <td>
+                  <div class="dropdown">
+                    <a href="#" data-bs-toggle="dropdown" class="fs-24 text-gray">
+                      <i class="bi bi-three-dots-vertical"></i>
+                    </a>
+                    <div class="dropdown-menu p-0">
+                <!-- Bouton de suppression -->
+                <button class="dropdown-item" 
+                (click)="onDelete(projectBudget.id ? projectBudget.id : '')" *ngIf="projectBudget.id">Supprimer</button>
+                <!-- Bouton de Edit -->
+                <button class="dropdown-item" 
+                (click)="onEdit(projectBudget)" *ngIf="projectBudget.id">Modifier</button>
+                    </div>
+                  </div>
+
+                </td>
+              </tr>
+              
+              <tr *ngIf="budgets.length === 0">
+                <td colspan="4" class="text-center text-muted">Aucun budget trouvé pour ce projet.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<app-admin-footer></app-admin-footer>

@@ -1,0 +1,79 @@
+<app-admin-header></app-admin-header>
+<app-admin-sidebar></app-admin-sidebar>
+
+<main class="main-wrapper">
+  <div class="container-fluid">
+    <div class="inner-contents">
+      <div class="page-header d-flex align-items-center justify-content-between mr-bottom-30">
+        <div class="left-part">
+          <h2 class="text-dark">Modifier un Paiement</h2>
+          <p class="text-gray mb-0">Modifiez les informations du paiement ci-dessous.</p>
+        </div>
+      </div>
+
+      <div class="card border-0 p-5">
+        <div class="card-header bg-transparent border-0 p-0 d-flex align-items-center justify-content-between gap-3">
+          <h6 class="mb-0">Détails du Paiement</h6>
+        </div>
+
+        <div class="card-body p-0 pt-4">
+          <form [formGroup]="paymentForm" (ngSubmit)="onSubmit()">
+            <!-- Méthode de Paiement -->
+            <div class="form-group">
+              <label>Méthode de Paiement</label>
+              <select formControlName="paymentMethod" class="form-control" required>
+                <option value="">-- Sélectionner méthode de paiement --</option>
+                <option *ngFor="let method of paymentMethods" [value]="method" [selected]="payment?.paymentMethod === method">{{ method }}</option>
+              </select>
+            </div>
+
+            <!-- Statut -->
+            <div class="form-group">
+              <label>Statut du Paiement</label>
+              <select formControlName="status" class="form-control" required>
+                <option value="">-- Sélectionner statut de paiement --</option>
+                <option *ngFor="let status of paymentStatuses" [value]="status" [selected]="payment?.status === status">{{ status }}</option>
+              </select>
+            </div>
+            
+            <!-- Description -->
+            <div class="form-group">
+              <label>Description</label>
+              <textarea formControlName="description" class="form-control" rows="3">{{ payment?.description }}</textarea>
+            </div>
+
+            <!-- Paiement Récurrent -->
+            <div class="form-check mb-3">
+                <input type="checkbox" formControlName="isRecurring" class="form-check-input" id="recurringCheck" [checked]="payment?.isRecurring">
+                <label class="form-check-label" for="recurringCheck">Paiement récurrent</label>
+            </div>
+
+
+            <!-- Fréquence si Récurrent -->
+            <div class="form-group" *ngIf="paymentForm.get('isRecurring')?.value">
+              <label>Fréquence de Récurrence</label>
+              <select formControlName="recurrenceFrequency" class="form-control">
+                <option value="">-- Sélectionner Fréquence de Récurrence --</option>
+                <option *ngFor="let freq of recurrenceFrequencies" [value]="freq" [selected]="payment?.recurrenceFrequency === freq">{{ freq }}</option>
+              </select>
+            </div>
+
+
+            <!-- Bouton -->
+            <div class="button_group mt-3">
+              <button class="btn btn-primary" type="submit" [disabled]="loading || paymentForm.invalid">
+                {{ loading ? 'Enregistrement...' : 'Modifier le Paiement' }}
+              </button>
+            </div>
+          </form>
+
+          <!-- Messages -->
+          <div *ngIf="successMessage" class="alert alert-success mt-3">{{ successMessage }}</div>
+          <div *ngIf="errorMessage" class="alert alert-danger mt-3">{{ errorMessage }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<app-admin-footer></app-admin-footer>

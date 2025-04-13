@@ -1,0 +1,83 @@
+<app-admin-header></app-admin-header>
+<app-admin-sidebar></app-admin-sidebar>
+
+<main class="main-wrapper">
+  <div class="container-fluid">
+    <div class="inner-contents">
+      <!-- Header -->
+      <div class="page-header d-flex align-items-center justify-content-between mr-bottom-30">
+        <div class="left-part">
+          <h2 class="text-dark">Ajouter un Budget de Projet</h2>
+          <p class="text-gray mb-0">Veuillez remplir les informations ci-dessous pour ajouter un budget de projet.</p>
+        </div>
+        <div class="right-part">
+          <form class="search-form w-auto">
+            <input type="text" name="search" class="bg-white form-control" placeholder="Search" />
+            <button type="submit" class="btn">
+              <img src="assets/img/svg/search.svg" alt="search" />
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div class="card border-0 p-5">
+        <div class="card-header bg-transparent border-0 p-0 d-flex align-items-center justify-content-between gap-3">
+          <h6 class="mb-0">Détails du Budget de Projet</h6>
+        </div>
+
+        <div class="card-body p-0 pt-4">
+          <form (ngSubmit)="onSubmit()" [formGroup]="budgetForm">
+            
+            <!-- Projet -->
+            <div class="form-group">
+              <label class="form-label" for="projetId">Projet</label>
+              <select class="form-control" id="projetId" formControlName="projetId">
+                <option value="">Sélectionner un Projet</option>
+                <option *ngFor="let projet of projets" [value]="projet.id">{{ projet.name }}</option>
+              </select>
+              <div *ngIf="budgetForm.get('projetId')?.touched && budgetForm.get('projetId')?.invalid" class="text-danger">
+                Le projet est requis.
+              </div>
+              <!-- Erreur projet déjà associé -->
+              <div *ngIf="erreurProjet" class="text-danger mt-1">
+                {{ erreurProjet }}
+              </div>
+            </div>
+
+            <!-- Fonds Alloués -->
+            <div class="form-group">
+              <label class="form-label" for="allocatedFunds">Fonds Alloués</label>
+              <input type="number" class="form-control" id="allocatedFunds" formControlName="allocatedFunds" placeholder="Fonds alloués" />
+              <div *ngIf="budgetForm.get('allocatedFunds')?.touched && budgetForm.get('allocatedFunds')?.invalid" class="text-danger">
+                <div *ngIf="budgetForm.get('allocatedFunds')?.errors?.['required']">Le champ est requis.</div>
+                <div *ngIf="budgetForm.get('allocatedFunds')?.errors?.['min']">Doit être supérieur à 0.</div>
+              </div>
+            </div>
+
+            <!-- Fonds Utilisés -->
+            <div class="form-group">
+              <label class="form-label" for="usedFunds">Fonds Utilisés</label>
+              <input type="number" class="form-control" id="usedFunds" formControlName="usedFunds" placeholder="Fonds utilisés" />
+              <div *ngIf="budgetForm.get('usedFunds')?.touched && budgetForm.get('usedFunds')?.invalid" class="text-danger">
+                <div *ngIf="budgetForm.get('usedFunds')?.errors?.['required']">Le champ est requis.</div>
+                <div *ngIf="budgetForm.get('usedFunds')?.errors?.['min']">Ne peut pas être négatif.</div>
+              </div>
+            </div>
+
+            <!-- Bouton -->
+            <div class="button_group mt-4">
+              <button type="submit" class="btn btn-primary" [disabled]="budgetForm.invalid">
+                Ajouter le Budget du Projet
+              </button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<app-admin-footer></app-admin-footer>

@@ -1,0 +1,109 @@
+<app-admin-header></app-admin-header>
+<app-admin-sidebar></app-admin-sidebar>
+
+<main class="main-wrapper">
+  <div class="container-fluid">
+    <div class="inner-contents">
+      <div class="page-header d-flex align-items-center justify-content-between mr-bottom-30">
+        <div class="left-part">
+          <h2 class="text-dark">Ajouter une Fiche de Paie</h2>
+          <p class="text-gray mb-0">Veuillez remplir les informations ci-dessous pour ajouter une nouvelle fiche de paie.</p>
+        </div>
+      </div>
+
+      <div class="card border-0 p-5">
+        <div class="card-header bg-transparent border-0 p-0 d-flex align-items-center justify-content-between gap-3">
+          <h6 class="mb-0">Détails de la Fiche de Paie</h6>
+        </div>
+
+        <div class="card-body p-0 pt-4">
+          <form (ngSubmit)="onSubmit()" #payrollForm="ngForm" novalidate>
+
+            <!-- Employé -->
+            <div class="form-group">
+              <label for="employeeId">Employé</label>
+              <select
+                class="form-control"
+                id="employeeId"
+                [(ngModel)]="payroll.employeeId"
+                name="employeeId"
+                required
+                #employeeId="ngModel">
+                <option value="">Sélectionner un Employé</option>
+                <option *ngFor="let employee of employees" [value]="employee.id">{{ employee.name }}</option>
+              </select>
+              <div *ngIf="employeeId.invalid && (employeeId.touched || payrollForm.submitted)" class="text-danger">
+                Veuillez sélectionner un employé.
+              </div>
+            </div>
+
+            <!-- Salaire -->
+                <!-- Salaire -->
+                <div class="form-group">
+                  <label for="salary">Salaire</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="salary"
+                    [(ngModel)]="payroll.salary"
+                    name="salary"
+                    placeholder="Salaire"
+                    required
+                    min="1"
+                    #salary="ngModel" />
+                  <div *ngIf="salary.invalid && (salary.touched || payrollForm.submitted)" class="text-danger">
+                    Le salaire est requis et doit être strictement supérieur à 0.
+                  </div>
+                </div>
+
+
+            <!-- Bonus -->
+            <div class="form-group">
+              <label for="bonus">Bonus</label>
+              <input
+                type="number"
+                class="form-control"
+                id="bonus"
+                [(ngModel)]="payroll.bonus"
+                name="bonus"
+                placeholder="Bonus"
+                required
+                min="0"
+                #bonus="ngModel" />
+              <div *ngIf="bonus.invalid && (bonus.touched || payrollForm.submitted)" class="text-danger">
+                Le bonus est requis et doit être supérieur ou égal à 0.
+              </div>
+            </div>
+
+
+            <!-- Date de Paiement -->
+            <div class="form-group">
+              <label for="payDate">Date de Paiement</label>
+              <input
+                type="date"
+                class="form-control"
+                id="payDate"
+                [(ngModel)]="payroll.payDate"
+                name="payDate"
+                required
+                #payDate="ngModel" />
+              <div *ngIf="payDate.invalid && (payDate.touched || payrollForm.submitted)" class="text-danger">
+                Veuillez entrer une date valide.
+              </div>
+            </div>
+
+            <!-- Bouton -->
+            <div class="button_group">
+              <button type="submit" class="btn btn-primary" [disabled]="payrollForm.invalid">
+                Ajouter la Fiche de Paie
+              </button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<app-admin-footer></app-admin-footer>

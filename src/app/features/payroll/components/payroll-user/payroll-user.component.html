@@ -1,0 +1,93 @@
+<app-user-header></app-user-header>
+
+<section id="fiche-paie" class="bg-light" style="margin-top: 80px;">
+  
+  <div class="container">
+    <div class="bg-white rounded-4 shadow p-5 mx-auto" style="max-width: 900px;">
+
+      <!-- En-tête -->
+      <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3" style="margin-top: 100px;">
+        <div>
+          <h2 class="fw-bold mb-1">Fiche de Paie</h2>
+          <small class="text-muted">Référence : {{ selectedPayment.referenceNumber }}</small>
+        </div>
+        <div class="d-flex align-items-center">
+          <span class="badge bg-primary text-white me-3" style="font-size: 1rem;">Statut : {{ selectedPayment.status }}</span>
+
+
+        <!-- Bouton icône de téléchargement -->
+        <button class="download-btn" title="Télécharger la fiche de paie" (click)="downloadPDF()">
+          <i class="fa-solid fa-download fs-5 text-primary"></i>
+        </button>
+
+        </div>
+      </div>
+
+      <!-- Infos employé -->
+      <div class="row mb-4">
+        <div class="col-md-6">
+          <h6 class="text-uppercase text-muted mb-2">Informations Employé</h6>
+          <p class="mb-1"><strong>Nom :</strong> {{ selectedE.name }}</p>
+          <p class="mb-1"><strong>ID :</strong> {{ selectedPayment.employeeId }}</p>
+          <p class="mb-1"><strong>Email :</strong> {{ selectedE.email }}</p>
+          <p class="mb-0"><strong>Département :</strong> {{ selectedE.department }}</p>
+        </div>
+        <div class="col-md-6">
+          <h6 class="text-uppercase text-muted mb-2">Détails du Paiement</h6>
+          <p class="mb-1"><strong>Date :</strong> {{ selectedPayment.paymentDate | date:'longDate' }}</p>
+          <p class="mb-1"><strong>Méthode :</strong> {{ selectedPayment.paymentMethod }}</p>
+          <p class="mb-1"><strong>Fréquence :</strong> {{ selectedPayment.recurrenceFrequency }}</p>
+          <p class="mb-0"><strong>Montant :</strong> {{ selectedPayment.amount | currency:'TND' }}</p>
+        </div>
+      </div>
+
+      <!-- Salaire / Bonus -->
+      <div class="mb-4">
+        <h6 class="text-uppercase text-muted mb-2">Résumé Salaire</h6>
+        <ng-container *ngIf="payrollE">
+          <div class="row">
+            <div class="col-md-6">
+              <p><strong>Salaire de base :</strong> {{ payrollE.salary | currency:'TND' }}</p>
+            </div>
+            <div class="col-md-6">
+              <p><strong>Bonus :</strong> {{ payrollE.bonus | currency:'TND' }}</p>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+
+      <!-- Description -->
+      <div>
+        <h6 class="text-uppercase text-muted mb-2">Description</h6>
+        <p>{{ selectedPayment.description }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<app-user-footer></app-user-footer>
+
+
+<!-- Favicon -->
+<link rel="shortcut icon" type="image/x-icon" href="/assets/user-template/imgs/theme/favicon.svg" />
+
+<!-- Template CSS -->
+<link rel="stylesheet" href="/assets/user-template/css/plugins/animate.min.css" />
+<link rel="stylesheet" href="/assets/user-template/css/mainc619.css?v=1.0" />
+
+<!-- Vendor JS -->
+<script src="/assets/user-template/js/vendor/modernizr-3.6.0.min.js"></script>
+<script src="/assets/user-template/js/vendor/jquery-3.6.0.min.js"></script>
+<script src="/assets/user-template/js/vendor/jquery-migrate-3.3.0.min.js"></script>
+<script src="/assets/user-template/js/vendor/bootstrap.bundle.min.js"></script>
+<script src="/assets/user-template/js/plugins/waypoints.js"></script>
+<script src="/assets/user-template/js/plugins/wow.js"></script>
+<script src="/assets/user-template/js/plugins/magnific-popup.js"></script>
+<script src="/assets/user-template/js/plugins/perfect-scrollbar.min.js"></script>
+<script src="/assets/user-template/js/plugins/select2.min.js"></script>
+<script src="/assets/user-template/js/plugins/isotope.js"></script>
+<script src="/assets/user-template/js/plugins/scrollup.js"></script>
+<script src="/assets/user-template/js/plugins/swiper-bundle.min.js"></script>
+
+<!-- Template JS -->
+<script src="/assets/user-template/js/mainc619.js?v=1.0"></script>
