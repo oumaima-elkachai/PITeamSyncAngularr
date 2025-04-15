@@ -1,0 +1,73 @@
+<div *ngIf="project; else loading">
+    <!-- Project Header (Read-only) -->
+    <div class="project-header">
+        <h1>{{ project.title }}</h1>
+        <button routerLink="/projects">Back to Projects</button>
+    </div>
+
+    <!-- Project Metadata -->
+    <div class="project-meta">
+        <div><strong>Owner:</strong> {{ project.owner }}</div>
+        <div>
+            <strong>Status:</strong>
+            <span [class]="project.status.toLowerCase()">{{ project.status }}</span>
+        </div>
+        <div>
+            <strong>Type:</strong>
+            <span [class]="project.type.toLowerCase()">{{ project.type }}</span>
+        </div>
+        <div><strong>Due Date:</strong> {{ project.dueDate | date }}</div>
+    </div>
+
+    <!-- Project Description -->
+    <div class="project-description">
+        <h3>Description</h3>
+        <p>{{ project.description || 'No description provided' }}</p>
+    </div>
+
+    <!-- Tasks List (Read-only) -->
+    <div class="tasks-section">
+        <h3>Tasks</h3>
+
+        <!-- Loading State -->
+        <div *ngIf="loadingTasks" class="loading-tasks">
+            <div class="spinner"></div>
+            Loading tasks...
+        </div>
+
+        <!-- Error State -->
+        <div *ngIf="taskError" class="task-error">
+            {{ taskError }}
+            <button (click)="loadTasks(project.id)">Retry</button>
+        </div>
+
+        <!-- Tasks List -->
+        <div *ngIf="!loadingTasks && !taskError">
+            <div *ngIf="tasks.length > 0; else noTasks">
+                <div *ngFor="let task of tasks" class="task-card">
+                    <div class="task-header">
+                        <h4>{{ task.title }}</h4>
+                        <span class="task-status {{ task.status.toLowerCase() }}">
+                            {{ task.status }}
+                        </span>
+                    </div>
+                    <p>{{ task.description || 'No description' }}</p>
+                    <div class="task-meta">
+                        <span>Deadline: {{ task.deadline | date }}</span>
+                        <span>Priority: {{ task.priority }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <ng-template #noTasks>
+                <div class="no-tasks">
+                    No tasks found for this project
+                </div>
+            </ng-template>
+        </div>
+    </div>
+</div>
+
+<ng-template #loading>
+    <div class="loading">Loading project details...</div>
+</ng-template>

@@ -16,6 +16,14 @@ import { TaskPageComponent } from './Task_Page/task-page/task-page.component';
 import { TaskListComponent } from './Task_Page/task-list/task-list.component';
 import { TaskCardComponent } from './Task_Page/task-card/task-card.component';
 import { TaskFiltersComponent } from './Task_Page/task-filters/task-filters.component';
+import { ProjectListComponent } from './project/project-list/project-list.component';
+import { ProjectDetailsComponent } from './project/project-details/project-details.component';
+import { TaskDetailsComponent } from './task/task-details/task-details.component';
+import { ProjectService } from './services/project.service';
+import { TaskService } from './task.service';
+import { EmployeeService } from './services/employee.service';
+import { HttpClientModule } from '@angular/common/http';  // Add this
+
 
 @NgModule({
   declarations: [
@@ -32,13 +40,19 @@ import { TaskFiltersComponent } from './Task_Page/task-filters/task-filters.comp
     TaskPageComponent,
     TaskListComponent,
     TaskCardComponent,
-    TaskFiltersComponent
+    TaskFiltersComponent,
+    ProjectListComponent,
+    ProjectDetailsComponent,
+    TaskDetailsComponent
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,  // Add this line
     AppRoutingModule
   ],
-  providers: [],
+  providers: [ProjectService,
+    TaskService,
+    EmployeeService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

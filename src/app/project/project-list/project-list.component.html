@@ -1,0 +1,28 @@
+<div>
+    <!-- Loading State -->
+    <div *ngIf="isLoading">
+      <div>Loading projects...</div>
+    </div>
+  
+    <!-- Error State -->
+    <div *ngIf="errorMessage">
+      <div>Error: {{ errorMessage }}</div>
+      <button (click)="loadProjects()">Retry</button>
+    </div>
+  
+    <!-- Projects List -->
+    <div *ngIf="!isLoading && !errorMessage">
+      <div *ngFor="let project of projects" class="project-card">
+        <h3>{{ project.title }}</h3>
+        <div>Owner: {{ project.owner }}</div>
+        <div>Status: {{ project.status }}</div>
+        <div>Type: {{ project.type }}</div>
+        <div>Due: {{ project.dueDate | date }}</div>
+        <p>{{ project.description }}</p>
+        <div>
+          <button (click)="onDeleteProject(project.id)">Delete</button>
+          <button [routerLink]="['/projects', project.id]">Details</button>
+        </div>
+      </div>
+    </div>
+  </div>
