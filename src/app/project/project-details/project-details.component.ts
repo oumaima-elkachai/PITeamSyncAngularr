@@ -15,10 +15,13 @@ export class ProjectDetailsComponent implements OnInit {
   project!: Project;
   tasks: Task[] = [];
   isLoading = true;
+  teamMembers: Employee[] = [];
+  loadingMembers = true;
   errorMessage: string | null = null;
   employees: Employee[] = []; // 1. Add employees property
   loadingTasks = true;
   taskError = '';
+  memberError = '';
 
 
   constructor(
@@ -44,7 +47,7 @@ export class ProjectDetailsComponent implements OnInit {
   }
 
 
-  private loadEmployees(): void {
+  loadEmployees(): void {
     this.employeeService.getAllEmployees().subscribe({
       next: (employees: Employee[]) => this.employees = employees,
       error: (err: any) => console.error('Error loading employees:', err)
@@ -79,6 +82,26 @@ export class ProjectDetailsComponent implements OnInit {
         this.loadingTasks = false;
       }
     });
+  }
+
+  private loadTeamMembers(projectId: string): void {
+    this.loadingMembers = true;
+    this.employeeService.getEmployeesByProject(projectId).subscribe({
+      next: (members) => {
+        this.teamMembers = members;
+        this.loadingMembers = false;
+      },
+      error: (err) => {
+        this.memberError = 'Failed to load team members';
+        this.loadingMembers = false;
+      }
+    });
+  }
+
+  getProgress(): number {
+    if (!this.tasks.length) return 0;
+    const completed = this.tasks.filter(t => t.status === 'DONE').length;
+    return Math.round((completed / this.tasks.length) * 100);
   }
 
   onUpdateProject(updatedProject: Project): void {

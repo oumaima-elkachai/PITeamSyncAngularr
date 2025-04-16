@@ -1,0 +1,57 @@
+<div class="container mt-4">
+    <h2>Edit Project</h2>
+    <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
+        <!-- Same form fields as project form -->
+        <!-- Reuse your existing project form template -->
+        <!-- Add cancel button -->
+
+        <div class="form-group">
+            <label for="title">Project Title</label>
+            <input type="text" id="title" formControlName="title" class="form-control">
+            <div *ngIf="projectForm.get('title')?.invalid && projectForm.get('title')?.touched" class="text-danger">
+                Title is required
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" formControlName="description" class="form-control" rows="3"></textarea>
+            <div *ngIf="projectForm.get('description')?.invalid && projectForm.get('description')?.touched"
+                class="text-danger">
+                Description is required
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="dueDate">Due Date</label>
+            <input type="date" id="dueDate" formControlName="dueDate" class="form-control">
+            <div *ngIf="projectForm.get('dueDate')?.invalid && projectForm.get('dueDate')?.touched" class="text-danger">
+                Due date is required
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="status">Status</label>
+            <select id="status" formControlName="status" class="form-control">
+                <option *ngFor="let status of statusOptions" [value]="status">{{status}}</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="type">Project Type</label>
+            <select id="type" formControlName="type" class="form-control">
+                <option *ngFor="let type of typeOptions" [value]="type">{{type}}</option>
+            </select>
+        </div>
+
+
+        <div class="d-flex justify-content-between mt-4">
+            <button type="button" class="btn btn-secondary" (click)="router.navigate(['/projects', projectId])">
+                Cancel
+            </button>
+            <button type="submit" class="btn btn-primary" [disabled]="projectForm.invalid">
+                Save Changes
+            </button>
+        </div>
+    </form>
+</div>

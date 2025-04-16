@@ -1,0 +1,12 @@
+form {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .form-label {
+    font-weight: 500;
+  }
+  
+  .btn:disabled {
+    cursor: not-allowed;
+  }

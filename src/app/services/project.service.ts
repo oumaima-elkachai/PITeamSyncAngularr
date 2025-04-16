@@ -29,4 +29,6 @@ export class ProjectService {
   deleteProject(id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
+
+  
 }

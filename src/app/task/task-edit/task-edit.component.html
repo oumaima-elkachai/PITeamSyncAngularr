@@ -1,0 +1,72 @@
+<div class="container mt-4">
+    <h2>Edit Task</h2>
+    <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
+        <!-- Title -->
+        <div class="mb-3">
+            <label class="form-label">Title</label>
+            <input type="text" class="form-control" formControlName="title"
+                [class.is-invalid]="taskForm.get('title')?.invalid && taskForm.get('title')?.touched">
+            <div class="invalid-feedback" *ngIf="taskForm.get('title')?.errors?.['required']">
+                Title is required
+            </div>
+        </div>
+
+        <!-- Description -->
+        <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea class="form-control" formControlName="description" rows="4"></textarea>
+        </div>
+
+        <!-- Deadline -->
+        <div class="mb-3">
+            <label class="form-label">Deadline</label>
+            <input type="date" class="form-control" formControlName="deadline"
+                [class.is-invalid]="taskForm.get('deadline')?.invalid && taskForm.get('deadline')?.touched">
+            <div class="invalid-feedback" *ngIf="taskForm.get('deadline')?.errors?.['required']">
+                Deadline is required
+            </div>
+        </div>
+
+        <!-- Priority and Status -->
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label">Priority</label>
+                <select class="form-select" formControlName="priority">
+                    <option *ngFor="let priority of priorities" [value]="priority">
+                        {{ priority | titlecase }}
+                    </option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Status</label>
+                <select class="form-select" formControlName="status">
+                    <option *ngFor="let status of statuses" [value]="status">
+                        {{ status | titlecase }}
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Assignee -->
+        <div class="mb-4">
+            <label class="form-label">Assigned To</label>
+            <select class="form-select" formControlName="employeeId">
+                <option value="">Unassigned</option>
+                <option *ngFor="let employee of employees" [value]="employee.id">
+                    {{ employee.name }} ({{ employee.position }})
+                </option>
+            </select>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="d-flex justify-content-between">
+            <button type="button" class="btn btn-outline-secondary" (click)="router.navigate(['/projects', projectId])">
+                Cancel
+            </button>
+            <button type="submit" class="btn btn-primary" [disabled]="taskForm.invalid || isLoading">
+                <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+                {{ isLoading ? 'Saving...' : 'Save Changes' }}
+            </button>
+        </div>
+    </form>
+</div>
