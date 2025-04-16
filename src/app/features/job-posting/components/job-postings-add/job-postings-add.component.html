@@ -1,0 +1,158 @@
+<main class="main-wrapper">
+  <div class="container-fluid">
+    <div class="inner-contents">
+      <div class="page-header d-flex align-items-center justify-content-between mb-4">
+        <div class="left-part">
+          <h2 class="text-dark">Ajouter l'Offre d'Emploi</h2>
+          <p class="text-gray mb-0">Ajouter les informations de l'offre d'emploi</p>
+        </div>
+      </div>
+
+      <!-- Alertes de succès et d'erreur -->
+      <div *ngIf="successMessage" class="alert alert-success d-flex align-items-center" role="alert">
+        <div class="alert-icon-bg h-100 me-2">
+          <i class="bi bi-check-circle-fill"></i>
+        </div>
+        <div>
+          {{ successMessage }} <a routerLink="/admin/job-postings" class="alert-link">Voir les offres</a>
+        </div>
+      </div>
+      <div *ngIf="errorMessage" class="alert alert-danger d-flex align-items-center" role="alert">
+        <div class="alert-icon-bg h-100 me-2">
+          <i class="bi bi-exclamation-triangle-fill"></i>
+        </div>
+        <div>{{ errorMessage }}</div>
+      </div>
+
+      <div class="card border-0 p-5">
+        <div class="card-header bg-transparent border-0 p-0 d-flex align-items-center justify-content-between">
+          <h6 class="mb-0">Formulaire d'ajout</h6>
+        </div>
+
+        <div class="card-body p-0 pt-4">
+          <form [formGroup]="jobForm" (ngSubmit)="addJob()" novalidate>
+            <!-- Intitulé du poste -->
+            <div class="form-group mb-3">
+              <label for="title" class="form-label d-flex align-items-center gap-2">
+                Intitulé du poste
+                <i class="bi bi-info-circle text-primary" title="Nom du poste à pourvoir (ex : Développeur Full Stack)"></i>
+              </label>
+              <input id="title" type="text" class="form-control" formControlName="title" placeholder="Intitulé du poste" />
+              <div *ngIf="jobForm.get('title')?.touched && jobForm.get('title')?.invalid" class="text-danger">
+                Ce champ est requis.
+              </div>
+            </div>
+
+            <!-- Description -->
+            <div class="form-group mb-3">
+              <label for="description" class="form-label d-flex align-items-center gap-2">
+                Description
+                <i class="bi bi-info-circle text-primary" title="Décrivez le poste, les responsabilités et les missions."></i>
+              </label>
+              <textarea id="description" rows="4" class="form-control" formControlName="description" placeholder="Description du poste"></textarea>
+              <div *ngIf="jobForm.get('description')?.touched && jobForm.get('description')?.invalid" class="text-danger">
+                Ce champ est requis.
+              </div>
+            </div>
+
+            <!-- Département -->
+            <div class="form-group mb-3">
+              <label for="department" class="form-label d-flex align-items-center gap-2">
+                Département
+                <i class="bi bi-info-circle text-primary" title="Département concerné (ex : Informatique, Ressources Humaines...)"></i>
+              </label>
+              <input id="department" type="text" class="form-control" formControlName="department" placeholder="Département (ex: IT, RH)" />
+              <div *ngIf="jobForm.get('department')?.touched && jobForm.get('department')?.invalid" class="text-danger">
+                Ce champ est requis.
+              </div>
+            </div>
+
+            <!-- Catégorie -->
+            <div class="form-group mb-3">
+              <label for="category" class="form-label d-flex align-items-center gap-2">
+                Catégorie
+                <i class="bi bi-info-circle text-primary" title="Type de contrat (ex : CDI, CDD, Stage...)"></i>
+              </label>
+              <input id="category" type="text" class="form-control" formControlName="category" placeholder="Catégorie (CDI, CDD...)" />
+              <div *ngIf="jobForm.get('category')?.touched && jobForm.get('category')?.invalid" class="text-danger">
+                Ce champ est requis.
+              </div>
+            </div>
+
+            <!-- Salaire -->
+            <div class="form-group mb-3">
+              <label for="salary" class="form-label d-flex align-items-center gap-2">
+                Salaire
+                <i class="bi bi-info-circle text-primary" title="Montant proposé pour ce poste (ex : 3000 €)"></i>
+              </label>
+              <input id="salary" type="number" class="form-control" formControlName="salary" placeholder="Salaire" />
+              <div *ngIf="jobForm.get('salary')?.touched && jobForm.get('salary')?.errors?.['required']" class="text-danger">
+                Ce champ est requis.
+              </div>
+              <div *ngIf="jobForm.get('salary')?.touched && jobForm.get('salary')?.errors?.['min']" class="text-danger">
+                Le salaire doit être positif.
+              </div>
+            </div>
+
+            <!-- Date d'expiration -->
+            <div class="form-group mb-3">
+              <label for="expirationDate" class="form-label d-flex align-items-center gap-2">
+                Date d'expiration
+                <i class="bi bi-info-circle text-primary" title="Date limite de validité de l'offre. Elle doit être ultérieure à aujourd'hui."></i>
+              </label>
+              <input id="expirationDate" type="date" class="form-control" formControlName="expirationDate" />
+              <div *ngIf="jobForm.get('expirationDate')?.touched && jobForm.get('expirationDate')?.errors" class="text-danger">
+                <div *ngIf="jobForm.get('expirationDate')?.errors?.['required']">
+                  Ce champ est requis.
+                </div>
+                <div *ngIf="jobForm.get('expirationDate')?.errors?.['notFutureDate']">
+                  La date d’expiration doit être ultérieure à aujourd’hui.
+                </div>
+              </div>
+            </div>
+
+            <!-- Statut -->
+            <div class="form-group mb-3">
+              <label for="status" class="form-label d-flex align-items-center gap-2">
+                Statut
+                <i class="bi bi-info-circle text-primary" title="Statut de publication de l'offre : activée ou désactivée."></i>
+              </label>
+              <select id="status" class="form-control" formControlName="status">
+                <option value="ENABLE">ENABLE</option>
+                <option value="DISABLE">DISABLE</option>
+              </select>
+            </div>
+
+            <!-- Image -->
+            <div class="form-group mb-3">
+              <label for="image" class="form-label d-flex align-items-center gap-2">
+                Image du poste
+                <i class="bi bi-info-circle text-primary" title="Ajoutez une image représentative du poste ou de l'entreprise (format PNG, JPEG, JPG - max 1 Mo)."></i>
+              </label>
+              <input id="image" type="file" class="form-control" (change)="onFileSelected($event)" accept="image/*" />
+              
+              <div *ngIf="imageUrlPreview" class="mt-3">
+                <p class="mb-1">Aperçu :</p>
+                <img [src]="imageUrlPreview" alt="Aperçu de l'image" class="rounded-3 shadow-sm" style="height: 180px; object-fit: cover;" />
+              </div>
+              <div *ngIf="imageError" class="text-danger mt-1">{{ imageError }}</div>
+            </div>
+
+            <!-- Boutons -->
+            <div class="form-group d-flex justify-content-end gap-2 mt-4">
+              <button type="submit" class="btn btn-success px-4" [disabled]="jobForm.invalid">
+                <i class="bi bi-check-circle me-1"></i> Ajouter
+              </button>
+              <button type="button" class="btn btn-outline-secondary px-4" (click)="cancel()">
+                <i class="bi bi-x-circle me-1"></i> Annuler
+              </button>
+              <button type="button" class="btn btn-warning text-white px-4" (click)="resetForm()">
+                <i class="bi bi-arrow-repeat me-1"></i> Réinitialiser
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

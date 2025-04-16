@@ -1,0 +1,144 @@
+
+
+ <!-- Content -->
+ <main class="main">
+    <section class="section-box">
+        <div class="box-head-single">
+            <div class="container">
+                <h3>{{ job.title }}</h3>
+                <ul class="breadcrumbs">
+                    <li><a href="#">Home</a></li>
+                    <li>Jobs listing</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+    <section class="section-box mt-50">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-md-12 col-sm-12 col-12">
+                    <div class="single-image-feature">
+                        <figure>
+                            <img [src]="job.imageUrl ? job.imageUrl : 'assets/img/company.jpg'" class="img-rd-15"/>
+                          </figure>
+                          
+                    </div>
+                    <div class="content-single">
+                        <h5>The AliStudio Team</h5>
+                        <p>{{job.description}}</p>
+                    </div>
+                    <div class="author-single">
+                        <span>AliThemes</span>
+                    </div>
+                    <div class="single-apply-jobs">
+                        <div class="row align-items-center">
+                            <div class="col-md-5">
+                                <a href="#" class="btn btn-default mr-15">Apply now</a>
+                               
+                            </div>
+                            <div class="col-md-7 text-lg-end social-share">
+                                <a href="#" class="btn btn-border btn-sm mr-10"><img alt="jobhub" src="assets/user-template/imgs/theme/icons/share-fb.svg" /> Share</a>
+                                <a href="#" class="btn btn-border btn-sm mr-10"><img alt="jobhub" src="assets/user-template/imgs/theme/icons/share-tw.svg" /> Tweet</a>
+                                <a href="#" class="btn btn-border btn-sm"><img alt="jobhub" src="assets/user-template/imgs/theme/icons/share-pinterest.svg" /> Pin</a>
+                            </div>
+                        </div>
+                    </div>
+                   
+                </div>
+                <div class="col-lg-4 col-md-12 col-sm-12 col-12 pl-40 pl-lg-15 mt-lg-30">
+                    <div class="sidebar-shadow">
+                        <div class="sidebar-heading">
+                            <div class="avatar-sidebar">
+                                <figure><img alt="jobhub" src="assets/user-template/imgs/page/job-single/avatar-job.png" /></figure>
+                                <div class="sidebar-info">
+                                    <span class="sidebar-company">AliStudio, Inc</span>
+                                    <span class="sidebar-website-text">alithemes.com</span>
+                                    <div class="dropdowm">
+                                        <button class="btn btn-dots btn-dots-abs-right dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                                        <ul class="dropdown-menu dropdown-menu-light">
+                                            <li><a class="dropdown-item" href="#">Contact</a></li>
+                                            <li><a class="dropdown-item" href="#">Bookmark</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-description mt-15">
+                            We're looking to add more product designers to our growing teams.
+                        </div>
+                        <div class="text-start mt-20">
+                            <a href="#" [routerLink]="['/user/apply-job', job.id, candidateId]" class="btn btn-default mr-10">Apply now</a>
+                       
+                        </div>
+                        <div class="sidebar-list-job">
+                            <ul>
+                                <li>
+                                    <div class="sidebar-icon-item"><i class="fi-rr-briefcase"></i></div>
+                                    <div class="sidebar-text-info">
+                                        <span class="text-description">Job Type</span>
+                                        <strong class="small-heading">{{job.category}}</strong>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="sidebar-icon-item"><i class="fi-rr-marker"></i></div>
+                                    <div class="sidebar-text-info">
+                                        <span class="text-description">Department</span>
+                                        <strong class="small-heading"> {{job.department}}</strong>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="sidebar-icon-item"><i class="fi-rr-dollar"></i></div>
+                                    <div class="sidebar-text-info">
+                                        <span class="text-description">Salary</span>
+                                        <strong class="small-heading">{{job.salary}}-TND</strong>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="sidebar-icon-item"><i class="fi-rr-clock"></i></div>
+                                    <div class="sidebar-text-info">
+                                        <span class="text-description">Date posted</span>
+                                        <strong class="small-heading">{{job.datePosted}}</strong>
+                                    </div>
+                                </li>
+                                <li> 
+                                    <div class="sidebar-icon-item"><i class="fi-rr-time-fast"></i></div>
+                                    <div class="sidebar-text-info">
+                                      <span class="text-description">Expiration date</span>
+                                      <strong class="small-heading">{{ job.expirationDate | date: 'dd MMMM yyyy' }}</strong>
+
+                                    </div>
+                                  </li>
+                                  
+                                <li>
+                                    <div class="sidebar-icon-item"><i class="fi-rr-time-status"></i></div>
+                                    <div class="sidebar-text-info">
+                                        <span class="text-description">Status</span>
+                                        <strong class="small-heading">{{job.status}}</strong>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                       
+                        <div class="sidebar-team-member pt-40">
+                            <h6 class="small-heading">Contact Info</h6>
+                            <div class="info-address">
+                                <span><i class="fi-rr-marker"></i> <span>Campbell Ave undefined Kent, Utah 53127
+                                        United
+                                        States</span></span>
+                                <span><i class="fi-rr-headset"></i> <span>(+91) - 540-025-124553 </span></span>
+                                <span><i class="fi-rr-paper-plane"></i> <span><a href="https://wp.alithemes.com/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="177478796376746357797264637a7665633974787a">[email&#160;protected]</a></span></span>
+                                <span><i class="fi-rr-time-fast"></i> <span>10:00 - 18:00, Mon - Sat </span></span>
+                            </div>
+                        </div>
+                    </div>
+                   
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+   
+</main>
+
+
+

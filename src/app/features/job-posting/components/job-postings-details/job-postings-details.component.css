@@ -1,0 +1,9 @@
+/* Dans styles.css ou styles.scss */
+.hover-shadow {
+    transition: all 0.3s ease;
+  }
+  .hover-shadow:hover {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+    transform: translateY(-4px);
+  }
+  

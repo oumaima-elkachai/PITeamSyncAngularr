@@ -1,0 +1,367 @@
+
+
+<main class="main">
+  <!-- Hero / Search Section -->
+  <section class="section-box-2">
+    <div class="box-head-single none-bg">
+      <div class="container">
+        <h4>There Are 65.866 Jobs<br />Here For you!</h4>
+        <div class="row mt-15 mb-40">
+          <div class="col-lg-7 col-md-9">
+            <span class="text-mutted">Discover your next career move, freelance gig, or internship</span>
+          </div>
+          <div class="col-lg-5 col-md-3 text-lg-end text-start">
+            <ul class="breadcrumbs mt-sm-15">
+              <li><a routerLink="/">Home</a></li>
+              <li>Jobs listing</li>
+            </ul>
+          </div>
+        </div>
+        <div class="box-shadow-bdrd-15 box-filters">
+          <div class="row">
+            <div class="col-lg-5">
+              <div class="box-search-job">
+                <form class="form-search-job">
+                  <input type="text" class="input-search-job" placeholder="UI Designer" />
+                </form>
+              </div>
+              <div class="list-tags-job">
+                <a href="#" class="text-normal job-tag">UI/UX designing <span class="remove-tags-job"></span></a>
+              </div>
+            </div>
+            <div class="col-lg-7">
+              <div class="d-flex job-fillter">
+                <div class="d-block d-lg-flex">
+                  <!-- Filters -->
+                  <div class="dropdown job-type">
+                    <button class="btn dropdown-toggle" type="button" id="dropdownJobType" data-bs-toggle="dropdown">
+                      <i class="fi-rr-briefcase"></i> <span>Full time</span> <i class="fi-rr-angle-small-down"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item active" href="#">Full time</a></li>
+                      <li><a class="dropdown-item" href="#">Part time</a></li>
+                      <li><a class="dropdown-item" href="#">Freelancer</a></li>
+                      <li><a class="dropdown-item" href="#">Online work</a></li>
+                    </ul>
+                  </div>
+                  <div class="dropdown">
+                    <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                      <i class="fi-rr-marker"></i> <span>New York, USA</span> <i class="fi-rr-angle-small-down"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item active" href="#">New York, USA</a></li>
+                      <li><a class="dropdown-item" href="#">Dallas, USA</a></li>
+                      <li><a class="dropdown-item" href="#">Chicago, USA</a></li>
+                    </ul>
+                  </div>
+                  <div class="dropdown">
+                    <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                      <i class="fi-rr-dollar"></i> <span>Salary Range</span> <i class="fi-rr-angle-small-down"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item active" href="#">$100 - $500</a></li>
+                      <li><a class="dropdown-item" href="#">$500 - $1000</a></li>
+                      <li><a class="dropdown-item" href="#">$1000 - $1500</a></li>
+                      <li><a class="dropdown-item" href="#">$1500 - $2000</a></li>
+                      <li><a class="dropdown-item" href="#">Over $2000</a></li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="box-button-find">
+                  <button class="btn btn-default float-right">Find Now</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Job Listings Section -->
+  <section class="section-box mt-80">
+    <div class="container">
+      <div class="row flex-row-reverse">
+        <div class="col-lg-9 col-md-12">
+          <div class="content-page">
+            <div class="box-filters-job mt-15 mb-10">
+              <div class="row">
+                <div class="col-lg-7">
+                  <span class="text-small">Showing <strong>1-20</strong> of <strong>{{jobList.length}}</strong> jobs</span>
+                </div>
+                <div class="col-lg-5 text-lg-end mt-sm-15">
+                  <div class="display-flex2">
+                    <span class="text-sortby">Sort by:</span>
+                    <div class="dropdown dropdown-sort">
+                      <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <span>Newest Post</span> <i class="fi-rr-angle-small-down"></i>
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li><a class="dropdown-item active" href="#">Newest Post</a></li>
+                        <li><a class="dropdown-item" href="#">Oldest Post</a></li>
+                        <li><a class="dropdown-item" href="#">Rating Post</a></li>
+                      </ul>
+                    </div>
+                    <div class="box-view-type">
+                      <a href="job-grid.html" class="view-type"><img src="assets/user-template/imgs/theme/icons/icon-list.svg" alt="jobhub" /></a>
+                      <a href="job-list.html" class="view-type"><img src="assets/user-template/imgs/theme/icons/icon-grid.svg" alt="jobhub" /></a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- JOB LIST -->
+            <div class="row">
+                <div class="col-lg-4 col-md-6" *ngFor="let job of paginatedJobs">
+                    <div class="card-grid-2 hover-up wow animate__animated animate__fadeIn" data-wow-delay=".1s">
+                    <div class="text-center card-grid-2-image">
+                    <a [routerLink]="['/user/job-postings/details', job.id]">
+                
+                    <figure><img  [src]=" job.imageUrl" alt="Image du poste" style="width: 100%; height: 200px; object-fit: cover;" />
+                 
+                </figure>
+                    </a>
+                      <label class="btn-urgent" *ngIf="job.status === 'ENABLE'">Enable</label>
+                    </div>
+                    <div class="card-block-info">
+                    <div class="row">
+                    <div class="col-lg-7 col-6">
+                    <a  [routerLink]="['/user/job-postings/details', job.id]"   href="#" class="card-2-img-text" >
+                
+                    <span class="card-grid-2-img-small"><img  [src]=" job.imageUrl" alt="Image du poste"  />
+                 </span>
+                    <span>OFFRES</span>
+                    </a>
+                    </div>
+                    <div class="col-lg-5 col-6 text-end">
+                    <span class="btn btn-grey-small disc-btn">{{job.category}} </span>
+                    </div>
+                    </div>
+                    <h5 class="mt-20"><a [routerLink]="['/user/job-postings/details', job.id]">{{ job.title }}</a>
+                 </h5>
+                    <div class="mt-15">
+                    <span class="card-time">
+                {{ job.datePosted | date: 'shortDate' }}
+                </span>
+                    <span class="card-location">{{job.department}} </span>
+                    </div>
+                    <div class="card-2-bottom mt-30">
+                    <div class="row">
+                    <div class="col-lg-7 col-8">
+                    <span class="card-text-price"> {{ job.salary }} TND <span>/Month</span> </span>
+                    </div>
+                    <div class="col-lg-5 col-4 text-end">
+                    <span><img src="assets/user-template/imgs/theme/icons/shield-check.svg" class="me-2" alt="icon" /> </span>
+                    <span class="ml-5"><img src="assets/user-template/imgs/theme/icons/bookmark.svg" alt="icon" />
+                 </span>
+                    </div>
+                    </div>
+                    </div>
+                    </div>
+                    </div>
+                    </div>
+                
+                
+              </div>
+              
+
+            <!-- Pagination -->
+            <div class="paginations mt-30" *ngIf="jobList.length > 0">
+                <ul class="pager">
+                  <!-- Précédent -->
+                  <li *ngIf="currentPage > 1">
+                    <a (click)="onPageChange(currentPage - 1)" class="pager-prev"></a>
+                  </li>
+              
+                  <!-- Pages -->
+                  <li *ngFor="let page of totalPagesArray" [ngClass]="{'active': currentPage === page}">
+                    <a (click)="onPageChange(page)" class="pager-number">
+                      {{ page }}
+                    </a>
+                  </li>
+              
+                  <!-- Suivant -->
+                  <li *ngIf="currentPage < totalPages">
+                    <a (click)="onPageChange(currentPage + 1)" class="pager-next"></a>
+                  </li>
+                </ul>
+              </div>
+              
+          </div>
+        </div>
+
+        <!-- SIDEBAR -->
+        <div class="col-lg-3 col-md-12">
+          <div class="sidebar-with-bg">
+            <h5 class="font-semibold mb-10">Set job reminder</h5>
+            <p class="text-body-999">Enter your email address and get job notification.</p>
+            <form>
+              <div class="form-group mt-15">
+                <input type="text" class="form-control input-bg-white form-icons" placeholder="Enter email address" />
+                <i class="fi-rr-envelope"></i>
+              </div>
+              <div class="form-group mt-25 mb-5">
+                <button class="btn btn-default btn-md">Submit</button>
+              </div>
+            </form>
+          </div>
+          <div class="sidebar-shadow none-shadow mb-30">
+            <div class="sidebar-filters">
+                <div class="filter-block mb-30">
+                    <h5 class="medium-heading mb-15">Location</h5>
+                    <div class="form-group">
+                        <input type="text" class="form-control form-icons" placeholder="Location" />
+                        <i class="fi-rr-marker"></i>
+                    </div>
+                </div>
+                <div class="filter-block mb-30">
+                    <h5 class="medium-heading mb-15">Categoy</h5>
+                    <div class="form-group select-style select-style-icon">
+                        <select class="form-control form-icons select-active">
+                            <option>Ui/UX design</option>
+                            <option>Ui/UX design 1</option>
+                            <option>Ui/UX design 2</option>
+                            <option>Ui/UX design 3</option>
+                        </select>
+                        <i class="fi-rr-briefcase"></i>
+                    </div>
+                </div>
+                <div class="filter-block mb-30">
+                    <h5 class="medium-heading mb-15">Job type</h5>
+                    <div class="form-group">
+                        <ul class="list-checkbox">
+                            <li>
+                                <label class="cb-container">
+                                    <input type="checkbox"> <span class="text-small">Full Time
+                                        Jobs</span>
+                                    <span class="checkmark"></span>
+                                </label>
+                                <span class="number-item">235</span>
+                            </li>
+                            <li>
+                                <label class="cb-container">
+                                    <input type="checkbox" checked="checked"> <span class="text-small">Part Time
+                                        Jobs</span>
+                                    <span class="checkmark"></span>
+                                </label>
+                                <span class="number-item">28</span>
+                            </li>
+                            <li>
+                                <label class="cb-container">
+                                    <input type="checkbox" checked="checked"> <span class="text-small">Remote
+                                        Jobs</span>
+                                    <span class="checkmark"></span>
+                                </label>
+                                <span class="number-item">67</span>
+                            </li>
+                            <li>
+                                <label class="cb-container">
+                                    <input type="checkbox"> <span class="text-small">Freelance</span>
+                                    <span class="checkmark"></span>
+                                </label>
+                                <span class="number-item">92</span>
+                            </li>
+                            <li>
+                                <label class="cb-container">
+                                    <input type="checkbox"> <span class="text-small">Temporary</span>
+                                    <span class="checkmark"></span>
+                                </label>
+                                <span class="number-item">14</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="filter-block mb-30">
+                    <h5 class="medium-heading mb-10">Experience Level</h5>
+                    <div class="form-group">
+                        <ul class="list-checkbox">
+                            <li>
+                                <label class="cb-container">
+                                    <input type="checkbox"> <span class="text-small">Expert</span>
+                                    <span class="checkmark"></span>
+                                </label>
+                                <span class="number-item">76</span>
+                            </li>
+                            <li>
+                                <label class="cb-container">
+                                    <input type="checkbox"> <span class="text-small">Senior</span>
+                                    <span class="checkmark"></span>
+                                </label>
+                                <span class="number-item">89</span>
+                            </li>
+                            <li>
+                                <label class="cb-container">
+                                    <input type="checkbox" checked="checked"> <span class="text-small">Junior</span>
+                                    <span class="checkmark"></span>
+                                </label>
+                                <span class="number-item">54</span>
+                            </li>
+                            <li>
+                                <label class="cb-container">
+                                    <input type="checkbox" checked="checked"> <span class="text-small">Regular</span>
+                                    <span class="checkmark"></span>
+                                </label>
+                                <span class="number-item">23</span>
+                            </li>
+                            <li>
+                                <label class="cb-container">
+                                    <input type="checkbox"> <span class="text-small">Internship</span>
+                                    <span class="checkmark"></span>
+                                </label>
+                                <span class="number-item">22</span>
+                            </li>
+                            <li>
+                                <label class="cb-container">
+                                    <input type="checkbox"> <span class="text-small">Associate</span>
+                                    <span class="checkmark"></span>
+                                </label>
+                                <span class="number-item">14</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="filter-block mb-40">
+                    <h5 class="medium-heading mb-25">Salary Range</h5>
+                    <div class="">
+                        <div class="row mb-20">
+                            <div class="col-sm-12">
+                                <div id="slider-range"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <label class="lb-slider">From</label>
+                                <div class="form-group minus-input">
+                                    <input type="text" name="min-value-money" class="input-disabled form-control min-value-money" disabled="disabled" value="" />
+                                    <input type="hidden" name="min-value" class="form-control min-value" value="" />
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <label class="lb-slider">To</label>
+                                <div class="form-group">
+                                    <input type="text" name="max-value-money" class="input-disabled form-control max-value-money" disabled="disabled" value="" />
+                                    <input type="hidden" name="max-value" class="form-control max-value" value="" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="buttons-filter">
+                    <button class="btn btn-default">Apply filter</button>
+                    <button class="btn">Reset filter</button>
+                </div>
+            </div>
+        </div>
+          <div class="sidebar-with-bg background-primary bg-sidebar pb-80">
+            <h5 class="medium-heading text-white mb-20 mt-20">Recruiting?</h5>
+            <p class="text-body-999 text-white mb-30">Advertise your jobs to millions of monthly users.</p>
+            <a href="#" class="btn btn-border icon-chevron-right btn-white-sm">Post a Job</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+

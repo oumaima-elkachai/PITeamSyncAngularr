@@ -1,0 +1,250 @@
+
+
+<main class="main-wrapper" *ngIf="job">
+  <div class="container-fluid">
+    <div class="inner-contents">
+
+      <!-- Page Header -->
+      <div class="page-header d-flex align-items-center justify-content-between mb-4">
+        <div>
+          <h2 class="fw-bold text-dark fs-36 mb-1">{{ job.title }}</h2>
+          <p class="text-muted fs-16 mb-0">{{ job.department }} • {{ job.category }}</p>
+        </div>
+        <div>
+          <span class="badge rounded-pill px-3 py-2 text-capitalize"
+                [ngClass]="{
+                  'badge text-bg-success mb-1': job.status === 'ENABLE',
+                  'badge text-bg-danger mb-1': job.status === 'DISABLE'
+                }">
+            {{ job.status }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Job Card -->
+      <div class="card border-0 shadow-lg candidate-profile rounded-4 overflow-hidden">
+        <!-- Cover Photo -->
+        <div class="cover-photo"
+     [style.background-image]="'url(' + job.imageUrl + ')'">
+</div>
+
+   
+        <div class="card-body pt-0">
+          <div class="d-flex flex-wrap justify-content-between align-items-center mb-5 gap-4">
+            <div class="d-flex align-items-center gap-4 flex-wrap">
+              <img [src]="job.imageUrl "
+                   alt="Job" width="160" height="160" class="rounded-3 shadow-sm" />
+              <div>
+                <h3 class="fs-30 fw-bold mb-1">{{ job.title }}</h3>
+                <p class="text-muted fw-medium mb-0 d-flex align-items-center gap-3 flex-wrap">
+                  <span>{{ job.department }}</span>
+                  <span class="dot-separator"></span>
+                  <span>{{ job.salary | currency }}</span>
+                  <span class="dot-separator"></span>
+                  <span>{{ job.category }}</span>
+                </p>
+              </div>
+            </div>
+
+            <div class="d-flex align-items-center gap-3">
+              <div class="dropdown">
+                <a href="#" data-bs-toggle="dropdown" class="text-muted fs-24">
+                  <i class="bi bi-three-dots-vertical"></i>
+                </a>
+                <div class="dropdown-menu p-0">
+                  <a class="dropdown-item" href="#">Edit</a>
+                  <a class="dropdown-item" href="#">Duplicate</a>
+                  <a class="dropdown-item text-danger" href="#">Close</a>
+                </div>
+              </div>
+             
+            </div>
+          </div>
+
+          <!-- Tabs -->
+          <ul class="nav nav-tabs mb-4" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" href="#description" data-bs-toggle="tab" role="tab">
+                <i class="bi bi-file-text me-1"></i> Description
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#details" data-bs-toggle="tab" role="tab">
+                <i class="bi bi-info-circle me-1"></i> Details
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#applications" data-bs-toggle="tab" role="tab">
+                <i class="bi bi-people me-1"></i> Applications ({{ job.applicationIds.length }})
+              </a>
+            </li>
+          </ul>
+
+          <div class="tab-content">
+            <!-- Description Tab -->
+            <div class="tab-pane fade show active" id="description" role="tabpanel">
+              <div class="row">
+                <div class="col-lg-8 mb-4">
+                  <h4 class="fw-semibold">Job Description</h4>
+                  <div class="text-muted" [innerHTML]="job.description"></div>
+                </div>
+                <div class="col-lg-4">
+                  <div class="card border-0 shadow-sm rounded-3 p-4 bg-white">
+                    <h5 class="fw-semibold text-dark mb-4">Quick Info</h5>
+                    <ul class="list-unstyled text-muted mb-0 small">
+                      <li class="d-flex justify-content-between mb-3">
+                        <span class="text-dark">Posted:</span>
+                        <span>{{ job.datePosted | date }}</span>
+                      </li>
+                      <li class="d-flex justify-content-between mb-3">
+                        <span class="text-dark">Expires:</span>
+                        <span>{{ job.expirationDate | date }}</span>
+                      </li>
+                      <li class="d-flex justify-content-between mb-3">
+                        <span class="text-dark">Salary:</span>
+                        <span>{{ job.salary | currency }}</span>
+                      </li>
+                      <li class="d-flex justify-content-between">
+                        <span class="text-dark">Status:</span>
+                        <span class="text-capitalize fw-medium"
+                              [ngClass]="{
+                                'text-success': job.status === 'ENABLE',
+                                'text-danger': job.status === 'DISABLE'
+                              }">
+                          {{ job.status.toLowerCase() }}
+                        </span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+
+          <!-- Details Tab -->
+<div class="tab-pane fade" id="details" role="tabpanel">
+  <div class="row g-4">
+    <!-- Job Information -->
+    <div class="col-md-6">
+      <div class="card shadow-sm border-0 rounded-3 p-4 h-100 bg-white">
+        <h5 class="fw-semibold text-dark mb-4">Job Information</h5>
+        <ul class="list-unstyled text-muted mb-0">
+          <li class="mb-3">
+            <div class="d-flex justify-content-between">
+              <span class="text-dark">Title:</span>
+              <span>{{ job.title }}</span>
+            </div>
+          </li>
+          <li class="mb-3">
+            <div class="d-flex justify-content-between">
+              <span class="text-dark">Department:</span>
+              <span>{{ job.department }}</span>
+            </div>
+          </li>
+          <li class="mb-3">
+            <div class="d-flex justify-content-between">
+              <span class="text-dark">Category:</span>
+              <span>{{ job.category }}</span>
+            </div>
+          </li>
+          <li>
+            <div class="d-flex justify-content-between">
+              <span class="text-dark">Salary:</span>
+              <span>{{ job.salary | currency }}</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Timing -->
+    <div class="col-md-6">
+      <div class="card shadow-sm border-0 rounded-3 p-4 h-100 bg-white">
+        <h5 class="fw-semibold text-dark mb-4">Timing</h5>
+        <ul class="list-unstyled text-muted mb-0">
+          <li class="mb-3">
+            <div class="d-flex justify-content-between">
+              <span class="text-dark">Posted:</span>
+              <span>{{ job.datePosted | date }}</span>
+            </div>
+          </li>
+          <li class="mb-3">
+            <div class="d-flex justify-content-between">
+              <span class="text-dark">Expires:</span>
+              <span>{{ job.expirationDate | date }}</span>
+            </div>
+          </li>
+          <li>
+            <div class="d-flex justify-content-between">
+              <span class="text-dark">Status:</span>
+              <span>{{ job.status }}</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+            <!-- Applications Tab -->
+         <!-- Applications Tab -->
+<!-- Applications Tab -->
+<div class="tab-pane fade" id="applications" role="tabpanel">
+  <div class="alert alert-info" *ngIf="applications.length === 0">
+    No applications received yet.
+  </div>
+
+  <div class="row" *ngIf="applications.length > 0">
+    <div *ngFor="let app of applications" class="col-md-6 col-xl-4 mb-4">
+      <div class="card h-100 border-0 shadow-sm rounded-4 p-4 hover-shadow">
+        <!-- Header: Avatar + Info -->
+        <div class="d-flex align-items-center mb-4">
+          <img src="assets/admin-template/img/1.jpg" alt="Applicant"
+               class="rounded-circle shadow-sm me-3" width="60" height="60" />
+          <div>
+            <h6 class="mb-0 fw-bold text-dark">{{ app.candidateName }}</h6>
+            <small class="text-muted">Application</small>
+          </div>
+        </div>
+
+        <!-- Status -->
+        <div class="mb-4">
+          <small class="text-muted d-block mb-1">Status</small>
+          <span class="badge px-3 py-1 rounded-pill text-capitalize"
+      [ngClass]="getStatusBadgeClass(app.status)">
+  {{ app.status || 'N/A' }}
+</span>
+
+        </div>
+
+        <!-- Actions -->
+        <div class="d-flex gap-2 mt-auto">
+          <a [routerLink]="['/admin/application-details', app.id]"
+             class="btn btn-outline-primary w-100 d-flex align-items-center justify-content-center">
+            <i class="bi bi-eye me-1"></i> View
+          </a>
+
+          <button *ngIf="app.id"
+                  (click)="deleteApplication(app.id)"
+                  class="btn btn-outline-danger w-100 d-flex align-items-center justify-content-center">
+            <i class="bi bi-trash me-1"></i> Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+</div> <!-- /applications tab -->
+ <!-- /applications tab -->
+ <!-- /applications tab -->
+          </div>
+        </div>
+      </div>
+    </div>
+  
+</main>
+
+
