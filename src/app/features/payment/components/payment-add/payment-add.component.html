@@ -40,6 +40,15 @@
               </div>
             </div>
 
+            <!-- Date de Paiement -->
+            <div class="form-group">
+              <label for="payDate">Date de Paiement</label>
+              <input type="date" formControlName="payDate" class="form-control" />
+              <div class="text-danger" *ngIf="submitted && f['payDate'].invalid">
+                Veuillez sélectionner une date de paiement.
+              </div>
+            </div>
+
             <!-- Statut -->
             <div class="form-group">
               <label>Statut du Paiement</label>

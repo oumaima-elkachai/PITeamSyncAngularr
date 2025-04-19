@@ -69,9 +69,21 @@ export class PayrollsAddComponent implements OnInit {
       return;
     }
   
-    const existingPayroll = this.payrolls.find(p => p.employeeId === this.payroll.employeeId);
-    if (existingPayroll) {
-      alert("Cet employé possède déjà une fiche de paie.");
+    const selectedDate = new Date(this.payroll.payDate);
+    const selectedMonth = selectedDate.getMonth();
+    const selectedYear = selectedDate.getFullYear();
+  
+    const duplicatePayroll = this.payrolls.find(p => {
+      const existingDate = new Date(p.payDate);
+      return (
+        p.employeeId === this.payroll.employeeId &&
+        existingDate.getMonth() === selectedMonth &&
+        existingDate.getFullYear() === selectedYear
+      );
+    });
+  
+    if (duplicatePayroll) {
+      alert("Cet employé a déjà une fiche de paie pour ce mois.");
       return;
     }
   
@@ -86,7 +98,7 @@ export class PayrollsAddComponent implements OnInit {
     this.payrollService.addPayroll(payrollData).subscribe(
       response => {
         alert('Fiche de paie ajoutée avec succès !');
-        this.loadPayrolls(); //  Actualiser la liste pour détecter un double ajout
+        this.loadPayrolls(); // Rafraîchir la liste
         setTimeout(() => {
           this.router.navigate(['/payrolls']);
         }, 1500);
@@ -96,5 +108,6 @@ export class PayrollsAddComponent implements OnInit {
       }
     );
   }
+  
   
 }

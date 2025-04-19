@@ -1,0 +1,84 @@
+<section class="bg-light" style="padding-top: 15vh;">
+  <main class="main-wrapper container mt-5" style="max-width: 900px;">
+    <form (ngSubmit)="fetchData()" class="custom-card">
+      <div class="mb-4">
+        <label class="form-label">Date :</label>
+        <input type="date" class="form-control custom-input" [(ngModel)]="selectedDate" name="date" required />
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label">Que souhaitez-vous afficher ?</label>
+        <select class="form-select custom-input" [(ngModel)]="selectedOption" name="option">
+          <option value="payroll">Fiche de Paie</option>
+          <option value="details">Détail salaire</option>
+          <option value="status">Statut de paiement</option>
+        </select>
+      </div>
+      <button type="submit" class="custom-btn">Afficher</button>
+    </form>
+    <!-- Affichage du Résultat -->
+    <div *ngIf="result === 'payroll'" id="fiche-paie" class="mt-5">
+      <div class="bg-white rounded-4 shadow p-5 mx-auto" style="max-width: 900px;">
+        <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+          <div>
+            <h2 class="fw-bold mb-1">Fiche de Paie</h2>
+            <small class="text-muted">Référence : {{ selectedPayment.referenceNumber }}</small>
+          </div>
+          <div class="d-flex align-items-center">
+            <span class="badge bg-primary text-white me-3" style="font-size: 1rem;">Statut : {{ selectedPayment.status }}</span>
+            <button class="download-btn" title="Télécharger la fiche de paie" (click)="downloadPDF()">
+              <i class="fa-solid fa-download fs-5 text-primary"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <h6 class="text-uppercase text-muted mb-2">Informations Employé</h6>
+            <p><strong>Nom :</strong> {{ selectedE.name }}</p>
+            <p><strong>ID :</strong> {{ selectedPayment.employeeId }}</p>
+            <p><strong>Email :</strong> {{ selectedE.email }}</p>
+            <p><strong>Département :</strong> {{ selectedE.department }}</p>
+          </div>
+          <div class="col-md-6">
+            <h6 class="text-uppercase text-muted mb-2">Détails du Paiement</h6>
+            <p><strong>Date :</strong> {{ selectedPayment.paymentDate | date:'longDate' }}</p>
+            <p><strong>Méthode :</strong> {{ selectedPayment.paymentMethod }}</p>
+            <p><strong>Fréquence :</strong> {{ selectedPayment.recurrenceFrequency }}</p>
+            <p><strong>Montant :</strong> {{ selectedPayment.amount | currency:'TND' }}</p>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <h6 class="text-uppercase text-muted mb-2">Résumé Salaire</h6>
+          <div class="row">
+            <div class="col-md-6">
+              <p><strong>Salaire de base :</strong> {{ payrollE.salary | currency:'TND' }}</p>
+            </div>
+            <div class="col-md-6">
+              <p><strong>Bonus :</strong> {{ payrollE.bonus | currency:'TND' }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h6 class="text-uppercase text-muted mb-2">Description</h6>
+          <p>{{ selectedPayment.description }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Détails du Salaire -->
+    <div *ngIf="selectedOption === 'details' && result" class="mt-4">
+      <h3>Détails Salaire</h3>
+      <p><strong>Salaire de base :</strong> {{ result.salary | currency:'TND' }}</p>
+      <p><strong>Bonus :</strong> {{ result.bonus | currency:'TND' }}</p>
+    </div>
+
+    <!-- Statut du Paiement -->
+    <div *ngIf="selectedOption === 'status' && result" class="mt-4">
+      <h3>Statut de Paiement</h3>
+      <p><strong>Statut :</strong> {{ result.status }}</p>
+    </div>
+  </main>
+</section>

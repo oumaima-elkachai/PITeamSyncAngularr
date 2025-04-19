@@ -1,0 +1,99 @@
+/* Fond général clair avec un petit padding en haut */
+section.bg-light {
+ background-color: #f8f9fa;
+ padding-top: 15vh;
+ min-height: 100vh;
+}
+
+/* Wrapper centré */
+.main-wrapper {
+ max-width: 900px;
+ margin: auto;
+}
+
+/* Formulaire blanc avec ombre et coins arrondis */
+form {
+ background-color: #ffffff;
+ border-radius: 1rem;
+ box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+ padding: 2rem;
+}
+
+/* Label stylé */
+.form-label {
+ font-weight: 600;
+ color: #495057;
+}
+
+/* Champ de formulaire */
+.form-control,
+.form-select {
+ border-radius: 0.5rem;
+ padding: 0.5rem 1rem;
+ border: 1px solid #ced4da;
+ box-shadow: none;
+ transition: border-color 0.3s;
+}
+
+.form-control:focus,
+.form-select:focus {
+ border-color: #0d6efd;
+ box-shadow: 0 0 0 0.1rem rgba(13, 110, 253, 0.25);
+}
+
+/* Bouton submit */
+button[type="submit"] {
+ padding: 0.75rem;
+ font-weight: 600;
+}
+
+/* Fiche de paie */
+#fiche-paie {
+ background-color: #fff;
+ border-radius: 1rem;
+ box-shadow: 0 4px 24px rgba(0, 0, 0, 0.05);
+ padding: 3rem;
+ margin-top: 2rem;
+}
+
+/* En-tête de la fiche */
+#fiche-paie h2 {
+ font-weight: 700;
+}
+
+.badge {
+ font-size: 1rem;
+ padding: 0.5em 1em;
+ border-radius: 0.5rem;
+}
+
+/* Bouton téléchargement */
+.download-btn {
+ background: none;
+ border: none;
+ cursor: pointer;
+ transition: transform 0.2s ease;
+}
+
+.download-btn:hover {
+ transform: scale(1.1);
+}
+
+/* Titres de section */
+h6.text-uppercase {
+ font-size: 0.85rem;
+ font-weight: 700;
+ color: #6c757d;
+ margin-bottom: 0.5rem;
+}
+
+/* Paragraphes avec données */
+p {
+ margin-bottom: 0.25rem;
+ color: #212529;
+}
+
+.mt-4 h3 {
+ margin-bottom: 1rem;
+ font-weight: 600;
+}

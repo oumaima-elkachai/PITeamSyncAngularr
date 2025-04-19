@@ -66,6 +66,7 @@ export class PaymentAddComponent implements OnInit {
       employeeId: ['', Validators.required],
       paymentMethod: ['', Validators.required],
       status: ['', Validators.required],
+      payDate: ['', Validators.required],
       description: [''],
       isRecurring: [false],
       recurrenceFrequency: ['']
@@ -84,25 +85,35 @@ export class PaymentAddComponent implements OnInit {
   
     if (this.paymentForm.invalid) return;
   
-    const { employeeId } = this.paymentForm.value;
+    const { employeeId, payDate } = this.paymentForm.value;
   
-    // Vérifie si l'employé a déjà un paiement
     this.paymentService.getPaymentsByEmployee(employeeId).subscribe({
       next: (payments) => {
-        if (payments && payments.length > 0) {
-          this.errorMessage = 'Cet employé a déjà un paiement enregistré.';
+        const sameMonthPayment = payments.find(p => {
+          const pDate = new Date(p.payDate);
+          const formDate = new Date(payDate);
+          return (
+            pDate.getFullYear() === formDate.getFullYear() &&
+            pDate.getMonth() === formDate.getMonth()
+          );
+        });
+        
+        if (sameMonthPayment) {
+          this.errorMessage = "Cet employé a déjà un paiement enregistré pour ce mois.";
           this.loading = false;
         } else {
           this.ajouterPaiement();
         }
+        
       },
       error: (err) => {
         console.error(err);
-        this.errorMessage = "Erreur lors de la vérification de l'existence du paiement.";
+        this.errorMessage = "Erreur lors de la vérification du paiement.";
         this.loading = false;
       }
     });
   }
+  
   
   ajouterPaiement(): void {
     this.loading = true;

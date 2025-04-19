@@ -2,9 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 import { UserLayoutComponent } from './layouts/user-layout/user-layout.component';
-import { JobPostingsAddComponent } from './features/job-posting/components/job-postings-add/job-postings-add.component';
-import { JobPostingsEditComponent } from './features/job-posting/components/job-postings-edit/job-postings-edit.component';
-import { JobPostingsListComponent } from './features/job-posting/components/job-postings-list/job-postings-list.component';
 import { PayrollsAddComponent } from './features/payroll/components/payroll-add/payroll-add.component';
 import { PayrollListComponent } from './features/payroll/components/payroll-list/payroll-list.component';
 import { PayrollEditComponent } from './features/payroll/components/payroll-edit/payroll-edit.component';
@@ -16,6 +13,7 @@ import { PaymentListComponent } from './features/payment/components/payment-list
 import { PaymentAddComponent } from './features/payment/components/payment-add/payment-add.component';
 import { PaymentEditComponent } from './features/payment/components/payment-edit/payment-edit.component';
 import { PaymentDetailComponent } from './features/payment/components/payment-detail/payment-detail.component';
+import { CalendarComponent } from './features/payment/components/calendar/calendar.component';
 
 
 
@@ -43,7 +41,17 @@ const routes: Routes = [
     path: 'admin',
     component: AdminLayoutComponent,
     children: [
+      { path: 'payrolls/add', component: PayrollsAddComponent },
+      { path: 'payrolls', component: PayrollListComponent },
+      { path: 'payrolls/edit/:id', component: PayrollEditComponent },
+      { path: 'project-budget/add', component: ProjectBudgetsAddComponent },
+      { path: 'project-budget', component: ProjectBudgetsListComponent },
+      { path: 'project-budgets/edit/:id', component: ProjectBudgetEditComponent },
+      { path: 'payments', component: PaymentListComponent  },
+      { path: 'payments/edit/:id', component: PaymentEditComponent },
       { path: 'payment/add', component: PaymentAddComponent  },
+      { path: 'payments/details/:id', component: PaymentDetailComponent },
+      
 
    
     ]
@@ -53,10 +61,10 @@ const routes: Routes = [
     component: UserLayoutComponent,
     children: [
       { path: 'payrolls/list', component: PayrollUserComponent },
+      { path: 'payment/calendar', component: CalendarComponent },
 
     ]
   },
-  { path: '', redirectTo: '/admin', pathMatch: 'full' }
 ];
 
 @NgModule({

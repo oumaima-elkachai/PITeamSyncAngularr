@@ -44,6 +44,18 @@ export class PaymentService {
   getPaymentsByEmployee(employeeId: string) {
     return this.http.get<any[]>(`${this.apiUrl}/employee/${employeeId}`);
   }
+
+  //
+  getPaymentByEmployeeAndDate(employeeId: string, date: string) {
+    return this.http.get<Payment[]>(`${this.apiUrl}/payments?employeeId=${employeeId}&date=${date}`);
+  }
+  // Ajoute cette méthode dans PaymentService pour récupérer le statut de paiement
+getPaymentStatus(employeeId: string, date: string): Observable<any> {
+  return this.http.get<any>(`${this.apiUrl}/employee/${employeeId}/status?date=${date}`);
+}
+
+  
+
   
 
 }
