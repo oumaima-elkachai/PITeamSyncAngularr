@@ -1,0 +1,64 @@
+<div class="col-xxl-12 col-md-6">
+  <div class="card border-0 bg-transparent rounded-0 overflow-visible">
+    <div class="card-body p-0">
+      <div class="dropdown-widget dropdown-schedule p-0">
+        <div class="dropdown-wrapper">
+
+            <!-- Loading spinner -->
+            <div *ngIf="isLoading" class="text-center my-4">
+              <p>Loading events...</p>
+            </div>
+
+            <!-- Error -->
+            <div *ngIf="errorMessage && !isLoading" class="alert alert-danger">
+              {{ errorMessage }}
+            </div>
+
+            <!-- No events found -->
+            <div *ngIf="!isLoading && events.length === 0 && !errorMessage" class="text-center">
+              <p>No events available at the moment.</p>
+            </div>
+
+            <!-- Events List -->
+            <ul *ngIf="!isLoading && events.length > 0" class="list-unstyled">
+              <li *ngFor="let event of events" class="author-online has-new-message bg-white d-flex align-items-center justify-content-between gap-3">
+                <div class="d-flex align-items-center gap-3">
+                  <div class="calendar-date bg-soft-primary text-center d-flex flex-column justify-content-center">
+                    <h5 class="text-primary ff-heading fs-18 fw-bold lh-18 mb-0">{{ event.startDate | date: 'd' }}</h5>
+                    <p class="fs-14 mb-0">{{ event.startDate | date: 'MMM' }}</p>
+                  </div>
+                  <div class="user-message">
+                    <h6 class="message mb-1"><a href="#" class="text-dark">{{ event.title }}</a></h6>
+                    <p class="message-footer d-flex align-items-center justify-content-between">
+                      <span><i class="bi bi-clock-fill"></i> {{ event.startTime }} - {{ event.endTime }}</span>
+                    </p>
+                  </div>
+                </div>
+                <div>
+                  <a href="#" data-bs-toggle="dropdown" class="fs-24 text-gray" aria-expanded="false">
+                    <i class="bi bi-three-dots-vertical"></i>
+                  </a>
+                  <div class="dropdown-menu p-0">
+                    <a class="dropdown-item" href="#">View</a>
+                    <a class="dropdown-item" [routerLink]="'/admin/edit-event/' + event.idEvent">Edit</a>
+                    <a class="dropdown-item text-danger" href="#"
+                       (click)="removeEvent(event.idEvent!); $event.preventDefault()">
+                      Remove
+                    </a>
+
+                  </div>
+                </div>
+              </li>
+            </ul>
+
+        </div>
+      </div>
+      <div>
+        <a href="#" data-bs-toggle="modal" routerLink="/admin/add-event" class="btn btn-primary w-100 rounded-2 py-3">
+          <span class="align-middle"><i class="bi bi-plus"></i></span>
+          Create New Event
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

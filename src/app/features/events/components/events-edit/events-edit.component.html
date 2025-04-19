@@ -1,0 +1,88 @@
+<div class="container">
+  <h2>Edit Event</h2>
+
+  <!-- Loading spinner -->
+  <div *ngIf="isLoading" class="text-center my-4">
+    <p>Loading event...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="errorMessage && !isLoading" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Event Edit Form -->
+  <div *ngIf="!isLoading && event">
+    <form (ngSubmit)="saveEvent()" #eventForm="ngForm">
+
+      <!-- Event Title -->
+      <div class="mb-3">
+        <label for="title" class="form-label">Event Title</label>
+        <input
+          type="text"
+          class="form-control"
+          id="title"
+          [(ngModel)]="event.title"
+          name="title"
+          required
+        />
+      </div>
+
+      <!-- Event Start Date -->
+      <div class="mb-3">
+        <label for="startDate" class="form-label">Start Date</label>
+        <input
+          type="date"
+          class="form-control"
+          id="startDate"
+          [(ngModel)]="event.startDate"
+          name="startDate"
+          required
+        />
+      </div>
+
+      <div class="mb-3">
+        <label for="endDate" class="form-label">End Date</label>
+        <input
+          type="date"
+          class="form-control"
+          id="endDate"
+          [(ngModel)]="event.endDate"
+          name="endDate"
+          required
+        />
+      </div>
+
+      <!-- Event Start Time -->
+      <div class="mb-3">
+        <label for="startTime" class="form-label">Start Time</label>
+        <input
+          type="time"
+          class="form-control"
+          id="startTime"
+          [(ngModel)]="event.startTime"
+          name="startTime"
+          required
+        />
+      </div>
+
+      <!-- Event End Time -->
+      <div class="mb-3">
+        <label for="endTime" class="form-label">End Time</label>
+        <input
+          type="time"
+          class="form-control"
+          id="endTime"
+          [(ngModel)]="event.endTime"
+          name="endTime"
+          required
+        />
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="btn btn-primary" [disabled]="eventForm.invalid">
+        Save Changes
+      </button>
+    </form>
+  </div>
+</div>
