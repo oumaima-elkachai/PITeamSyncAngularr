@@ -20,6 +20,10 @@ export class EventsListComponent implements OnInit {
     sortField: string = 'startDate';
     sortDirection: 'asc' | 'desc' = 'asc';
 
+    showEditModal = false;
+    showAddModal = false;
+    selectedEvent: Event | null = null;
+
     // Add these Outputs to communicate with parent
     @Output() editEvent = new EventEmitter<string>();
     @Output() deleteEvent = new EventEmitter<string>();
@@ -71,15 +75,39 @@ export class EventsListComponent implements OnInit {
     }
 
     navigateToEdit(eventId: string): void {
-        this.router.navigate(['/events/edit', eventId]);
+        const event = this.events.find(e => e.idEvent === eventId);
+        if (event) {
+            this.selectedEvent = { ...event };
+            this.showEditModal = true;
+        }
     }
 
     navigateToAdd(): void {
-        this.router.navigate(['/events/add']);
+        this.showAddModal = true;
     }
 
     navigateToView(eventId: string): void {
         this.router.navigate(['/events/view', eventId]);
+    }
+
+    handleEventUpdated(updatedEvent: Event): void {
+        const index = this.events.findIndex(e => e.idEvent === updatedEvent.idEvent);
+        if (index !== -1) {
+            this.events[index] = updatedEvent;
+            this.events = [...this.events]; // Create new reference to trigger change detection
+        }
+        this.closeModals();
+    }
+
+    handleEventAdded(newEvent: Event): void {
+        this.events = [...this.events, newEvent];
+        this.closeModals();
+    }
+
+    closeModals(): void {
+        this.showEditModal = false;
+        this.showAddModal = false;
+        this.selectedEvent = null;
     }
 
     get paginatedEvents(): Event[] {

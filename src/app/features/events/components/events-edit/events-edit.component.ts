@@ -56,7 +56,7 @@ export class EventsEditComponent implements OnInit {
       firstValueFrom(this.eventService.updateEvent(this.event.idEvent, this.event))
           .then((updatedEvent: Event) => {
             this.eventUpdated.emit(updatedEvent);
-            this.router.navigate(['/admin/list-event']);
+            this.cancel.emit(); // Close the modal after successful update
           })
           .catch((error: HttpErrorResponse) => {
             this.errorMessage = 'Failed to save changes.';
@@ -65,7 +65,6 @@ export class EventsEditComponent implements OnInit {
   }
 
   cancelEdit(): void {
-    this.cancel.emit();
-    this.router.navigate(['/admin/events']);
+    this.cancel.emit(); // Just emit cancel to close modal
   }
 }

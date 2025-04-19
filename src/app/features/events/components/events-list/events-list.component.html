@@ -86,3 +86,44 @@
     </div>
   </div>
 </div>
+
+<!-- Edit Event Modal -->
+<div class="modal" [class.show]="showEditModal" [style.display]="showEditModal ? 'block' : 'none'" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Event</h5>
+        <button type="button" class="btn-close" (click)="closeModals()"></button>
+      </div>
+      <div class="modal-body">
+        <app-events-edit 
+          *ngIf="selectedEvent"
+          [event]="selectedEvent"
+          (eventUpdated)="handleEventUpdated($event)"
+          (cancel)="closeModals()">
+        </app-events-edit>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Event Modal -->
+<div class="modal" [class.show]="showAddModal" [style.display]="showAddModal ? 'block' : 'none'" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add New Event</h5>
+        <button type="button" class="btn-close" (click)="closeModals()"></button>
+      </div>
+      <div class="modal-body">
+        <app-events-add
+          (eventAdded)="handleEventAdded($event)"
+          (cancel)="closeModals()">
+        </app-events-add>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Backdrop -->
+<div class="modal-backdrop fade show" *ngIf="showEditModal || showAddModal"></div>
