@@ -17,7 +17,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { UpcomingEventsComponent } from './components/upcoming-events/upcoming-events.component';
 //import { MatDialogModule } from '@angular/material/dialog';
-
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 @NgModule({
@@ -42,6 +42,7 @@ import { UpcomingEventsComponent } from './components/upcoming-events/upcoming-e
     HttpClientModule,
     FullCalendarModule,
    // MatDialogModule,
+    MatProgressSpinnerModule,
     ToastrModule.forRoot({
       progressBar: true,
       closeButton: true,
