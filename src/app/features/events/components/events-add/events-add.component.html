@@ -2,17 +2,9 @@
   <div class="modal-dialog modal-xl">
 
     <div class="modal-content rounded-2 p-0 p-sm-5">
-      <div class="modal-header">
-        <h2 class="modal-title fw-bold">Add New Event</h2>
-        <button type="button" class="btn-close p-0 border-0" data-bs-dismiss="modal" aria-label="Close"></button>
-
-        <!--button type="button"
-                class="btn-close p-0 border-0"
-                (click)="closeDialog()"
-                aria-label="Close">
-        </button-->
-
-
+      <div class="card-header">
+        <h4 class="card-title">Add Event</h4>
+        <button type="button" class="btn-close" (click)="returnToList()"></button>
       </div>
       <div class="modal-body">
         <form (ngSubmit)="submitForm()" #eventForm="ngForm">

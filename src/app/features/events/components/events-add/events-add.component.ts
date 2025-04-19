@@ -4,7 +4,7 @@ import { EventStatus } from "../../models/event-status.enum";
 import { Event } from "../../models/event.model";
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { format } from 'date-fns';
-//import { MatDialogRef } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-events-add',
@@ -33,6 +33,7 @@ export class EventsAddComponent {
   constructor(
       private http: HttpClient,
       private eventService: EventService,
+      private router: Router
   ) {}
 
   submitForm(): void {
@@ -43,13 +44,6 @@ export class EventsAddComponent {
 
     const now = new Date();
     const eventDateTime = new Date(`${this.eventData.startDate}T${this.eventData.startTime || '00:00'}`);
-
-    /* const diffMinutes = (eventDateTime.getTime() - now.getTime()) / 60000;
-
-    if (diffMinutes <= 10 && diffMinutes > 0) {
-      const message = `⏰ Your event "${this.eventData.title}" starts in less than 10 minutes!`;
-      this.webSocketService.sendMessage(message);
-    }*/
 
     const formattedEvent = {
       ...this.eventData,
@@ -72,6 +66,9 @@ export class EventsAddComponent {
     });
   }
 
+  returnToList(): void {
+    this.router.navigate(['admin/events/']);
+  }
 
   private resetForm(): void {
     this.eventData = {
@@ -87,9 +84,4 @@ export class EventsAddComponent {
       timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
     };
   }
-
-  /*closeDialog() {
-    this.dialogRef.close();
-  }*/
-
 }

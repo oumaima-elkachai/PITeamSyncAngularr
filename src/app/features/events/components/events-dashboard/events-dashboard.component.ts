@@ -13,32 +13,32 @@ export class EventsDashboardComponent implements OnInit{
 
   today = new Date();
   upcomingEvents: Event[] = [];
- /* ngOnInit(): void {
-    this.eventService.getAllEvents().subscribe({
-      next: (data: any) => {
-        this.events = Array.isArray(data.data) ? data.data : [];
-      },
-      error: (error: HttpErrorResponse) => console.error(error)
-    });
-  }*/
-
   events: Event[] = [];
   selectedEvent: Event | null = null;
   showAddEventModal = false;
   showEditEventModal = false;
 
+  // Add new properties
+  isLoading = false;
+  viewMode: 'list' | 'calendar' = 'list';
+  searchTerm = '';
 
   ngOnInit(): void {
     this.loadEvents();
   }
 
   loadEvents(): void {
+    this.isLoading = true;
     this.eventService.getAllEvents().subscribe({
       next: (data: any) => {
         this.events = Array.isArray(data.data) ? data.data : [];
         this.filterUpcomingEvents();
+        this.isLoading = false;
       },
-      error: (error) => console.error(error)
+      error: (error) => {
+        console.error(error);
+        this.isLoading = false;
+      }
     });
   }
 
@@ -49,6 +49,21 @@ export class EventsDashboardComponent implements OnInit{
     ).slice(0, 4); // Show only 4 upcoming events
   }
 
+  searchEvents(term: string): void {
+    this.searchTerm = term;
+    if (!term) {
+      this.loadEvents();
+      return;
+    }
+    this.events = this.events.filter(event => 
+      event.title.toLowerCase().includes(term.toLowerCase()) ||
+      event.description.toLowerCase().includes(term.toLowerCase())
+    );
+  }
+
+  toggleView(): void {
+    this.viewMode = this.viewMode === 'list' ? 'calendar' : 'list';
+  }
 
   // Modal control methods
   openAddEventModal(): void {

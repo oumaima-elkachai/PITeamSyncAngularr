@@ -26,7 +26,10 @@ export class EventsEditComponent implements OnInit {
 
   ngOnInit(): void {
     if (!this.event) {
-      const eventId = this.route.snapshot.paramMap.get('idEvent');
+      console.log('Loading event from route...');
+
+      const eventId = this.route.snapshot.paramMap.get('id');
+      console.log('Event ID from route:', eventId);
       if (eventId) {
         this.loadEvent(eventId);
       }
@@ -61,8 +64,8 @@ export class EventsEditComponent implements OnInit {
     }
   }
 
-  onCancel(): void {
+  cancelEdit(): void {
     this.cancel.emit();
-    this.router.navigate(['/admin/list-event']);
+    this.router.navigate(['/admin/events']);
   }
 }
