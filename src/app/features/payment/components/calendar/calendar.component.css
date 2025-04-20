@@ -1,3 +1,16 @@
+full-calendar {
+ display: block;
+ width: 100%;
+ height: 100%;
+}
+
+.calendar-container {
+ padding: 20px;
+}
+
+.calendar-header {
+ margin-bottom: 20px;
+}
 /* Fond général clair avec un petit padding en haut */
 section.bg-light {
  background-color: #f8f9fa;
@@ -97,3 +110,4 @@ p {
  margin-bottom: 1rem;
  font-weight: 600;
 }
+

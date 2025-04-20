@@ -17,7 +17,10 @@ export class CalendarComponent {
   employeeId: string = '67f091e0a15fb50ce3b5d81e';
   selectedDate: string = '';
   selectedOption: string = 'payroll';
+  selectedPayroll!: Payroll;
+  predictedStatus: number = -1;
   result: any;
+  previousDelays: number = 0;
 
   selectedPayment!: Payment;
   selectedE!: Employee;
@@ -31,19 +34,19 @@ export class CalendarComponent {
 
   fetchData(): void {
     if (!this.employeeId || !this.selectedDate) return;
-
+  
     const formattedDate = this.selectedDate;
-
+  
     if (this.selectedOption === 'payroll') {
       this.paymentService.getPaymentsByEmployee(this.employeeId).subscribe(payments => {
         const matchedPayment = payments.find(p => p.paymentDate?.startsWith(formattedDate));
         if (matchedPayment) {
           this.selectedPayment = matchedPayment;
-
+  
           this.employeeService.getEmployeeById(this.employeeId).subscribe(emp => {
             this.selectedE = emp;
           });
-
+  
           if (matchedPayment.payrollId) {
             this.payrollService.getPayrollById(matchedPayment.payrollId).subscribe(payroll => {
               this.payrollE = payroll;
@@ -55,7 +58,7 @@ export class CalendarComponent {
           alert("Aucun paiement trouvé pour cette date.");
         }
       });
-
+  
     } else if (this.selectedOption === 'details') {
       this.paymentService.getPaymentsByEmployee(this.employeeId).subscribe(payments => {
         const matched = payments.find(p => p.paymentDate?.startsWith(formattedDate));
@@ -68,16 +71,46 @@ export class CalendarComponent {
           alert("Aucun paiement trouvé pour cette date.");
         }
       });
-
+  
     } else if (this.selectedOption === 'status') {
       this.paymentService.getPaymentStatus(this.employeeId, formattedDate).subscribe(status => {
         this.result = status;
       });
-    } else {
-      this.result = null;
-      alert("Aucun paiement trouvé pour cette date.");
+  
+    } else if (this.selectedOption === 'prediction') {
+      // Partie prédiction
+      this.paymentService.getPaymentsByEmployee(this.employeeId).subscribe(payments => {
+        const matchedPayment = payments.find(p => p.paymentDate?.startsWith(formattedDate));
+        if (matchedPayment && matchedPayment.payrollId) {
+          this.payrollService.getPayrollById(matchedPayment.payrollId).subscribe(payroll => {
+            this.payrollE = payroll;
+  
+            // Calcul du nombre de retards précédents
+            const previousDelays = payments.filter(p => new Date(p.paymentDate) > new Date(p.dueDate)).length;
+            console.log("Retards précédents:", previousDelays); // Vérifie les retards précédents
+  
+            const data = {
+              salary: payroll.salary,
+              bonus: payroll.bonus,
+              previousDelays: previousDelays
+            };
+  
+            this.paymentService.predictPaymentStatus(data).subscribe(res => {
+              console.log("Réponse de la prédiction:", res); // Vérifie la réponse de l'API
+              this.predictedStatus = Number(res.prediction);  // Convertir la prédiction en nombre
+              console.log("Statut prédit:", this.predictedStatus); // Vérifie la valeur du statut prédit
+              this.result = 'prediction'; // Affiche la section dans le HTML
+            });
+          });
+        } else {
+          this.result = null;
+          this.predictedStatus = -1;
+          alert("Aucun paiement trouvé pour cette date.");
+        }
+      });
     }
   }
+  
 
   downloadPDF(): void {
     setTimeout(() => {
@@ -93,4 +126,19 @@ export class CalendarComponent {
       }
     }, 300);
   }
+
+  predict() {
+    const data = {
+      salary: this.payrollE.salary,
+      bonus: this.payrollE.bonus,
+      previousDelays: 2  // Cette valeur est juste un exemple, tu devrais l'ajuster selon tes données réelles
+    };
+  
+    this.paymentService.predictPaymentStatus(data).subscribe(res => {
+      console.log("Réponse de la prédiction:", res); // Vérifie la réponse de l'API
+      this.predictedStatus = Number(res.prediction);  // Convertir la prédiction en nombre
+      console.log("Statut prédit dans predict:", this.predictedStatus); // Vérifie la valeur du statut
+    });
+  }
+  
 }

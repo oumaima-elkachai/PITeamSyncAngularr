@@ -11,12 +11,39 @@
         <select class="form-select custom-input" [(ngModel)]="selectedOption" name="option">
           <option value="payroll">Fiche de Paie</option>
           <option value="details">Détail salaire</option>
-          <option value="status">Statut de paiement</option>
+          <!--option value="status">Statut de paiement</option-->
+          <option value="prediction">Prédiction de Statut</option>
         </select>
       </div>
       <button type="submit" class="custom-btn">Afficher</button>
     </form>
-    <!-- Affichage du Résultat -->
+    
+          <!-- Affichage du Statut Prédit -->
+          <div *ngIf="selectedOption === 'prediction' && result === 'prediction'" class="mt-4">
+            <h3>Résultat de la prédiction</h3>
+            
+            <!-- Affichage du statut prédit : payé ou en retard -->
+            <p><strong>Statut :</strong>
+              <span [ngClass]="predictedStatus === 1 ? 'text-success' : 'text-danger'">
+                {{ predictedStatus === 1 ? 'Payé' : 'En retard' }}
+              </span>
+            </p>
+
+            <!-- Affichage des retards passés (si nécessaire) -->
+            <div *ngIf="predictedStatus === 0">
+              <p><strong>Retards passés :</strong> {{ previousDelays }} paiement(s) en retard.</p>
+            </div>
+
+            <!-- Conseils (si le paiement est en retard) -->
+            <div *ngIf="predictedStatus === 0">
+              <p><strong>Conseils :</strong> Il est recommandé de vérifier la situation actuelle des paiements.</p>
+            </div>
+          </div>
+
+
+    
+    
+        <!-- Affichage du Résultat -->
     <div *ngIf="result === 'payroll'" id="fiche-paie" class="mt-5">
       <div class="bg-white rounded-4 shadow p-5 mx-auto" style="max-width: 900px;">
         <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">

@@ -54,6 +54,11 @@ getPaymentStatus(employeeId: string, date: string): Observable<any> {
   return this.http.get<any>(`${this.apiUrl}/employee/${employeeId}/status?date=${date}`);
 }
 
+//tester prediction ia
+predictPaymentStatus(data: any): Observable<{ prediction: string }> {
+  return this.http.post<{ prediction: string }>('http://localhost:5000/predict', data);
+}
+
   
 
   
