@@ -57,6 +57,16 @@
               </li>
             </ul>
 
+            <!-- Add Event Modal -->
+            <div *ngIf="showAddModal" class="modal">
+              <div class="modal-content">
+                <app-events-add
+                  (eventAdded)="handleEventAdded($event)"
+                  (cancel)="closeAddModal()">
+                </app-events-add>
+              </div>
+            </div>
+
             <!-- Pagination -->
             <div *ngIf="totalPages > 1" class="d-flex justify-content-center mt-3">
                 <nav aria-label="Events pagination">

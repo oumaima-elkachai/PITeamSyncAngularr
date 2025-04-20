@@ -28,6 +28,9 @@ export class EventsListComponent implements OnInit {
     @Output() editEvent = new EventEmitter<string>();
     @Output() deleteEvent = new EventEmitter<string>();
 
+    itemsPerPage = 3; // Set items per page to 3
+    totalPages = 0;
+
     constructor(
         private eventService: EventService,
         private http: HttpClient,
@@ -35,16 +38,15 @@ export class EventsListComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this.fetchEvents();
+        this.loadEvents();
     }
 
-    fetchEvents(): void {
+    loadEvents(): void {
         this.isLoading = true;
-        this.errorMessage = '';
-
         this.eventService.getAllEvents().subscribe({
             next: (data: any) => {
                 this.events = Array.isArray(data.data) ? data.data : [];
+                this.calculateTotalPages();
                 this.isLoading = false;
             },
             error: (error: HttpErrorResponse) => {
@@ -53,6 +55,14 @@ export class EventsListComponent implements OnInit {
                 this.errorMessage = 'Failed to load events. Please try again later.';
             }
         });
+    }
+
+    calculateTotalPages(): void {
+        this.totalPages = Math.ceil(this.events.length / this.itemsPerPage);
+        // If we're on a page that no longer exists, go to the last page
+        if (this.currentPage > this.totalPages) {
+            this.currentPage = this.totalPages || 1;
+        }
     }
 
     removeEvent(id: string): void {
@@ -100,8 +110,19 @@ export class EventsListComponent implements OnInit {
     }
 
     handleEventAdded(newEvent: Event): void {
-        this.events = [...this.events, newEvent];
+        this.events.push(newEvent);
+        this.calculateTotalPages();
+        // Navigate to the last page where the new event was added
+        this.currentPage = this.totalPages;
         this.closeModals();
+    }
+
+    openAddModal(): void {
+        this.showAddModal = true;
+    }
+
+    closeAddModal(): void {
+        this.showAddModal = false;
     }
 
     closeModals(): void {
@@ -111,16 +132,13 @@ export class EventsListComponent implements OnInit {
     }
 
     get paginatedEvents(): Event[] {
-        const start = (this.currentPage - 1) * this.pageSize;
-        return this.sortEvents(this.events).slice(start, start + this.pageSize);
-    }
-
-    get totalPages(): number {
-        return Math.ceil(this.events.length / this.pageSize);
+        const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+        const endIndex = startIndex + this.itemsPerPage;
+        return this.events.slice(startIndex, endIndex);
     }
 
     refreshEvents(): void {
-        this.fetchEvents();
+        this.loadEvents();
     }
 
     changePage(page: number): void {
