@@ -16,7 +16,7 @@ export class ProjectFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private projectService: ProjectService,
-    private router: Router
+    public router: Router
   ) {
     this.projectForm = this.fb.group({
       title: ['', Validators.required],

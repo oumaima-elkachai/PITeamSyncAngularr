@@ -151,3 +151,35 @@
       margin-bottom: 1.5rem;
   }
 }
+
+/* Add to component styles */
+.extension-request-alert {
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.attachments-section, .links-section {
+  border-top: 1px solid #f1f5f9;
+  padding-top: 12px;
+}
+
+.attachment-item, .link-item {
+  display: flex;
+  align-items: center;
+  padding: 4px 0;
+}
+
+.bi-paperclip, .bi-link-45deg {
+  color: #64748b;
+}
+
+.attachments-section {
+  border-top: 1px solid #eee;
+  padding-top: 0.5rem;
+}
+
+.attachment-item:hover {
+  background-color: #f8f9fa;
+  border-radius: 4px;
+}

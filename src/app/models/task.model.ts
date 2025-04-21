@@ -1,3 +1,5 @@
+import { Attachment } from './attachment.model';
+
 export enum TaskPriority {
     HIGH = 'HIGH',
     MEDIUM = 'MEDIUM',
@@ -19,4 +21,19 @@ export enum TaskPriority {
     priority: TaskPriority;  // Changed to use enum
     status: TaskStatus;      // Changed to use enum
     employeeId?: string;
+    attachments?: Attachment[]; // Add this
+
+    links?: Array<{
+      url: string;
+      description?: string;
+      createdBy: string;
+      createdAt: string;
+    }>;
+    
+
+    extensionStatus?: 'PENDING' | 'APPROVED' | 'REJECTED';
+    requestedExtensionDate?: Date | string;
+
   }
+
+  

@@ -32,6 +32,7 @@ import { TasksComponent } from './taskfront/tasks/tasks.component';
 import { MyTasksComponent } from './taskfront/my-tasks/my-tasks.component';
 import { MyProjectDetailsComponent } from './taskfront/my-project-details/my-project-details.component';
 import { MyTaskDetailsComponent } from './taskfront/my-task-details/my-task-details.component';
+import { FileSizePipe } from './shared/pipes/filesize.pipe';
 
 
 @NgModule({
@@ -60,7 +61,8 @@ import { MyTaskDetailsComponent } from './taskfront/my-task-details/my-task-deta
     TasksComponent,
     MyTasksComponent,
     MyProjectDetailsComponent,
-    MyTaskDetailsComponent
+    MyTaskDetailsComponent,
+    FileSizePipe
   ],
   imports: [
     BrowserModule,

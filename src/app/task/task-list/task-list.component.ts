@@ -82,4 +82,39 @@ export class TaskListComponent implements OnInit {
       });
     }
   }
+
+  approveExtension(taskId: string) {
+    this.taskService.approveExtension(taskId).subscribe({
+      next: (updatedTask) => this.updateTaskInList(updatedTask),
+      error: (err) => this.handleError('Approval failed', err)
+    });
+  }
+
+  rejectExtension(taskId: string) {
+    this.taskService.rejectExtension(taskId).subscribe({
+      next: (updatedTask) => this.updateTaskInList(updatedTask),
+      error: (err) => this.handleError('Rejection failed', err)
+    });
+  }
+
+  downloadAttachment(attachmentId: string) {
+    this.taskService.downloadAttachment(attachmentId).subscribe(blob => {
+      const url = window.URL.createObjectURL(blob);
+      // Implement actual download logic
+    });
+  }
+
+  private updateTaskInList(updatedTask: Task) {
+    const index = this.tasks.findIndex(t => t.id === updatedTask.id);
+    if (index > -1) {
+      this.tasks[index] = updatedTask;
+    }
+  }
+
+  private handleError(message: string, error: any) {
+    console.error(message, error);
+    alert(message);
+  }
+
+  
 }

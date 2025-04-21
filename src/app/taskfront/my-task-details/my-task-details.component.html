@@ -15,8 +15,7 @@
                             <span class="task-status" [ngClass]="'status-' + task?.status?.toLowerCase()">
                                 {{ task?.status | titlecase }}
                             </span>
-                            <span class="priority-badge" 
-                                  [ngClass]="{
+                            <span class="priority-badge" [ngClass]="{
                                     'priority-high': task?.priority === 'HIGH',
                                     'priority-medium': task?.priority === 'MEDIUM',
                                     'priority-low': task?.priority === 'LOW'
@@ -53,16 +52,15 @@
                                 <div class="detail-item">
                                     <div class="detail-label">Status</div>
                                     <div class="detail-value">
-                                        <select class="form-select status-select" 
-                                                [(ngModel)]="task.status" 
-                                                (change)="updateStatus(task.status)">
+                                        <select class="form-select status-select" [(ngModel)]="task.status"
+                                            (change)="updateStatus(task.status)">
                                             <option *ngFor="let status of statusOptions" [value]="status">
                                                 {{ status | titlecase }}
                                             </option>
                                         </select>
                                     </div>
                                 </div>
-                                
+
                                 <div class="detail-item">
                                     <div class="detail-label">Current Deadline</div>
                                     <div class="detail-value">
@@ -72,7 +70,25 @@
                                         </div>
                                     </div>
                                 </div>
-                                
+
+                                <div class="detail-item" *ngIf="task.extensionStatus">
+                                    <div class="detail-label">Extension Status</div>
+                                    <div class="detail-value">
+                                        <span class="extension-status" [ngClass]="{
+                                        'status-pending': task.extensionStatus === 'PENDING',
+                                        'status-approved': task.extensionStatus === 'APPROVED',
+                                        'status-rejected': task.extensionStatus === 'REJECTED'
+                                      }">
+                                            {{ task.extensionStatus | titlecase }}
+                                            <span *ngIf="task.requestedExtensionDate">
+                                                (Requested: {{ task.requestedExtensionDate | date:'MMM d, yyyy' }})
+                                            </span>
+                                        </span>
+                                    </div>
+                                </div>
+
+
+
                                 <div class="detail-item">
                                     <div class="detail-label">Project</div>
                                     <div class="detail-value">
@@ -83,7 +99,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="description-section">
                                 <h3 class="section-subtitle">Description</h3>
                                 <div class="description-content">
@@ -93,7 +109,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Sidebar Column -->
                 <div class="col-lg-4">
                     <div class="content-card">
@@ -103,75 +119,121 @@
                         <div class="card-body">
                             <!-- Deadline Extension -->
                             <div class="sidebar-section deadline-extension">
-                                <button class="btn btn-primary extension-btn" 
-                                        (click)="showExtensionForm = true"
-                                        *ngIf="!showExtensionForm">
+                                <button class="btn btn-primary extension-btn" (click)="showExtensionForm = true"
+                                    *ngIf="!showExtensionForm">
                                     <i class="bi bi-calendar-plus me-2"></i>
                                     Request Deadline Extension
                                 </button>
-                                
-                                <div *ngIf="showExtensionForm" class="extension-form-container">
+
+                                <div *ngIf="showExtensionForm" class="extension-form-container"
+                                    [formGroup]="extensionForm">
                                     <h3 class="form-title">Request Extension</h3>
                                     <div class="mb-3">
                                         <label class="form-label">New Deadline</label>
-                                        <input type="date" 
-                                               class="form-control" 
-                                               formControlName="newDeadline">
+                                        <input type="date" class="form-control" formControlName="newDeadline" required>
                                     </div>
                                     <div class="form-actions">
-                                        <button class="btn btn-success submit-btn" 
-                                                (click)="requestExtension()"
-                                                [disabled]="extensionForm.invalid">
+                                        <button class="btn btn-success submit-btn" (click)="requestExtension()"
+                                            [disabled]="extensionForm.invalid">
                                             <i class="bi bi-check-lg me-1"></i> Submit
                                         </button>
-                                        <button class="btn btn-light cancel-btn" 
-                                                (click)="showExtensionForm = false">
+                                        <button class="btn btn-light cancel-btn" type="button"
+                                            (click)="showExtensionForm = false">
                                             Cancel
                                         </button>
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <!-- Attachments -->
+                            <!-- Attachments Section -->
                             <div class="sidebar-section attachments-section">
                                 <h3 class="section-subtitle">
                                     <i class="bi bi-paperclip me-2"></i>
                                     Attachments
                                 </h3>
-                                
+
                                 <div class="file-upload">
                                     <label class="file-upload-label">
-                                        <input type="file" 
-                                               class="form-control visually-hidden"
-                                               (change)="onFileSelected($event)"
-                                               multiple>
+                                        <input type="file" class="form-control visually-hidden"
+                                            (change)="onFileSelected($event)" [disabled]="uploadLoading">
                                         <div class="upload-zone">
-                                            <i class="bi bi-cloud-arrow-up"></i>
-                                            <span>Upload Files</span>
-                                            <small>Max size: 5MB</small>
+                                            <div *ngIf="!uploadLoading; else uploading">
+                                                <i class="bi bi-cloud-arrow-up"></i>
+                                                <span>Upload Files</span>
+                                                <small>Max size: 5MB</small>
+                                            </div>
+                                            <ng-template #uploading>
+                                                <div class="upload-progress">
+                                                    <div class="spinner-border spinner-border-sm" role="status"></div>
+                                                    <span>Uploading...</span>
+                                                </div>
+                                            </ng-template>
                                         </div>
                                     </label>
                                 </div>
-                                
+
                                 <div class="attachments-list">
-                                    <div *ngFor="let file of attachments; let i = index" 
-                                         class="attachment-item">
+                                    <div *ngFor="let attachment of task.attachments" class="attachment-item">
                                         <div class="file-info">
                                             <i class="bi bi-file-earmark"></i>
-                                            <span class="file-name">{{ file.name }}</span>
+                                            <span class="file-name">{{ attachment.fileName }}</span>
+                                            <span class="file-size">{{ attachment.fileSize | filesize }}</span>
                                         </div>
-                                        <button class="btn btn-sm btn-light delete-btn" 
-                                                (click)="removeAttachment(i)">
+                                        <button class="btn btn-sm btn-light delete-btn"
+                                            (click)="removeAttachment(attachment.id)">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </div>
-                                    
-                                    <div *ngIf="attachments.length === 0" class="no-attachments">
+
+                                    <div *ngIf="task.attachments?.length === 0" class="no-attachments">
                                         <i class="bi bi-file-earmark-x"></i>
                                         <span>No attachments uploaded</span>
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- Add this section -->
+                            <div class="sidebar-section links-section">
+                                <h3 class="section-subtitle">
+                                    <i class="bi bi-link-45deg me-2"></i>
+                                    Links
+                                </h3>
+
+                                <div class="link-input-group mb-3">
+                                    <input type="url" class="form-control mb-2" placeholder="https://example.com"
+                                        [(ngModel)]="newLink">
+                                    <textarea class="form-control mb-2" placeholder="Description (optional)"
+                                        [(ngModel)]="linkDescription"></textarea>
+                                    <button class="btn btn-primary btn-sm" (click)="addLink()" [disabled]="!newLink">
+                                        <i class="bi bi-plus-lg me-1"></i> Add Link
+                                    </button>
+                                </div>
+
+                                <div class="links-list">
+                                    <div *ngFor="let link of task.links; let i = index" class="link-item">
+                                        <div class="link-info">
+                                            <a [href]="link.url" target="_blank" class="link-url">
+                                                <i class="bi bi-box-arrow-up-right me-2"></i>
+                                                {{ link.description || link.url }}
+                                            </a>
+                                            <small *ngIf="link.description" class="text-muted d-block">
+                                                {{ link.url }}
+                                            </small>
+                                        </div>
+                                        <button class="btn btn-link text-danger btn-sm" (click)="removeLink(i)">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+
+                                    <div *ngIf="!task.links?.length" class="no-links">
+                                        <i class="bi bi-link-45deg"></i>
+                                        No links added yet
+                                    </div>
+                                </div>
+                            </div>
+
+
                         </div>
                     </div>
                 </div>
@@ -190,18 +252,18 @@
         color: #333;
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
-    
+
     .container {
         max-width: 1200px;
         padding: 0 20px;
     }
-    
+
     /* ===== DASHBOARD LAYOUT ===== */
     .task-dashboard {
         min-height: 100vh;
         background: linear-gradient(180deg, #f0f4ff 0%, #f5f7fa 100%);
     }
-    
+
     /* ===== HEADER SECTION ===== */
     .dashboard-header {
         background: #fff;
@@ -210,7 +272,7 @@
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
         position: relative;
     }
-    
+
     .dashboard-header:after {
         content: '';
         position: absolute;
@@ -220,7 +282,7 @@
         height: 5px;
         background: linear-gradient(90deg, #4a6cf7, #6e8cff, #9ab5ff);
     }
-    
+
     .back-button {
         display: inline-flex;
         align-items: center;
@@ -232,16 +294,16 @@
         background: #f8fafc;
         border-radius: 20px;
     }
-    
+
     .back-button:hover {
         color: #4a6cf7;
         background: #f1f5f9;
     }
-    
+
     .back-button i {
         margin-right: 8px;
     }
-    
+
     .dashboard-title {
         font-size: 2.25rem;
         font-weight: 700;
@@ -249,14 +311,15 @@
         margin: 12px 0;
         letter-spacing: -0.5px;
     }
-    
+
     .task-meta-badges {
         display: flex;
         flex-wrap: wrap;
         gap: 12px;
     }
-    
-    .task-status, .priority-badge {
+
+    .task-status,
+    .priority-badge {
         padding: 8px 16px;
         border-radius: 20px;
         font-size: 0.875rem;
@@ -265,48 +328,48 @@
         align-items: center;
         gap: 6px;
     }
-    
+
     .status-todo {
         background-color: #f1f5f9;
         color: #64748b;
     }
-    
+
     .status-in_progress {
         background-color: #e0e7ff;
         color: #4a6cf7;
     }
-    
+
     .status-done {
         background-color: #dcfce7;
         color: #10b981;
     }
-    
+
     .priority-high {
         background-color: #fee2e2;
         color: #ef4444;
     }
-    
+
     .priority-medium {
         background-color: #fef3c7;
         color: #f59e0b;
     }
-    
+
     .priority-low {
         background-color: #dbeafe;
         color: #3b82f6;
     }
-    
+
     /* ===== LOADING ANIMATION ===== */
     .loading-container {
         text-align: center;
         padding: 60px 0;
     }
-    
+
     .loading-animation {
         display: inline-block;
         margin-bottom: 20px;
     }
-    
+
     .spinner {
         width: 60px;
         height: 60px;
@@ -315,17 +378,19 @@
         border-top-color: #4a6cf7;
         animation: spin 1s ease-in-out infinite;
     }
-    
+
     @keyframes spin {
-        to { transform: rotate(360deg); }
+        to {
+            transform: rotate(360deg);
+        }
     }
-    
+
     .loading-text {
         color: #64748b;
         font-size: 1.1rem;
         font-weight: 500;
     }
-    
+
     /* ===== CONTENT CARDS ===== */
     .content-card {
         background: #fff;
@@ -334,31 +399,31 @@
         overflow: hidden;
         margin-bottom: 30px;
     }
-    
+
     .card-header {
         padding: 20px 25px;
         border-bottom: 1px solid #f1f5f9;
         background-color: #fff;
     }
-    
+
     .card-body {
         padding: 25px;
     }
-    
+
     .section-title {
         font-size: 1.25rem;
         font-weight: 600;
         color: #1e293b;
         margin: 0;
     }
-    
+
     .section-subtitle {
         font-size: 1.125rem;
         font-weight: 600;
         color: #334155;
         margin: 0 0 16px 0;
     }
-    
+
     /* ===== DETAILS GRID ===== */
     .details-grid {
         display: grid;
@@ -366,31 +431,31 @@
         gap: 24px;
         margin-bottom: 30px;
     }
-    
+
     .detail-item {
         display: grid;
         grid-template-columns: 140px 1fr;
         gap: 20px;
         align-items: center;
     }
-    
+
     @media (max-width: 767px) {
         .detail-item {
             grid-template-columns: 1fr;
             gap: 8px;
         }
     }
-    
+
     .detail-label {
         font-weight: 500;
         color: #64748b;
     }
-    
+
     .detail-value {
         font-weight: 500;
         color: #1e293b;
     }
-    
+
     /* Status Select Styling */
     .status-select {
         border-radius: 10px;
@@ -400,18 +465,18 @@
         width: 100%;
         max-width: 200px;
     }
-    
+
     /* Date Display */
     .date-display {
         display: flex;
         align-items: center;
         gap: 8px;
     }
-    
+
     .date-display i {
         color: #4a6cf7;
     }
-    
+
     /* Project Link */
     .project-link {
         display: inline-flex;
@@ -422,33 +487,33 @@
         font-weight: 500;
         transition: color 0.2s ease;
     }
-    
+
     .project-link:hover {
         color: #364fc7;
         text-decoration: underline;
     }
-    
+
     /* Description Section */
     .description-section {
         padding-top: 20px;
         border-top: 1px solid #f1f5f9;
     }
-    
+
     .description-content {
         color: #475569;
         line-height: 1.7;
         font-size: 1rem;
     }
-    
+
     /* ===== SIDEBAR SECTIONS ===== */
     .sidebar-section {
         margin-bottom: 30px;
     }
-    
+
     .sidebar-section:last-child {
         margin-bottom: 0;
     }
-    
+
     /* Deadline Extension */
     .extension-btn {
         width: 100%;
@@ -460,51 +525,52 @@
         font-weight: 600;
         transition: all 0.3s ease;
     }
-    
+
     .extension-btn:hover {
         transform: translateY(-2px);
         box-shadow: 0 6px 15px rgba(74, 108, 247, 0.35);
     }
-    
+
     .extension-form-container {
         background-color: #f8fafc;
         border-radius: 12px;
         padding: 20px;
         margin-top: 20px;
     }
-    
+
     .form-title {
         font-size: 1rem;
         font-weight: 600;
         color: #334155;
         margin-bottom: 16px;
     }
-    
+
     .form-actions {
         display: flex;
         gap: 10px;
         margin-top: 20px;
     }
-    
-    .submit-btn, .cancel-btn {
+
+    .submit-btn,
+    .cancel-btn {
         flex: 1;
         border-radius: 8px;
         padding: 10px;
         font-weight: 500;
     }
-    
+
     /* Attachments Section */
     .file-upload {
         margin-bottom: 20px;
     }
-    
+
     .file-upload-label {
         display: block;
         width: 100%;
         cursor: pointer;
         margin: 0;
     }
-    
+
     .upload-zone {
         border: 2px dashed #cbd5e1;
         border-radius: 10px;
@@ -513,35 +579,35 @@
         transition: all 0.3s ease;
         background-color: #f8fafc;
     }
-    
+
     .upload-zone:hover {
         border-color: #94a3b8;
         background-color: #f1f5f9;
     }
-    
+
     .upload-zone i {
         font-size: 1.5rem;
         color: #64748b;
         margin-bottom: 8px;
         display: block;
     }
-    
+
     .upload-zone span {
         display: block;
         font-weight: 500;
         color: #334155;
         margin-bottom: 4px;
     }
-    
+
     .upload-zone small {
         color: #94a3b8;
     }
-    
+
     .attachments-list {
         max-height: 300px;
         overflow-y: auto;
     }
-    
+
     .attachment-item {
         display: flex;
         justify-content: space-between;
@@ -551,26 +617,26 @@
         border-radius: 10px;
         margin-bottom: 10px;
     }
-    
+
     .file-info {
         display: flex;
         align-items: center;
         gap: 10px;
         overflow: hidden;
     }
-    
+
     .file-info i {
         color: #4a6cf7;
         font-size: 1.1rem;
     }
-    
+
     .file-name {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
         max-width: 180px;
     }
-    
+
     .delete-btn {
         color: #ef4444;
         border: none;
@@ -579,11 +645,11 @@
         border-radius: 6px;
         transition: all 0.2s ease;
     }
-    
+
     .delete-btn:hover {
         background-color: #fee2e2;
     }
-    
+
     .no-attachments {
         text-align: center;
         padding: 24px;
@@ -591,19 +657,19 @@
         background-color: #f8fafc;
         border-radius: 10px;
     }
-    
+
     .no-attachments i {
         font-size: 1.5rem;
         display: block;
         margin-bottom: 8px;
     }
-    
+
     /* Responsive adjustments */
     @media (max-width: 991px) {
         .dashboard-header {
             padding: 30px 0 20px;
         }
-        
+
         .dashboard-title {
             font-size: 1.75rem;
         }

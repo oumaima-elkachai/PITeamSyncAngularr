@@ -6,6 +6,8 @@ import { Project } from '../../models/project.model';
 import { Task } from '../../models/task.model';
 import { Employee } from 'src/app/models/employee.model';
 import { EmployeeService } from 'src/app/services/employee.service';
+import { Attachment } from '../../models/attachment.model';
+import { AttachmentService } from '../../services/attachment.service';
 
 @Component({
   selector: 'app-project-details',
@@ -29,6 +31,7 @@ export class ProjectDetailsComponent implements OnInit {
     private router: Router,
     private projectService: ProjectService,
     private taskService: TaskService,
+    private attachmentService: AttachmentService,
     private employeeService: EmployeeService // Add this line
 
   ) {}
@@ -43,6 +46,7 @@ export class ProjectDetailsComponent implements OnInit {
     this.loadProject(projectId);
     this.loadTasks(projectId);
     this.loadEmployees(); // 2. Call the method
+    this.loadTeamMembers(projectId);
 
   }
 
@@ -130,6 +134,57 @@ export class ProjectDetailsComponent implements OnInit {
     if (!this.employees.length) return 'Loading...';
     const employee = this.employees.find(e => e.id === employeeId);
     return employee ? employee.name : 'Unassigned';
+  }
+
+
+  approveExtension(taskId: string) {
+    this.taskService.approveExtension(taskId).subscribe({
+      next: (updatedTask) => this.updateTaskInList(updatedTask),
+      error: (err) => this.handleError('Approval failed', err)
+    });
+  }
+
+  rejectExtension(taskId: string) {
+    this.taskService.rejectExtension(taskId).subscribe({
+      next: (updatedTask) => this.updateTaskInList(updatedTask),
+      error: (err) => this.handleError('Rejection failed', err)
+    });
+  }
+
+  downloadAttachment(attachmentId: string) {
+    this.taskService.downloadAttachment(attachmentId).subscribe(blob => {
+      const url = window.URL.createObjectURL(blob);
+      // Implement actual download logic
+    });
+  }
+
+  // In project-details.component.ts
+loadingAttachments: { [taskId: string]: boolean } = {};
+
+loadAttachments(taskId: string): void {
+  this.loadingAttachments[taskId] = true;
+  this.attachmentService.getTaskAttachments(taskId).subscribe({
+    next: (attachments) => {
+      const task = this.tasks.find(t => t.id === taskId);
+      if (task) task.attachments = attachments;
+      this.loadingAttachments[taskId] = false;
+    },
+    error: () => this.loadingAttachments[taskId] = false
+  });
+}
+
+
+
+  private updateTaskInList(updatedTask: Task) {
+    const index = this.tasks.findIndex(t => t.id === updatedTask.id);
+    if (index > -1) {
+      this.tasks[index] = updatedTask;
+    }
+  }
+
+  private handleError(message: string, error: any) {
+    console.error(message, error);
+    alert(message);
   }
 
 
