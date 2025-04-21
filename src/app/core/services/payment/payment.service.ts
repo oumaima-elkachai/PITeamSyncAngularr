@@ -17,6 +17,11 @@ export class PaymentService {
     return this.http.get<Payment[]>(this.apiUrl);
   }
 
+  // Récupérer les paiements par mois
+  getPaymentsByMonth(): Observable<Payment[]> {
+      return this.http.get<Payment[]>(`${this.apiUrl}/payments-by-month`);
+    }
+
   // Get payments by employee ID
   getPaymentsByEmployeeId(employeeId: string): Observable<Payment[]> {
     return this.http.get<Payment[]>(`${this.apiUrl}/employee/${employeeId}`);

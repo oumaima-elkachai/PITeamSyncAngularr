@@ -23,6 +23,7 @@ import { PaymentListComponent } from './features/payment/components/payment-list
 import { PaymentAddComponent } from './features/payment/components/payment-add/payment-add.component';
 import { PaymentModule } from './features/payment/payment.module';
 import { AnomalyListComponent } from './features/anomaly-list/components/anomaly-list/anomaly-list.component';
+import { PaymentChartsComponent } from './features/statistics/components/payment-charts/payment-charts.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { AnomalyListComponent } from './features/anomaly-list/components/anomaly
     AdminLayoutComponent,
     UserLayoutComponent,
     AnomalyListComponent,
+    PaymentChartsComponent,
 
 
 

@@ -15,6 +15,7 @@ import { PaymentEditComponent } from './features/payment/components/payment-edit
 import { PaymentDetailComponent } from './features/payment/components/payment-detail/payment-detail.component';
 import { CalendarComponent } from './features/payment/components/calendar/calendar.component';
 import { AnomalyListComponent } from './features/anomaly-list/components/anomaly-list/anomaly-list.component';
+import { PaymentChartsComponent } from './features/statistics/components/payment-charts/payment-charts.component';
 
 
 
@@ -53,6 +54,7 @@ const routes: Routes = [
       { path: 'payment/add', component: PaymentAddComponent  },
       { path: 'payments/details/:id', component: PaymentDetailComponent },
       { path: 'anomaly', component: AnomalyListComponent },
+      { path: 'paymentCharts', component: PaymentChartsComponent },
       
 
    
