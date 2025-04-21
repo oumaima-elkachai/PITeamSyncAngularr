@@ -1,0 +1,32 @@
+.anomaly-card {
+ border: 1px solid #ddd;
+ border-radius: 8px;
+ margin-bottom: 10px;
+ padding: 15px;
+ background-color: #f9f9f9;
+}
+
+.anomaly-header {
+ margin-bottom: 10px;
+}
+
+.anomaly-body {
+ font-size: 16px;
+}
+
+.text-danger {
+ color: #e74c3c;  /* Rouge pour les anomalies hautes */
+}
+
+.text-warning {
+ color: #f39c12;  /* Jaune pour les anomalies basses */
+}
+
+.bi {
+ margin-right: 8px;
+}
+
+.anomaly-card i {
+ color: #e74c3c;
+ font-size: 20px;
+}

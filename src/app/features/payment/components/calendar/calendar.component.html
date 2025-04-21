@@ -18,29 +18,15 @@
       <button type="submit" class="custom-btn">Afficher</button>
     </form>
     
-          <!-- Affichage du Statut Prédit -->
-          <div *ngIf="selectedOption === 'prediction' && result === 'prediction'" class="mt-4">
-            <h3>Résultat de la prédiction</h3>
-            
-            <!-- Affichage du statut prédit : payé ou en retard -->
-            <p><strong>Statut :</strong>
-              <span [ngClass]="predictedStatus === 1 ? 'text-success' : 'text-danger'">
-                {{ predictedStatus === 1 ? 'Payé' : 'En retard' }}
-              </span>
-            </p>
-
-            <!-- Affichage des retards passés (si nécessaire) -->
-            <div *ngIf="predictedStatus === 0">
-              <p><strong>Retards passés :</strong> {{ previousDelays }} paiement(s) en retard.</p>
-            </div>
-
-            <!-- Conseils (si le paiement est en retard) -->
-            <div *ngIf="predictedStatus === 0">
-              <p><strong>Conseils :</strong> Il est recommandé de vérifier la situation actuelle des paiements.</p>
-            </div>
-          </div>
-
-
+    <!-- Affichage du Statut Prédit -->
+    <div *ngIf="selectedOption === 'prediction' && result === 'prediction'" class="mt-4">
+      <h3>Résultat de la prédiction</h3>
+      <p><strong>Statut :</strong>
+        <span [ngClass]="predictedStatus === 1 ? 'text-success' : 'text-danger'">
+          {{ predictedStatus === 1 ? 'Payé' : 'En retard' }}
+        </span>
+      </p>
+    </div>
     
     
         <!-- Affichage du Résultat -->

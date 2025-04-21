@@ -18,9 +18,8 @@ export class CalendarComponent {
   selectedDate: string = '';
   selectedOption: string = 'payroll';
   selectedPayroll!: Payroll;
-  predictedStatus: number = -1;
+  predictedStatus!: number;
   result: any;
-  previousDelays: number = 0;
 
   selectedPayment!: Payment;
   selectedE!: Employee;
@@ -85,22 +84,17 @@ export class CalendarComponent {
           this.payrollService.getPayrollById(matchedPayment.payrollId).subscribe(payroll => {
             this.payrollE = payroll;
   
-            // Calcul du nombre de retards précédents
-            const previousDelays = payments.filter(p => new Date(p.paymentDate) > new Date(p.dueDate)).length;
-            console.log("Retards précédents:", previousDelays); // Vérifie les retards précédents
-  
             const data = {
               salary: payroll.salary,
               bonus: payroll.bonus,
-              previousDelays: previousDelays
+              previousDelays: 2 // Tu peux calculer ça plus tard à partir de l'historique
             };
   
             this.paymentService.predictPaymentStatus(data).subscribe(res => {
-              console.log("Réponse de la prédiction:", res); // Vérifie la réponse de l'API
-              this.predictedStatus = Number(res.prediction);  // Convertir la prédiction en nombre
-              console.log("Statut prédit:", this.predictedStatus); // Vérifie la valeur du statut prédit
+              this.predictedStatus = Number(res.prediction);
               this.result = 'prediction'; // Affiche la section dans le HTML
             });
+  
           });
         } else {
           this.result = null;
@@ -131,14 +125,14 @@ export class CalendarComponent {
     const data = {
       salary: this.payrollE.salary,
       bonus: this.payrollE.bonus,
-      previousDelays: 2  // Cette valeur est juste un exemple, tu devrais l'ajuster selon tes données réelles
+      previousDelays: 2  // À ajuster selon ton historique
     };
   
     this.paymentService.predictPaymentStatus(data).subscribe(res => {
-      console.log("Réponse de la prédiction:", res); // Vérifie la réponse de l'API
-      this.predictedStatus = Number(res.prediction);  // Convertir la prédiction en nombre
-      console.log("Statut prédit dans predict:", this.predictedStatus); // Vérifie la valeur du statut
+      // Convertir la valeur en number avant de l'assigner
+      this.predictedStatus = Number(res.prediction);  // Conversion en nombre
     });
   }
+  
   
 }

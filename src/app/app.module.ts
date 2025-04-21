@@ -22,12 +22,14 @@ import { ProjectBudgetngModule } from './features/project-budget/project-budget.
 import { PaymentListComponent } from './features/payment/components/payment-list/payment-list.component';
 import { PaymentAddComponent } from './features/payment/components/payment-add/payment-add.component';
 import { PaymentModule } from './features/payment/payment.module';
+import { AnomalyListComponent } from './features/anomaly-list/components/anomaly-list/anomaly-list.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AdminLayoutComponent,
     UserLayoutComponent,
+    AnomalyListComponent,
 
 
 
