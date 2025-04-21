@@ -1,5 +1,4 @@
-import { Component, AfterViewInit } from '@angular/core';
-import { ThemeService } from './core/services/theme/theme.service';
+import { Component, AfterViewInit, OnDestroy } from '@angular/core';
 import { WebSocketService } from './core/services/websocket/websocket.service';
 
 @Component({
@@ -7,17 +6,18 @@ import { WebSocketService } from './core/services/websocket/websocket.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements AfterViewInit {
-  constructor(
-    private themeService: ThemeService,
-    private webSocketService: WebSocketService
-  ) {}
+export class AppComponent implements AfterViewInit, OnDestroy {
+  constructor(private webSocketService: WebSocketService) {}
 
-  ngAfterViewInit() {
-    // Initialize theme after view is ready
-    this.themeService.initializeTheme();
-    
-    // Initialize WebSocket connection
-    this.webSocketService.initConnection();
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.webSocketService.subscribe('/topic/events', (message) => {
+        console.log('Received message:', message);
+      });
+    }, 1000);
+  }
+
+  ngOnDestroy(): void {
+    this.webSocketService.disconnect();
   }
 }

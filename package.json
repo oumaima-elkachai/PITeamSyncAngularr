@@ -37,7 +37,7 @@
     "iconv-lite": "^0.6.3",
     "moment": "^2.30.1",
     "ngx-apexcharts": "^0.3.3",
-    "ngx-toastr": "^19.0.0",
+    "ngx-toastr": "^16.2.0",
     "process": "^0.11.10",
     "rxjs": "~7.8.0",
     "socket.io": "^4.7.2",

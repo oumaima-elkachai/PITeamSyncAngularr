@@ -11,7 +11,8 @@ import { SharedModule } from './shared/shared.module';
 import { HttpClientModule } from '@angular/common/http';
 import { EventsModule } from './features/events/events.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { WebSocketService } from 'src/app/core/services/websocket/websocket.service';
+import { WebSocketService } from './core/services/websocket/websocket.service';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { WebSocketService } from 'src/app/core/services/websocket/websocket.serv
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule, // Move this before ToastrModule
     AppRoutingModule,
     FormsModule,
     SharedModule,
@@ -29,9 +31,18 @@ import { WebSocketService } from 'src/app/core/services/websocket/websocket.serv
     RouterModule,
     JobPostingModule,
     EventsModule,
-    BrowserAnimationsModule
+    ToastrModule.forRoot({
+      timeOut: 5000,
+      positionClass: 'toast-top-right',
+      preventDuplicates: true,
+      progressBar: true,
+      closeButton: true, // Added close button
+      enableHtml: true // Enable HTML in toast messages
+    })
   ],
-  providers: [WebSocketService],
+  providers: [
+    WebSocketService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
