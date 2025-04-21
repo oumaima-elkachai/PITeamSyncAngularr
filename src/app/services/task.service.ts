@@ -10,10 +10,17 @@ export class TaskService {
 
   constructor(private http: HttpClient) { }
 
+  // Add this method to your task.service.ts
+
+  getEmployeeTasks(employeeId: string): Observable<Task[]> {
+    // Using the endpoint structure from your existing backend
+    return this.http.get<Task[]>(`${environment.apiUrl}/employees/${employeeId}/tasks`);
+  }
+
   getTasksByProject(projectId: string): Observable<Task[]> {
     // Use the correct endpoint path with query parameters
     const params = new HttpParams().set('projectId', projectId);
-    
+
     return this.http.get<Task[]>(`${this.baseUrl}/by-project`, { params });
   }
 
@@ -37,7 +44,7 @@ export class TaskService {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 
-  
+
 
 
 }

@@ -30,6 +30,7 @@ export class ProjectFormComponent implements OnInit {
 
   ngOnInit(): void {}
 
+  
   onSubmit() {
     if (this.projectForm.valid) {
       const projectData = {

@@ -2687,13 +2687,11 @@ label {
 }
 
 .header {
-  padding: 30px 0;
-  float: left;
-  width: 100%;
-  position: absolute;
-  top: 0;
+  position: relative;
   left: 0;
-  z-index: 999;
+  right: 0;
+  margin-left: 0 !important;
+  padding-left: 0 !important;
   background: #fff;
 }
 .header .main-header {
@@ -6724,7 +6722,7 @@ label {
     padding-left: 15px !important;
   }
   .header-right {
-    padding-right: 50px;
+    padding-right: 500px;
   }
   h2.section-title {
     font-size: 48px;
@@ -7123,3 +7121,111 @@ label {
     display: none;
   }
 }/*# sourceMappingURL=main.css.map */
+
+/* Reset default margins and padding */
+body.body-container {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header-container {
+  width: 100%;
+  /* If using fixed header */
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.content-container {
+  flex: 1;
+  width: 100%;
+  max-width: 1440px; /* Adjust as needed */
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.footer-container {
+  width: 100%;
+  margin-top: auto;
+}
+
+
+.main-content {
+  margin-left: 250px;
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  width: calc(100% - 250px);
+  min-height: 100vh;
+}
+
+/* When sidebar is collapsed, apply this class */
+.sidebar-collapsed .main-content {
+  margin-left: 0;
+  width: 100%;
+}
+
+/* When sidebar is fully hidden, apply this class */
+.sidebar-hidden .main-content {
+  margin-left: 0;
+  width: 100%;
+}
+
+/* Make sure the header spans full width */
+.dashboard-header {
+  width: 100%;
+}
+
+/* Ensure form containers are responsive */
+.form-container {
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+/* Additional media queries for better responsiveness */
+@media (max-width: 991px) {
+  .main-content {
+    margin-left: 0;
+    width: 100%;
+  }
+  
+  .dashboard-header {
+    padding: 30px 0 20px;
+  }
+  
+  .dashboard-title {
+    font-size: 2rem;
+  }
+}
+
+/* Fix z-index issues that might cause content to go under sidebar */
+app-admin-sidebar {
+  z-index: 1030;
+  position: fixed;
+  height: 100%;
+}
+
+/* Add this to your Angular component's code */
+/* You can add this code to your component's JavaScript/TypeScript file */
+/*
+// Add this function to your component
+toggleSidebar() {
+  const body = document.querySelector('body');
+  if (body.classList.contains('sidebar-collapsed')) {
+    body.classList.remove('sidebar-collapsed');
+    body.classList.add('sidebar-hidden');
+  } else if (body.classList.contains('sidebar-hidden')) {
+    body.classList.remove('sidebar-hidden');
+  } else {
+    body.classList.add('sidebar-collapsed');
+  }
+}
+
+// Then call this function when the sidebar toggle button is clicked
+*/
+
+
+

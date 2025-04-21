@@ -9,31 +9,47 @@ import { ProjectFormComponent } from './project/project-form/project-form.compon
 import { TaskFormComponent } from './task/task-form/task-form.component';
 import { ProjectEditComponent } from './project/project-edit/project-edit.component';
 import { TaskEditComponent } from './task/task-edit/task-edit.component';
+import { TasksComponent } from './taskfront/tasks/tasks.component';
+import { MyTasksComponent } from './taskfront/my-tasks/my-tasks.component';
+import { MyProjectDetailsComponent } from './taskfront/my-project-details/my-project-details.component';
+import { MyTaskDetailsComponent } from './taskfront/my-task-details/my-task-details.component';
 
 const routes: Routes = [
 
-  { 
-    path: 'projects/:id/edit', 
-    component: ProjectEditComponent 
+  { path: 'My-tasks/:id', component: MyTaskDetailsComponent }
+  ,
+  { path: 'projects/:id', component: MyProjectDetailsComponent }
+  ,
+  {
+    path: 'projects/:id/edit',
+    component: ProjectEditComponent
   },
-  { 
+  {
+    path: 'mytasks',
+    component: MyTasksComponent
+  },
+  {
+    path: 'tasks',
+    component: TasksComponent
+  },
+  {
     path: 'projects/:projectId/tasks/:taskId/edit',
-    component: TaskEditComponent 
+    component: TaskEditComponent
   },
   {
     path: 'projects/:projectId/new-task',
     component: TaskFormComponent
   },
-  { 
-    path: 'projects/new', component: ProjectFormComponent 
+  {
+    path: 'addprojects/new', component: ProjectFormComponent
   },
-  { 
+  {
     path: 'projects',
-    component: ProjectListComponent 
+    component: ProjectListComponent
   },
-  { 
-    path: 'projects/:id',
-    component: ProjectDetailsComponent 
+  {
+    path: 'projectsadmin/:id',
+    component: ProjectDetailsComponent
   },
 
   {

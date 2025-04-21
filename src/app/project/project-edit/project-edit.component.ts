@@ -13,6 +13,7 @@ export class ProjectEditComponent implements OnInit {
   projectForm: FormGroup;
   projectId!: string;
   isLoading = true;
+  isSidebarCollapsed = false;
 
   statusOptions = ['Active', 'On Hold', 'Completed'];
   typeOptions = ['Engineering', 'Design', 'Marketing', 'Research'];
@@ -38,6 +39,10 @@ export class ProjectEditComponent implements OnInit {
     this.loadProject();
   }
 
+  handleSidebarToggle(state: boolean) {
+    this.isSidebarCollapsed = state;
+  }
+  
   private loadProject(): void {
     this.projectService.getProject(this.projectId).subscribe({
       next: (project) => {
@@ -54,6 +59,7 @@ export class ProjectEditComponent implements OnInit {
     });
   }
 
+  
   onSubmit(): void {
     if (this.projectForm.valid) {
       const updatedProject = {

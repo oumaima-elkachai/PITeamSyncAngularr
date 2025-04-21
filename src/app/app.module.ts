@@ -24,10 +24,14 @@ import { TaskService } from './task.service';
 import { EmployeeService } from './services/employee.service';
 import { HttpClientModule } from '@angular/common/http';
 import { ProjectFormComponent } from './project/project-form/project-form.component';  // Add this
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TaskFormComponent } from './task/task-form/task-form.component';
 import { ProjectEditComponent } from './project/project-edit/project-edit.component';
 import { TaskEditComponent } from './task/task-edit/task-edit.component';
+import { TasksComponent } from './taskfront/tasks/tasks.component';
+import { MyTasksComponent } from './taskfront/my-tasks/my-tasks.component';
+import { MyProjectDetailsComponent } from './taskfront/my-project-details/my-project-details.component';
+import { MyTaskDetailsComponent } from './taskfront/my-task-details/my-task-details.component';
 
 
 @NgModule({
@@ -52,10 +56,15 @@ import { TaskEditComponent } from './task/task-edit/task-edit.component';
     ProjectFormComponent,
     TaskFormComponent,
     ProjectEditComponent,
-    TaskEditComponent
+    TaskEditComponent,
+    TasksComponent,
+    MyTasksComponent,
+    MyProjectDetailsComponent,
+    MyTaskDetailsComponent
   ],
   imports: [
     BrowserModule,
+    FormsModule,
     ReactiveFormsModule,
     HttpClientModule,  // Add this line
     AppRoutingModule

@@ -1,72 +1,419 @@
-<div class="container mt-4">
-    <h2>Edit Task</h2>
-    <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
-        <!-- Title -->
-        <div class="mb-3">
-            <label class="form-label">Title</label>
-            <input type="text" class="form-control" formControlName="title"
-                [class.is-invalid]="taskForm.get('title')?.invalid && taskForm.get('title')?.touched">
-            <div class="invalid-feedback" *ngIf="taskForm.get('title')?.errors?.['required']">
-                Title is required
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Task</title>
+    
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+</head>
+
+<body>
+    <app-admin-header></app-admin-header>
+    <app-admin-sidebar></app-admin-sidebar>
+
+    <div class="main-content">
+        <div class="content-wrapper">
+            <!-- Dashboard Header -->
+            <div class="dashboard-header">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6">
+                            <div class="header-content">
+                                <span class="badge bg-primary-soft rounded-pill mb-2">Tasks</span>
+                                <h1 class="dashboard-title">Edit Task</h1>
+                                <p class="dashboard-subtitle">Update task details and assignments</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Container -->
+            <div class="dashboard-content">
+                <div class="container">
+                    <div class="form-container">
+                        <div class="project-card">
+                            <div class="status-indicator"></div>
+                            <div class="card-content">
+                                <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" class="elegant-form">
+                                    <!-- Title -->
+                                    <div class="form-group">
+                                        <label class="input-label">Task Title</label>
+                                        <input type="text" formControlName="title" class="modern-input"
+                                            [class.invalid]="taskForm.get('title')?.invalid && taskForm.get('title')?.touched"
+                                            placeholder="Enter task title">
+                                        <div class="error-message" *ngIf="taskForm.get('title')?.invalid && taskForm.get('title')?.touched">
+                                            <i class="bi bi-exclamation-triangle"></i> Title required
+                                        </div>
+                                    </div>
+
+                                    <!-- Description -->
+                                    <div class="form-group">
+                                        <label class="input-label">Description</label>
+                                        <textarea formControlName="description" class="modern-input textarea" rows="3"
+                                            placeholder="Describe the task details"></textarea>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <!-- Deadline -->
+                                            <div class="form-group">
+                                                <label class="input-label">Deadline</label>
+                                                <div class="input-with-icon">
+                                                    <i class="bi bi-calendar input-icon"></i>
+                                                    <input type="date" formControlName="deadline" class="modern-input"
+                                                        [class.invalid]="taskForm.get('deadline')?.invalid && taskForm.get('deadline')?.touched">
+                                                </div>
+                                                <div class="error-message" *ngIf="taskForm.get('deadline')?.invalid && taskForm.get('deadline')?.touched">
+                                                    <i class="bi bi-exclamation-triangle"></i> Deadline required
+                                                </div>
+                                            </div>
+
+                                            <!-- Priority -->
+                                            <div class="form-group">
+                                                <label class="input-label">Priority</label>
+                                                <div class="select-wrapper">
+                                                    <select formControlName="priority" class="modern-select">
+                                                        <option *ngFor="let priority of priorities" [value]="priority">
+                                                            {{ priority | titlecase }}
+                                                        </option>
+                                                    </select>
+                                                    <div class="select-chevron">
+                                                        <i class="bi bi-chevron-down"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <!-- Status -->
+                                            <div class="form-group">
+                                                <label class="input-label">Status</label>
+                                                <div class="select-wrapper">
+                                                    <select formControlName="status" class="modern-select">
+                                                        <option *ngFor="let status of statuses" [value]="status">
+                                                            {{ status | titlecase }}
+                                                        </option>
+                                                    </select>
+                                                    <div class="select-chevron">
+                                                        <i class="bi bi-chevron-down"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Assignee -->
+                                            <div class="form-group">
+                                                <label class="input-label">Assign to</label>
+                                                <div class="select-wrapper">
+                                                    <select formControlName="employeeId" class="modern-select">
+                                                        <option value="">Unassigned</option>
+                                                        <option *ngFor="let employee of employees" [value]="employee.id">
+                                                            {{ employee.name }} ({{ employee.position }})
+                                                        </option>
+                                                    </select>
+                                                    <div class="select-chevron">
+                                                        <i class="bi bi-chevron-down"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                     <div class="form-actions">
+                                        <button type="button" class="btn-outline-secondary" 
+                                            (click)="router.navigate(['/projectsadmin', projectId])">
+                                            <i class="bi bi-x-lg me-1"></i> Cancel
+                                        </button>
+                                        <button type="submit" class="btn-primary" [disabled]="taskForm.invalid || isLoading">
+                                            <i class="bi bi-check2-lg me-2"></i>
+                                            {{ isLoading ? 'Saving...' : 'Save Changes' }}
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- Description -->
-        <div class="mb-3">
-            <label class="form-label">Description</label>
-            <textarea class="form-control" formControlName="description" rows="4"></textarea>
-        </div>
+        <router-outlet></router-outlet>
+    </div>
+    
+    <app-admin-footer></app-admin-footer>
 
-        <!-- Deadline -->
-        <div class="mb-3">
-            <label class="form-label">Deadline</label>
-            <input type="date" class="form-control" formControlName="deadline"
-                [class.is-invalid]="taskForm.get('deadline')?.invalid && taskForm.get('deadline')?.touched">
-            <div class="invalid-feedback" *ngIf="taskForm.get('deadline')?.errors?.['required']">
-                Deadline is required
-            </div>
-        </div>
+    <!-- Keep all your original script and link tags -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link href="/assets/admin-template/img/favicon.png" rel="shortcut icon" type="image/png">
+    <link rel="stylesheet" href="/assets/admin-template/css/main.css" id="stylesheet">
 
-        <!-- Priority and Status -->
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <label class="form-label">Priority</label>
-                <select class="form-select" formControlName="priority">
-                    <option *ngFor="let priority of priorities" [value]="priority">
-                        {{ priority | titlecase }}
-                    </option>
-                </select>
-            </div>
-            <div class="col-md-6">
-                <label class="form-label">Status</label>
-                <select class="form-select" formControlName="status">
-                    <option *ngFor="let status of statuses" [value]="status">
-                        {{ status | titlecase }}
-                    </option>
-                </select>
-            </div>
-        </div>
+    <script src="/assets/admin-template/js/jquery-3.6.0.min.js"></script>
+    <script src="/assets/admin-template/js/bootstrap.bundle.min.js"></script>
+    <!-- Keep all other script tags -->
 
-        <!-- Assignee -->
-        <div class="mb-4">
-            <label class="form-label">Assigned To</label>
-            <select class="form-select" formControlName="employeeId">
-                <option value="">Unassigned</option>
-                <option *ngFor="let employee of employees" [value]="employee.id">
-                    {{ employee.name }} ({{ employee.position }})
-                </option>
-            </select>
-        </div>
+    <style>
+    /* ===== GLOBAL STYLING ===== */
+    body {
+      background-color: #f5f7fa;
+      color: #333;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
 
-        <!-- Form Actions -->
-        <div class="d-flex justify-content-between">
-            <button type="button" class="btn btn-outline-secondary" (click)="router.navigate(['/projects', projectId])">
-                Cancel
-            </button>
-            <button type="submit" class="btn btn-primary" [disabled]="taskForm.invalid || isLoading">
-                <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
-                {{ isLoading ? 'Saving...' : 'Save Changes' }}
-            </button>
-        </div>
-    </form>
-</div>
+    .container {
+      max-width: 1200px;
+      padding: 0 20px;
+    }
+
+    /* ===== MAIN CONTENT AREA ===== */
+    .main-content {
+      margin-left: 280px;
+      min-height: 100vh;
+      background: linear-gradient(180deg, #f0f4ff 0%, #f5f7fa 100%);
+      transition: all 0.3s;
+    }
+
+    .content-wrapper {
+      padding: 0;
+    }
+
+    /* ===== HEADER SECTION ===== */
+    .dashboard-header {
+      background: #fff;
+      padding: 40px 0 30px;
+      margin-bottom: 40px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+      position: relative;
+    }
+
+    .dashboard-header:after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, #4a6cf7, #6e8cff, #9ab5ff);
+    }
+
+    .bg-primary-soft {
+      background-color: rgba(74, 108, 247, 0.1);
+      color: #4a6cf7;
+      font-weight: 500;
+      font-size: 0.85rem;
+      padding: 6px 12px;
+    }
+
+    .dashboard-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #2c3e50;
+      margin: 8px 0;
+      letter-spacing: -0.5px;
+    }
+
+    .dashboard-subtitle {
+      color: #64748b;
+      font-size: 1.1rem;
+      margin-bottom: 0;
+    }
+
+    /* ===== FORM CONTAINER ===== */
+    .form-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .project-card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+      position: relative;
+      transition: all 0.3s ease;
+      margin-bottom: 40px;
+    }
+
+    .status-indicator {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 6px;
+      height: 100%;
+      background: linear-gradient(to bottom, #4a6cf7 0%, #818cf8 100%);
+    }
+
+    .card-content {
+      padding: 30px 30px 30px 36px;
+    }
+
+    /* ===== FORM ELEMENTS ===== */
+    .elegant-form .form-group {
+      margin-bottom: 24px;
+    }
+
+    .input-label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #1e293b;
+      font-size: 0.95rem;
+    }
+
+    .modern-input, .modern-select {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      background-color: #f8fafc;
+      font-family: inherit;
+      font-size: 0.95rem;
+      color: #1e293b;
+      transition: all 0.2s;
+    }
+
+    .modern-input:focus, .modern-select:focus {
+      outline: none;
+      border-color: #4a6cf7;
+      box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.1);
+      background-color: #fff;
+    }
+
+    .invalid {
+      border-color: #ef4444 !important;
+      background-color: #fff5f5 !important;
+    }
+
+    .error-message {
+      font-size: 0.85rem;
+      color: #ef4444;
+      margin-top: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .select-wrapper {
+      position: relative;
+    }
+
+    .select-chevron {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: #64748b;
+    }
+
+    .select-chevron i {
+      font-size: 14px;
+    }
+
+    .input-with-icon {
+      position: relative;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #64748b;
+    }
+
+    .input-with-icon .modern-input {
+      padding-left: 44px;
+    }
+
+    /* ===== FORM ACTIONS ===== */
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 16px;
+      padding-top: 16px;
+      margin-top: 16px;
+      border-top: 1px solid #f1f5f9;
+    }
+
+    .btn-primary {
+      background: linear-gradient(45deg, #4a6cf7, #6d8bff);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(74, 108, 247, 0.25);
+    }
+
+    .btn-primary:disabled {
+      background: #cbd5e1;
+      transform: none;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    .btn-outline-secondary {
+      background: transparent;
+      color: #64748b;
+      border: 1px solid #e2e8f0;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-outline-secondary:hover {
+      background: #f1f5f9;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 991px) {
+      .main-content {
+        margin-left: 0;
+      }
+      
+      .dashboard-header {
+        padding: 30px 0 20px;
+      }
+      
+      .dashboard-title {
+        font-size: 2rem;
+      }
+    }
+
+    @media (max-width: 767px) {
+      .card-content {
+        padding: 25px 20px 25px 26px;
+      }
+      
+      .form-actions {
+        flex-direction: column-reverse;
+      }
+      
+      .form-actions button {
+        width: 100%;
+      }
+    }
+    </style>
+</body>
+</html>

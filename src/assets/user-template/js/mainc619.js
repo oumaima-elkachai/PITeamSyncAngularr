@@ -77,6 +77,8 @@
         });
     }
     /*====== SidebarSearch ======*/
+
+    
     function sidebarSearch() {
         var searchTrigger = $(".search-active"),
             endTriggersearch = $(".search-close"),

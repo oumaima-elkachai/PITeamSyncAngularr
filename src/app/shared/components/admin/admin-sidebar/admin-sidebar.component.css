@@ -1,0 +1,16 @@
+/* admin-sidebar.component.css */
+.kleon-vertical-nav {
+    width: 280px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: #fff; /* Add your sidebar background color */
+    box-shadow: 3px 0 15px rgba(0, 0, 0, 0.05); /* Optional shadow */
+  }
+  
+  .kleon-vertical-nav.collapsed {
+    transform: translateX(-100%);
+  }

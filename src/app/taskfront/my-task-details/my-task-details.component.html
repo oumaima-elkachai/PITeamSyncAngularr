@@ -1,0 +1,637 @@
+<app-user-header></app-user-header>
+
+<div class="task-dashboard task-details-page">
+    <!-- Beautiful header section with refined typography -->
+    <div class="dashboard-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <div class="header-content">
+                        <a routerLink="/mytasks" class="back-button">
+                            <i class="bi bi-arrow-left"></i> Back to Tasks
+                        </a>
+                        <h1 class="dashboard-title mt-3">{{ task?.title }}</h1>
+                        <div class="task-meta-badges mt-2">
+                            <span class="task-status" [ngClass]="'status-' + task?.status?.toLowerCase()">
+                                {{ task?.status | titlecase }}
+                            </span>
+                            <span class="priority-badge" 
+                                  [ngClass]="{
+                                    'priority-high': task?.priority === 'HIGH',
+                                    'priority-medium': task?.priority === 'MEDIUM',
+                                    'priority-low': task?.priority === 'LOW'
+                                  }">
+                                <i class="bi bi-flag-fill"></i> {{ task?.priority }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-container">
+        <div class="loading-animation">
+            <div class="spinner"></div>
+        </div>
+        <p class="loading-text">Loading task details...</p>
+    </div>
+
+    <!-- Task content area with proper container -->
+    <div class="dashboard-content" *ngIf="!isLoading">
+        <div class="container">
+            <div class="row g-4">
+                <!-- Main Content Column -->
+                <div class="col-lg-8">
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2 class="section-title">Task Details</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="details-grid">
+                                <div class="detail-item">
+                                    <div class="detail-label">Status</div>
+                                    <div class="detail-value">
+                                        <select class="form-select status-select" 
+                                                [(ngModel)]="task.status" 
+                                                (change)="updateStatus(task.status)">
+                                            <option *ngFor="let status of statusOptions" [value]="status">
+                                                {{ status | titlecase }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="detail-item">
+                                    <div class="detail-label">Current Deadline</div>
+                                    <div class="detail-value">
+                                        <div class="date-display">
+                                            <i class="bi bi-calendar3"></i>
+                                            <span>{{ task.deadline | date:'MMMM d, yyyy' }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="detail-item">
+                                    <div class="detail-label">Project</div>
+                                    <div class="detail-value">
+                                        <a [routerLink]="['/projects', task.projectId]" class="project-link">
+                                            <i class="bi bi-folder2-open"></i>
+                                            <span>View Project Details</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="description-section">
+                                <h3 class="section-subtitle">Description</h3>
+                                <div class="description-content">
+                                    {{ task.description || 'No description has been provided for this task.' }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sidebar Column -->
+                <div class="col-lg-4">
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2 class="section-title">Actions</h2>
+                        </div>
+                        <div class="card-body">
+                            <!-- Deadline Extension -->
+                            <div class="sidebar-section deadline-extension">
+                                <button class="btn btn-primary extension-btn" 
+                                        (click)="showExtensionForm = true"
+                                        *ngIf="!showExtensionForm">
+                                    <i class="bi bi-calendar-plus me-2"></i>
+                                    Request Deadline Extension
+                                </button>
+                                
+                                <div *ngIf="showExtensionForm" class="extension-form-container">
+                                    <h3 class="form-title">Request Extension</h3>
+                                    <div class="mb-3">
+                                        <label class="form-label">New Deadline</label>
+                                        <input type="date" 
+                                               class="form-control" 
+                                               formControlName="newDeadline">
+                                    </div>
+                                    <div class="form-actions">
+                                        <button class="btn btn-success submit-btn" 
+                                                (click)="requestExtension()"
+                                                [disabled]="extensionForm.invalid">
+                                            <i class="bi bi-check-lg me-1"></i> Submit
+                                        </button>
+                                        <button class="btn btn-light cancel-btn" 
+                                                (click)="showExtensionForm = false">
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Attachments -->
+                            <div class="sidebar-section attachments-section">
+                                <h3 class="section-subtitle">
+                                    <i class="bi bi-paperclip me-2"></i>
+                                    Attachments
+                                </h3>
+                                
+                                <div class="file-upload">
+                                    <label class="file-upload-label">
+                                        <input type="file" 
+                                               class="form-control visually-hidden"
+                                               (change)="onFileSelected($event)"
+                                               multiple>
+                                        <div class="upload-zone">
+                                            <i class="bi bi-cloud-arrow-up"></i>
+                                            <span>Upload Files</span>
+                                            <small>Max size: 5MB</small>
+                                        </div>
+                                    </label>
+                                </div>
+                                
+                                <div class="attachments-list">
+                                    <div *ngFor="let file of attachments; let i = index" 
+                                         class="attachment-item">
+                                        <div class="file-info">
+                                            <i class="bi bi-file-earmark"></i>
+                                            <span class="file-name">{{ file.name }}</span>
+                                        </div>
+                                        <button class="btn btn-sm btn-light delete-btn" 
+                                                (click)="removeAttachment(i)">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                    
+                                    <div *ngIf="attachments.length === 0" class="no-attachments">
+                                        <i class="bi bi-file-earmark-x"></i>
+                                        <span>No attachments uploaded</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-user-footer></app-user-footer>
+
+<!-- CSS for enhanced visual appeal -->
+<style>
+    /* ===== GLOBAL STYLING ===== */
+    body {
+        background-color: #f5f7fa;
+        color: #333;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    
+    .container {
+        max-width: 1200px;
+        padding: 0 20px;
+    }
+    
+    /* ===== DASHBOARD LAYOUT ===== */
+    .task-dashboard {
+        min-height: 100vh;
+        background: linear-gradient(180deg, #f0f4ff 0%, #f5f7fa 100%);
+    }
+    
+    /* ===== HEADER SECTION ===== */
+    .dashboard-header {
+        background: #fff;
+        padding: 40px 0 30px;
+        margin-bottom: 40px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        position: relative;
+    }
+    
+    .dashboard-header:after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: linear-gradient(90deg, #4a6cf7, #6e8cff, #9ab5ff);
+    }
+    
+    .back-button {
+        display: inline-flex;
+        align-items: center;
+        color: #64748b;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.2s ease;
+        padding: 8px 16px;
+        background: #f8fafc;
+        border-radius: 20px;
+    }
+    
+    .back-button:hover {
+        color: #4a6cf7;
+        background: #f1f5f9;
+    }
+    
+    .back-button i {
+        margin-right: 8px;
+    }
+    
+    .dashboard-title {
+        font-size: 2.25rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin: 12px 0;
+        letter-spacing: -0.5px;
+    }
+    
+    .task-meta-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    
+    .task-status, .priority-badge {
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+    
+    .status-todo {
+        background-color: #f1f5f9;
+        color: #64748b;
+    }
+    
+    .status-in_progress {
+        background-color: #e0e7ff;
+        color: #4a6cf7;
+    }
+    
+    .status-done {
+        background-color: #dcfce7;
+        color: #10b981;
+    }
+    
+    .priority-high {
+        background-color: #fee2e2;
+        color: #ef4444;
+    }
+    
+    .priority-medium {
+        background-color: #fef3c7;
+        color: #f59e0b;
+    }
+    
+    .priority-low {
+        background-color: #dbeafe;
+        color: #3b82f6;
+    }
+    
+    /* ===== LOADING ANIMATION ===== */
+    .loading-container {
+        text-align: center;
+        padding: 60px 0;
+    }
+    
+    .loading-animation {
+        display: inline-block;
+        margin-bottom: 20px;
+    }
+    
+    .spinner {
+        width: 60px;
+        height: 60px;
+        border: 4px solid rgba(74, 108, 247, 0.1);
+        border-radius: 50%;
+        border-top-color: #4a6cf7;
+        animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    
+    .loading-text {
+        color: #64748b;
+        font-size: 1.1rem;
+        font-weight: 500;
+    }
+    
+    /* ===== CONTENT CARDS ===== */
+    .content-card {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+        margin-bottom: 30px;
+    }
+    
+    .card-header {
+        padding: 20px 25px;
+        border-bottom: 1px solid #f1f5f9;
+        background-color: #fff;
+    }
+    
+    .card-body {
+        padding: 25px;
+    }
+    
+    .section-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin: 0;
+    }
+    
+    .section-subtitle {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #334155;
+        margin: 0 0 16px 0;
+    }
+    
+    /* ===== DETAILS GRID ===== */
+    .details-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 24px;
+        margin-bottom: 30px;
+    }
+    
+    .detail-item {
+        display: grid;
+        grid-template-columns: 140px 1fr;
+        gap: 20px;
+        align-items: center;
+    }
+    
+    @media (max-width: 767px) {
+        .detail-item {
+            grid-template-columns: 1fr;
+            gap: 8px;
+        }
+    }
+    
+    .detail-label {
+        font-weight: 500;
+        color: #64748b;
+    }
+    
+    .detail-value {
+        font-weight: 500;
+        color: #1e293b;
+    }
+    
+    /* Status Select Styling */
+    .status-select {
+        border-radius: 10px;
+        border: 1px solid #e2e8f0;
+        padding: 10px 15px;
+        font-weight: 500;
+        width: 100%;
+        max-width: 200px;
+    }
+    
+    /* Date Display */
+    .date-display {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .date-display i {
+        color: #4a6cf7;
+    }
+    
+    /* Project Link */
+    .project-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #4a6cf7;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.2s ease;
+    }
+    
+    .project-link:hover {
+        color: #364fc7;
+        text-decoration: underline;
+    }
+    
+    /* Description Section */
+    .description-section {
+        padding-top: 20px;
+        border-top: 1px solid #f1f5f9;
+    }
+    
+    .description-content {
+        color: #475569;
+        line-height: 1.7;
+        font-size: 1rem;
+    }
+    
+    /* ===== SIDEBAR SECTIONS ===== */
+    .sidebar-section {
+        margin-bottom: 30px;
+    }
+    
+    .sidebar-section:last-child {
+        margin-bottom: 0;
+    }
+    
+    /* Deadline Extension */
+    .extension-btn {
+        width: 100%;
+        padding: 12px;
+        border-radius: 10px;
+        background: linear-gradient(45deg, #4a6cf7, #6d8bff);
+        border: none;
+        box-shadow: 0 4px 10px rgba(74, 108, 247, 0.25);
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .extension-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(74, 108, 247, 0.35);
+    }
+    
+    .extension-form-container {
+        background-color: #f8fafc;
+        border-radius: 12px;
+        padding: 20px;
+        margin-top: 20px;
+    }
+    
+    .form-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #334155;
+        margin-bottom: 16px;
+    }
+    
+    .form-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+    }
+    
+    .submit-btn, .cancel-btn {
+        flex: 1;
+        border-radius: 8px;
+        padding: 10px;
+        font-weight: 500;
+    }
+    
+    /* Attachments Section */
+    .file-upload {
+        margin-bottom: 20px;
+    }
+    
+    .file-upload-label {
+        display: block;
+        width: 100%;
+        cursor: pointer;
+        margin: 0;
+    }
+    
+    .upload-zone {
+        border: 2px dashed #cbd5e1;
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        transition: all 0.3s ease;
+        background-color: #f8fafc;
+    }
+    
+    .upload-zone:hover {
+        border-color: #94a3b8;
+        background-color: #f1f5f9;
+    }
+    
+    .upload-zone i {
+        font-size: 1.5rem;
+        color: #64748b;
+        margin-bottom: 8px;
+        display: block;
+    }
+    
+    .upload-zone span {
+        display: block;
+        font-weight: 500;
+        color: #334155;
+        margin-bottom: 4px;
+    }
+    
+    .upload-zone small {
+        color: #94a3b8;
+    }
+    
+    .attachments-list {
+        max-height: 300px;
+        overflow-y: auto;
+    }
+    
+    .attachment-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 16px;
+        background-color: #f8fafc;
+        border-radius: 10px;
+        margin-bottom: 10px;
+    }
+    
+    .file-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        overflow: hidden;
+    }
+    
+    .file-info i {
+        color: #4a6cf7;
+        font-size: 1.1rem;
+    }
+    
+    .file-name {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 180px;
+    }
+    
+    .delete-btn {
+        color: #ef4444;
+        border: none;
+        background: transparent;
+        padding: 6px;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+    }
+    
+    .delete-btn:hover {
+        background-color: #fee2e2;
+    }
+    
+    .no-attachments {
+        text-align: center;
+        padding: 24px;
+        color: #94a3b8;
+        background-color: #f8fafc;
+        border-radius: 10px;
+    }
+    
+    .no-attachments i {
+        font-size: 1.5rem;
+        display: block;
+        margin-bottom: 8px;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 991px) {
+        .dashboard-header {
+            padding: 30px 0 20px;
+        }
+        
+        .dashboard-title {
+            font-size: 1.75rem;
+        }
+    }
+</style>
+
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
+<!-- Google Font -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Keep all existing JS references -->
+<link rel="shortcut icon" type="image/x-icon" href="/assets/user-template/imgs/theme/favicon.svg" />
+<link rel="stylesheet" href="/assets/user-template/css/plugins/animate.min.css" />
+<link rel="stylesheet" href="/assets/user-template/css/mainc619.css?v=1.0" />
+<script src="/assets/user-template/js/vendor/modernizr-3.6.0.min.js"></script>
+<script src="/assets/user-template/js/vendor/jquery-3.6.0.min.js"></script>
+<script src="/assets/user-template/js/vendor/jquery-migrate-3.3.0.min.js"></script>
+<script src="/assets/user-template/js/vendor/bootstrap.bundle.min.js"></script>
+<script src="/assets/user-template/js/plugins/waypoints.js"></script>
+<script src="/assets/user-template/js/plugins/wow.js"></script>
+<script src="/assets/user-template/js/plugins/magnific-popup.js"></script>
+<script src="/assets/user-template/js/plugins/perfect-scrollbar.min.js"></script>
+<script src="/assets/user-template/js/plugins/select2.min.js"></script>
+<script src="/assets/user-template/js/plugins/isotope.js"></script>
+<script src="/assets/user-template/js/plugins/scrollup.js"></script>
+<script src="/assets/user-template/js/plugins/swiper-bundle.min.js"></script>
+<script src="/assets/user-template/js/mainc619.js?v=1.0"></script>

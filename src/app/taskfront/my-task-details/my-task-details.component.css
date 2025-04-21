@@ -1,0 +1,21 @@
+.extension-form {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 0.5rem;
+  }
+  
+  .attachment-item {
+    padding: 0.5rem;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    transition: all 0.2s ease;
+  }
+  
+  .attachment-item:hover {
+    background-color: #f8f9fa;
+  }
+  
+  .badge {
+    font-size: 0.875em;
+    padding: 0.5em 0.75em;
+  }

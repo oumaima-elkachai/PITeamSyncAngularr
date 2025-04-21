@@ -1,180 +1,574 @@
-<!-- project-details.component.html -->
-<div class="container mt-4" *ngIf="project; else loading">
-    <!-- Header Section -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>{{ project.title }}</h1>
-        <div>
-            <button class="btn btn-outline-primary me-2" routerLink="/projects">
-                <i class="bi bi-arrow-left"></i> Back to Projects
-            </button>
-            <button class="btn btn-danger" (click)="onDeleteProject(project.id)">
-                <i class="bi bi-trash"></i> Delete Project
-            </button>
-        </div>
-    </div>
+<!DOCTYPE html>
+<html lang="en">
 
-    <!-- Add to project header -->
-    <button class="btn btn-warning me-2" [routerLink]="['/projects', project.id, 'edit']">
-        Edit Project
-    </button>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+    /* ===== GLOBAL STYLING ===== */
+    body {
+      background-color: #f5f7fa;
+      color: #333;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
 
+    .container {
+      max-width: 1200px;
+      padding: 0 20px;
+    }
 
-    <!-- Error Messages -->
-    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+    /* ===== MAIN CONTENT AREA ===== */
+    .main-content {
+      margin-left: 280px;
+      min-height: 100vh;
+      background: linear-gradient(180deg, #f0f4ff 0%, #f5f7fa 100%);
+      transition: all 0.3s;
+    }
 
-    <div class="row">
-        <!-- Left Column - Project Details -->
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Project Details</h5>
+    .content-wrapper {
+      padding: 0;
+    }
 
-                    <dl class="row">
-                        <dt class="col-sm-5">Owner:</dt>
-                        <dd class="col-sm-7">{{ project.owner }}</dd>
+    /* ===== HEADER SECTION ===== */
+    .dashboard-header {
+      background: #fff;
+      padding: 40px 0 30px;
+      margin-bottom: 40px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+      position: relative;
+    }
 
-                        <dt class="col-sm-5">Status:</dt>
-                        <dd class="col-sm-7">
-                            <span class="badge" [ngClass]="{
-                       'bg-success': project.status === 'Active',
-                       'bg-warning': project.status === 'On Hold',
-                       'bg-secondary': project.status === 'Completed'
-                     }">
-                                {{ project.status }}
-                            </span>
-                        </dd>
+    .dashboard-header:after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, #4a6cf7, #6e8cff, #9ab5ff);
+    }
 
-                        <dt class="col-sm-5">Type:</dt>
-                        <dd class="col-sm-7">{{ project.type }}</dd>
+    .bg-primary-soft {
+      background-color: rgba(74, 108, 247, 0.1);
+      color: #4a6cf7;
+      font-weight: 500;
+      font-size: 0.85rem;
+      padding: 6px 12px;
+    }
 
-                        <dt class="col-sm-5">Due Date:</dt>
-                        <dd class="col-sm-7">{{ project.dueDate | date }}</dd>
+    .dashboard-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #2c3e50;
+      margin: 8px 0;
+      letter-spacing: -0.5px;
+    }
 
-                        <dt class="col-sm-5">Progress:</dt>
-                        <dd class="col-sm-7">
-                            <div class="progress">
-                                <div class="progress-bar" [style.width.%]="getProgress()" role="progressbar">
-                                    {{ getProgress() }}%
-                                </div>
+    .dashboard-subtitle {
+      color: #64748b;
+      font-size: 1.1rem;
+      margin-bottom: 0;
+    }
+
+    /* ===== CARD STYLING ===== */
+    .project-card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+      position: relative;
+      transition: all 0.3s ease;
+      margin-bottom: 40px;
+      height: 100%;
+    }
+
+    .status-indicator {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 6px;
+      height: 100%;
+      background: linear-gradient(to bottom, #4a6cf7 0%, #818cf8 100%);
+    }
+
+    .card-content {
+      padding: 30px 30px 30px 36px;
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #1e293b;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-title i {
+      color: #4a6cf7;
+    }
+
+    /* ===== BUTTON STYLES ===== */
+    .btn-primary {
+      background: linear-gradient(45deg, #4a6cf7, #6d8bff);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(74, 108, 247, 0.25);
+    }
+
+    .btn-outline-secondary {
+      background: transparent;
+      color: #64748b;
+      border: 1px solid #e2e8f0;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-outline-secondary:hover {
+      background: #f1f5f9;
+    }
+
+    .btn-danger {
+      background: linear-gradient(45deg, #ef4444, #f87171);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-danger:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(239, 68, 68, 0.25);
+    }
+
+    .btn-warning {
+      background: linear-gradient(45deg, #f59e0b, #fbbf24);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-warning:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(245, 158, 11, 0.25);
+    }
+
+    /* ===== BADGE STYLES ===== */
+    .badge {
+      font-weight: 500;
+      padding: 0.5em 0.75em;
+      border-radius: 8px;
+    }
+
+    .bg-success { 
+      background: linear-gradient(45deg, #10b981, #34d399) !important; 
+    }
+    
+    .bg-warning { 
+      background: linear-gradient(45deg, #f59e0b, #fbbf24) !important; 
+    }
+    
+    .bg-secondary { 
+      background: linear-gradient(45deg, #64748b, #94a3b8) !important; 
+    }
+    
+    .bg-primary { 
+      background: linear-gradient(45deg, #4a6cf7, #6d8bff) !important; 
+    }
+
+    /* ===== PROGRESS BAR ===== */
+    .progress {
+      height: 8px;
+      border-radius: 4px;
+      background: #f1f5f9;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      background: linear-gradient(45deg, #4a6cf7, #6d8bff);
+    }
+
+    /* ===== MEMBER LIST STYLES ===== */
+    .member-avatar {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(45deg, #f1f5f9, #e2e8f0);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1rem;
+      flex-shrink: 0;
+      color: #64748b;
+    }
+
+    .list-group-item {
+      border: none;
+      border-bottom: 1px solid #f1f5f9;
+      padding: 16px 0;
+    }
+
+    .list-group-item:last-child {
+      border-bottom: none;
+    }
+
+    /* ===== TASK CARD STYLES ===== */
+    .task-card {
+      border-radius: 12px;
+      background: white;
+      transition: all 0.2s;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+      border: 1px solid #f1f5f9;
+      position: relative;
+    }
+
+    .task-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .task-status-indicator {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      border-radius: 4px 0 0 4px;
+    }
+
+    .task-status-todo {
+      background: linear-gradient(to bottom, #64748b, #94a3b8);
+    }
+
+    .task-status-in-progress {
+      background: linear-gradient(to bottom, #4a6cf7, #6d8bff);
+    }
+
+    .task-status-done {
+      background: linear-gradient(to bottom, #10b981, #34d399);
+    }
+
+    /* Loading spinner */
+    .spinner-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 0;
+    }
+
+    .spinner-border {
+      color: #4a6cf7;
+    }
+
+    /* Detail list */
+    .detail-list dt {
+      color: #64748b;
+      font-weight: 500;
+    }
+
+    .detail-list dd {
+      font-weight: 500;
+      color: #1e293b;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 991px) {
+      .main-content {
+        margin-left: 0;
+      }
+      
+      .dashboard-header {
+        padding: 30px 0 20px;
+      }
+      
+      .dashboard-title {
+        font-size: 2rem;
+      }
+    }
+    </style>
+</head>
+
+<body>
+    <!-- project-details.component.html -->
+    <app-admin-header></app-admin-header>
+    <app-admin-sidebar></app-admin-sidebar>
+
+    <div class="main-content">
+        <div class="content-wrapper" *ngIf="project; else loading">
+            <!-- Header Section -->
+            <div class="dashboard-header">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6">
+                            <div class="header-content">
+                                <span class="badge bg-primary-soft rounded-pill mb-2">Project</span>
+                                <h1 class="dashboard-title">{{ project.title }}</h1>
+                                <p class="dashboard-subtitle">View and manage project details</p>
                             </div>
-                        </dd>
-                    </dl>
-
-                    <h5 class="mt-4">Description</h5>
-                    <p>{{ project.description || 'No description provided' }}</p>
+                        </div>
+                        <div class="col-lg-6 d-flex justify-content-lg-end mt-3 mt-lg-0">
+                            <button class="btn-outline-secondary me-2" routerLink="/projects">
+                                <i class="bi bi-arrow-left"></i> Back to Projects
+                            </button>
+                            <button class="btn-danger" (click)="onDeleteProject(project.id)">
+                                <i class="bi bi-trash"></i> Delete Project
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Middle Column - Team Members -->
-        <!-- Team Members Section -->
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title d-flex justify-content-between align-items-center">
-                        Team Members
-                        <button class="btn btn-sm btn-outline-success"
-                            [routerLink]="['/projects', project.id, 'add-member']">
-                            <i class="bi bi-plus-lg"></i> Add Member
-                        </button>
-                    </h5>
+            <div class="container">
+                <!-- Error Messages -->
+                <div *ngIf="errorMessage" class="alert alert-danger mb-4">{{ errorMessage }}</div>
 
-                    <div *ngIf="loadingMembers" class="text-center my-3">
-                        <div class="spinner-border spinner-border-sm" role="status"></div>
-                        <span class="ms-2">Loading team members...</span>
-                    </div>
-
-                    <div *ngIf="memberError" class="alert alert-warning">{{ memberError }}</div>
-
-                    <ul class="list-group" *ngIf="!loadingMembers && !memberError">
-                        <li class="list-group-item d-flex align-items-center" *ngFor="let member of teamMembers">
-                            <i class="bi bi-person-circle fs-5 me-3"></i>
-                            <div>
-                                <strong>{{ member.name }}</strong>
-                                <div class="small text-muted">
-                                    {{ member.position }} · {{ member.email }}
-                                </div>
-                                <div class="small mt-1">
-                                    Tasks assigned: {{ member.assignedTaskIds?.length || 0 }}
-                                </div>
-                            </div>
-                        </li>
-                        <li class="list-group-item text-muted" *ngIf="!teamMembers.length">
-                            No team members found
-                        </li>
-                    </ul>
+                <!-- Action Bar -->
+                <div class="d-flex mb-4">
+                    <button class="btn-warning me-2" [routerLink]="['/projects', project.id, 'edit']">
+                        <i class="bi bi-pencil-square"></i> Edit Project
+                    </button>
+                    <button class="btn-primary" [routerLink]="['/projects', project.id, 'new-task']">
+                        <i class="bi bi-plus-lg"></i> Add Task
+                    </button>
                 </div>
-            </div>
-        </div>
 
-        <!-- Right Column - Tasks -->
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title d-flex justify-content-between align-items-center">
-                        Tasks
-                        <a [routerLink]="['/projects', project.id, 'new-task']" class="btn btn-sm btn-outline-primary">
-                            <i class="bi bi-plus-lg"></i> Add Task
-                        </a>
-                    </h5>
+                <div class="row g-4">
+                    <!-- Left Column - Project Details -->
+                    <div class="col-md-4">
+                        <div class="project-card">
+                            <div class="status-indicator"></div>
+                            <div class="card-content">
+                                <h5 class="card-title"><i class="bi bi-info-circle"></i>Project Details</h5>
 
-                    <div *ngIf="loadingTasks" class="text-center my-3">
-                        <div class="spinner-border spinner-border-sm" role="status"></div>
-                        Loading tasks...
-                    </div>
+                                <dl class="row detail-list mb-0">
+                                    <dt class="col-sm-5">Owner:</dt>
+                                    <dd class="col-sm-7">{{ project.owner }}</dd>
 
-                    <div *ngIf="taskError" class="alert alert-warning">{{ taskError }}</div>
-
-                    <div *ngIf="!loadingTasks && !taskError">
-                        <div class="task-list">
-                            <div class="task-card mb-3 p-3" *ngFor="let task of tasks">
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <div>
-                                        <h6 class="mb-1">{{ task.title }}</h6>
-                                        <small class="text-muted">Due: {{ task.deadline | date }}</small>
-                                    </div>
-                                    <span class="badge" [ngClass]="{
-                                       'bg-secondary': task.status === 'TODO',
-                                        'bg-primary': task.status === 'IN_PROGRESS',
-                                         'bg-success': task.status === 'DONE'
+                                    <dt class="col-sm-5">Status:</dt>
+                                    <dd class="col-sm-7">
+                                        <span class="badge" [ngClass]="{
+                                            'bg-success': project.status === 'Active',
+                                            'bg-warning': project.status === 'On Hold',
+                                            'bg-secondary': project.status === 'Completed'
                                         }">
-                                        {{ task.status }}
-                                    </span>
+                                            {{ project.status }}
+                                        </span>
+                                    </dd>
 
-                                    <div class="btn-group">
-                                        <button class="btn btn-sm btn-outline-secondary"
-                                            [routerLink]="['/projects', project.id, 'tasks', task.id, 'edit']">
-                                            Edit
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="progress mt-2" style="height: 3px;">
-                                    <div class="progress-bar" [style.width.%]="task.status === 'DONE' ? 100 : 50">
-                                    </div>
-                                </div>
+                                    <dt class="col-sm-5">Type:</dt>
+                                    <dd class="col-sm-7">{{ project.type }}</dd>
+
+                                    <dt class="col-sm-5">Due Date:</dt>
+                                    <dd class="col-sm-7">{{ project.dueDate | date }}</dd>
+
+                                    <dt class="col-sm-5">Progress:</dt>
+                                    <dd class="col-sm-7">
+                                        <div class="progress">
+                                            <div class="progress-bar" [style.width.%]="getProgress()" role="progressbar">
+                                                {{ getProgress() }}%
+                                            </div>
+                                        </div>
+                                    </dd>
+                                </dl>
+
+                                <h5 class="card-title mt-4"><i class="bi bi-file-text"></i>Description</h5>
+                                <p class="mb-0">{{ project.description || 'No description provided' }}</p>
                             </div>
-                            <div class="text-muted p-3" *ngIf="!tasks.length">
-                                No tasks created yet
+                        </div>
+                    </div>
+
+                    <!-- Middle Column - Team Members -->
+                    <div class="col-md-4">
+                        <div class="project-card">
+                            <div class="status-indicator"></div>
+                            <div class="card-content">
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h5 class="card-title mb-0"><i class="bi bi-people"></i>Team Members</h5>
+                                    <button class="btn-outline-secondary btn-sm"
+                                        [routerLink]="['/projects', project.id, 'add-member']">
+                                        <i class="bi bi-plus-lg"></i> Add Member
+                                    </button>
+                                </div>
+
+                                <div *ngIf="loadingMembers" class="spinner-container">
+                                    <div class="spinner-border" role="status"></div>
+                                </div>
+
+                                <div *ngIf="memberError" class="alert alert-warning">{{ memberError }}</div>
+
+                                <ul class="list-group" *ngIf="!loadingMembers && !memberError">
+                                    <li class="list-group-item d-flex align-items-center"
+                                        *ngFor="let member of teamMembers">
+                                        <div class="member-avatar">
+                                            <i class="bi bi-person"></i>
+                                        </div>
+                                        <div>
+                                            <strong>{{ member.name }}</strong>
+                                            <div class="small text-muted">
+                                                {{ member.position }} · {{ member.email }}
+                                            </div>
+                                            <div class="small mt-1">
+                                                <span class="badge bg-light text-dark">
+                                                    <i class="bi bi-check-circle"></i>
+                                                    Tasks: {{ member.assignedTaskIds?.length || 0 }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item text-center text-muted" *ngIf="!teamMembers.length">
+                                        <i class="bi bi-exclamation-circle me-2"></i>No team members found
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column - Tasks -->
+                    <div class="col-md-4">
+                        <div class="project-card">
+                            <div class="status-indicator"></div>
+                            <div class="card-content">
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h5 class="card-title mb-0"><i class="bi bi-list-check"></i>Tasks</h5>
+                                    <a [routerLink]="['/projects', project.id, 'new-task']"
+                                        class="btn-outline-secondary btn-sm">
+                                        <i class="bi bi-plus-lg"></i> Add Task
+                                    </a>
+                                </div>
+
+                                <div *ngIf="loadingTasks" class="spinner-container">
+                                    <div class="spinner-border" role="status"></div>
+                                </div>
+
+                                <div *ngIf="taskError" class="alert alert-warning">{{ taskError }}</div>
+
+                                <div *ngIf="!loadingTasks && !taskError">
+                                    <div class="task-list">
+                                        <div class="task-card mb-3 p-3" *ngFor="let task of tasks">
+                                            <div class="task-status-indicator"
+                                                [ngClass]="{
+                                                    'task-status-todo': task.status === 'TODO',
+                                                    'task-status-in-progress': task.status === 'IN_PROGRESS',
+                                                    'task-status-done': task.status === 'DONE'
+                                                }">
+                                            </div>
+                                            <div class="d-flex justify-content-between align-items-start mb-2" style="padding-left: 8px;">
+                                                <div>
+                                                    <h6 class="mb-1">{{ task.title }}</h6>
+                                                    <small class="text-muted">
+                                                        <i class="bi bi-calendar3"></i> Due: {{ task.deadline | date }}
+                                                    </small>
+                                                </div>
+                                                <div class="d-flex align-items-center">
+                                                    <span class="badge me-2" [ngClass]="{
+                                                        'bg-secondary': task.status === 'TODO',
+                                                        'bg-primary': task.status === 'IN_PROGRESS',
+                                                        'bg-success': task.status === 'DONE'
+                                                    }">
+                                                        {{ task.status }}
+                                                    </span>
+                                                    <button class="btn-outline-secondary btn-sm"
+                                                        [routerLink]="['/projects', project.id, 'tasks', task.id, 'edit']">
+                                                        <i class="bi bi-pencil"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="progress" style="height: 4px; margin-left: 8px;">
+                                                <div class="progress-bar" [style.width.%]="task.status === 'DONE' ? 100 : 
+                                                                       task.status === 'IN_PROGRESS' ? 50 : 10"
+                                                    [ngClass]="{
+                                                        'bg-secondary': task.status === 'TODO',
+                                                        'bg-primary': task.status === 'IN_PROGRESS',
+                                                        'bg-success': task.status === 'DONE'
+                                                    }">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-center text-muted p-4" *ngIf="!tasks.length">
+                                            <i class="bi bi-clipboard2 fs-4 d-block mb-2"></i>
+                                            No tasks created yet
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <ng-template #loading>
+            <div class="text-center mt-5">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-2">Loading project details...</p>
+            </div>
+        </ng-template>
+
+        <router-outlet></router-outlet>
     </div>
 
-    <a [routerLink]="['/projects', project.id, 'new-task']" class="btn btn-sm btn-outline-primary">
-        <i class="bi bi-plus-lg"></i> Add Task
-    </a>
+    <app-admin-footer></app-admin-footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 
-</div>
+</html>
+<!-- Keep all your original script and link tags below -->
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link href="/assets/admin-template/img/favicon.png" rel="shortcut icon" type="image/png">
+<link rel="stylesheet" href="/assets/admin-template/css/main.css" id="stylesheet">
 
-<ng-template #loading>
-    <div class="text-center mt-5">
-        <div class="spinner-border" role="status">
-            <span class="visually-hidden">Loading...</span>
-        </div>
-        <p class="mt-2">Loading project details...</p>
-    </div>
-</ng-template>
+<script src="/assets/admin-template/js/jquery-3.6.0.min.js"></script>
+<script src="/assets/admin-template/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/plugins/jquery_ui/jquery-ui.1.12.1.min.js"></script>
+<script src="/assets/plugins/apexchart/apexcharts.min.js"></script>
+<script src="/assets/plugins/peity/jquery.peity.min.js"></script>
+<script src="/assets/plugins/select2/js/select2.min.js"></script>
+<script src="/assets/plugins/datatables/js/jquery.dataTables.min.js"></script>
+<script src="/assets/plugins/flatpickr/flatpickr.min.js"></script>
+<script src="/assets/plugins/dropzone/dropzone.min.js"></script>
+<script src="/assets/plugins/tinymce/tinymce.min.js"></script>
+<script src="/assets/plugins/sweetalert/sweetalert2.min.js"></script>
+<script src="/assets/admin-template/js/snippets.js"></script>
+<script src="/assets/admin-template/js/theme.js"></script>
