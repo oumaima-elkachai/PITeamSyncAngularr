@@ -17,20 +17,29 @@
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [
-              "zone.js"
+              "src/polyfills.ts"
             ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              {
+                "glob": "**/*",
+                "input": "node_modules/apexcharts/dist",
+                "output": "/assets/plugins/apexchart"
+              }
             ],
             "styles": [
               "@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.css"
             ],
             "scripts": [
-
-
+              "node_modules/apexcharts/dist/apexcharts.min.js"
+            ],
+            "allowedCommonJsDependencies": [
+              "sockjs-client",
+              "crypto-browserify",
+              "buffer"
             ]
           },
           "configurations": {
@@ -94,16 +103,21 @@
               "@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.css"
             ],
-            "scripts": [
-
-
-            ]
+            "scripts": []
           }
         }
       }
     }
   },
-  "cli": {
-    "analytics": "a677c66c-66b0-4e84-b3b8-5b122168149f"
+  "architect": {
+    "build": {
+      "options": {
+        "allowedCommonJsDependencies": [
+          "sockjs-client",
+          "crypto-browserify",
+          "buffer"
+        ]
+      }
+    }
   }
 }

@@ -5,19 +5,16 @@ import { EventsListComponent } from './components/events-list/events-list.compon
 import { EventsCalendarComponent } from './components/events-calendar/events-calendar.component';
 import { EventsAddComponent } from './components/events-add/events-add.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { SharedModule } from "../../shared/shared.module";
 import { RouterModule, Routes } from "@angular/router";
 import { HttpClientModule } from '@angular/common/http';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { EventsEditComponent } from './components/events-edit/events-edit.component';
-//import { EventNotificationComponent } from './components/event-notification/event-notification.component';
+import { EventNotificationComponent } from './components/event-notification/event-notification.component';
 import { WebSocketService } from 'src/app/core/services/websocket/websocket.service';
 import { ToastrModule } from "ngx-toastr";
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { UpcomingEventsComponent } from './components/upcoming-events/upcoming-events.component';
-//import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ParticipationNotificationService } from 'src/app/core/services/participation-notification/participation-notification.service';
 
 const routes: Routes = [
   {
@@ -39,30 +36,33 @@ const routes: Routes = [
     EventsCalendarComponent,
     EventsAddComponent,
     EventsEditComponent,
-    //EventNotificationComponent,
+    EventNotificationComponent,
     UpcomingEventsComponent,
   ],
   imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
     CommonModule,
     FormsModule,
-    SharedModule,
     ReactiveFormsModule,
     RouterModule.forChild(routes),
     HttpClientModule,
     FullCalendarModule,
-    // MatDialogModule,
     MatProgressSpinnerModule,
-    ToastrModule.forRoot({
-      progressBar: true,
-      closeButton: true,
-      newestOnTop: true,
-      tapToDismiss: true,
-      positionClass: 'toast-bottom-right',
-      timeOut: 8000
-    })
+    ToastrModule
   ],
-  providers: [WebSocketService],
+  providers: [
+    WebSocketService,
+    ParticipationNotificationService,
+    {
+      provide: 'SOCKET_CONFIG',
+      useValue: {
+        url: 'http://localhost:8080/ws',
+        options: {
+          reconnectDelay: 5000,
+          heartbeatIncoming: 4000,
+          heartbeatOutgoing: 4000
+        }
+      }
+    }
+  ],
 })
 export class EventsModule { }

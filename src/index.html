@@ -83,13 +83,25 @@
  <!-- Theme Custom JS -->
  <script src="/assets/admin-template/js/theme.js"></script>
 
-
-
-
-
-
-
-
+ <script>
+  // Prevent theme.js errors
+  window.addEventListener('DOMContentLoaded', () => {
+    const themeInit = () => {
+      const elements = {
+        header: document.querySelector('.app-header'),
+        sidebar: document.querySelector('.app-sidebar')
+      };
+      
+      Object.entries(elements).forEach(([key, element]) => {
+        if (element && element.classList) {
+          // Your theme operations here
+        }
+      });
+    };
+    
+    themeInit();
+  });
+</script>
 
   <app-root></app-root>
 </body>

@@ -1,9 +1,0 @@
-<div *ngFor="let event of paginatedEvents">
-  <p>{{ event.name }}</p>
-</div>
-
-<div class="pagination-controls">
-  <button (click)="previousPage()" [disabled]="currentPage === 1">Previous</button>
-  <span>Page {{ currentPage }} of {{ totalPages }}</span>
-  <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
-</div>
