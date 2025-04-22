@@ -16,6 +16,7 @@ import { PaymentDetailComponent } from './features/payment/components/payment-de
 import { CalendarComponent } from './features/payment/components/calendar/calendar.component';
 import { AnomalyListComponent } from './features/anomaly-list/components/anomaly-list/anomaly-list.component';
 import { PaymentChartsComponent } from './features/statistics/components/payment-charts/payment-charts.component';
+import { CalendartestComponent } from './features/payment/components/calendartest/calendartest.component';
 
 
 
@@ -66,6 +67,7 @@ const routes: Routes = [
     children: [
       { path: 'payrolls/list', component: PayrollUserComponent },
       { path: 'payment/calendar', component: CalendarComponent },
+      { path: 'testcalendar', component: CalendartestComponent },
 
     ]
   },

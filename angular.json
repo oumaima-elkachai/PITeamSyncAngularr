@@ -25,10 +25,10 @@
               "src/favicon.ico",
               "src/assets"
             ],
-            "styles": [
-             "src/styles.css"
-             
-            ],
+          "styles": [
+            "src/styles.css"
+          ],
+
             "scripts": [
             
              
@@ -93,7 +93,10 @@
             ],
             "styles": [
               "src/styles.css",
-              "node_modules/angular-calendar/css/angular-calendar.css"
+              "node_modules/@fullcalendar/core/main.css",
+              "node_modules/@fullcalendar/daygrid/main.css",
+              "node_modules/@fullcalendar/interaction/main.css"
+
              
             ],
             "scripts": [

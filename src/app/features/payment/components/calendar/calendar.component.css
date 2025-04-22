@@ -1,113 +1,120 @@
-full-calendar {
- display: block;
+/* Styles du calendrier */
+.fc-event {
+ border-radius: 6px;
+ padding: 6px;
+ background-color: #f8f9fa;
+ font-size: 12px;
+ line-height: 1.4;
+ box-shadow: 0 0 3px rgba(0,0,0,0.1);
+}
+
+/* Personnalisation du contenu des événements */
+.fc-event-title {
+ color: #28a745;  /* Titre de l'événement en vert */
+ font-weight: bold;
+ margin-bottom: 4px;
+}
+
+.fc-event-subtitle {
+ color: #17a2b8;  /* Sous-titre en bleu */
+ font-weight: normal;
+}
+
+/* Personnalisation de la sidebar */
+.sidebar {
+ background-color: #ffffff;
+ border-radius: 10px;
+ padding: 20px;
+ box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar .event-list {
+ margin-top: 20px;
+}
+
+.event-list .d-flex {
+ border-bottom: 1px solid #f0f0f0;
+ padding-bottom: 10px;
+ margin-bottom: 10px;
+}
+
+.event-list .date-box {
+ width: 60px;
+ background-color: #f8f9fa;
+ border-radius: 6px;
+ padding: 10px;
+ text-align: center;
+}
+
+.event-info {
+ margin-left: 15px;
+}
+
+.event-info .title {
+ font-size: 14px;
+ font-weight: bold;
+ color: #333;
+}
+
+.event-info .subtitle {
+ font-size: 12px;
+ color: #666;
+}
+
+/* Bouton "New Event" */
+.sidebar .btn {
+ margin-top: 20px;
+ padding: 12px;
+ font-size: 16px;
+ background-color: #007bff;
+ color: white;
+ border: none;
+ border-radius: 5px;
+}
+
+.sidebar .btn:hover {
+ background-color: #0056b3;
+}
+
+/* Placer le calendrier à droite avec un peu d'espace */
+.calendar-main {
+ flex-grow: 1;
+ margin-left: 20px;
+}
+.custom-modal {
+ position: absolute;
+ top: 0;
+ left: 0;
  width: 100%;
  height: 100%;
+ background-color: rgba(0, 0, 0, 0.4); /* Fond sombre */
+ z-index: 1050; /* Au-dessus de tout */
+ display: flex;
+ justify-content: center;
+ align-items: center;
 }
 
-.calendar-container {
- padding: 20px;
-}
-
-.calendar-header {
- margin-bottom: 20px;
-}
-/* Fond général clair avec un petit padding en haut */
-section.bg-light {
- background-color: #f8f9fa;
- padding-top: 15vh;
- min-height: 100vh;
-}
-
-/* Wrapper centré */
-.main-wrapper {
- max-width: 900px;
- margin: auto;
-}
-
-/* Formulaire blanc avec ombre et coins arrondis */
-form {
- background-color: #ffffff;
+.modal-content {
+ background: white;
  border-radius: 1rem;
- box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
- padding: 2rem;
+ max-width: 800px;
+ width: 90%;
+ box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+ animation: fadeIn 0.3s ease-in-out;
 }
 
-/* Label stylé */
-.form-label {
- font-weight: 600;
- color: #495057;
+@keyframes fadeIn {
+ from {
+   opacity: 0;
+   transform: scale(0.95);
+ }
+ to {
+   opacity: 1;
+   transform: scale(1);
+ }
 }
 
-/* Champ de formulaire */
-.form-control,
-.form-select {
- border-radius: 0.5rem;
- padding: 0.5rem 1rem;
- border: 1px solid #ced4da;
- box-shadow: none;
- transition: border-color 0.3s;
-}
 
-.form-control:focus,
-.form-select:focus {
- border-color: #0d6efd;
- box-shadow: 0 0 0 0.1rem rgba(13, 110, 253, 0.25);
-}
 
-/* Bouton submit */
-button[type="submit"] {
- padding: 0.75rem;
- font-weight: 600;
-}
 
-/* Fiche de paie */
-#fiche-paie {
- background-color: #fff;
- border-radius: 1rem;
- box-shadow: 0 4px 24px rgba(0, 0, 0, 0.05);
- padding: 3rem;
- margin-top: 2rem;
-}
-
-/* En-tête de la fiche */
-#fiche-paie h2 {
- font-weight: 700;
-}
-
-.badge {
- font-size: 1rem;
- padding: 0.5em 1em;
- border-radius: 0.5rem;
-}
-
-/* Bouton téléchargement */
-.download-btn {
- background: none;
- border: none;
- cursor: pointer;
- transition: transform 0.2s ease;
-}
-
-.download-btn:hover {
- transform: scale(1.1);
-}
-
-/* Titres de section */
-h6.text-uppercase {
- font-size: 0.85rem;
- font-weight: 700;
- color: #6c757d;
- margin-bottom: 0.5rem;
-}
-
-/* Paragraphes avec données */
-p {
- margin-bottom: 0.25rem;
- color: #212529;
-}
-
-.mt-4 h3 {
- margin-bottom: 1rem;
- font-weight: 600;
-}
 

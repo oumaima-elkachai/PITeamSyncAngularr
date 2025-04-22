@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Employee } from 'src/app/features/employee/models/employee.model';
 import { Payroll } from 'src/app/features/payroll/models/payroll.model';
 import { Payment } from 'src/app/features/payment/models/payment.model';
@@ -7,13 +7,17 @@ import { PayrollService } from 'src/app/core/services/payroll/payroll.service';
 import { PaymentService } from 'src/app/core/services/payment/payment.service';
 import { EmployeeService } from 'src/app/core/services/employee/employee.service';
 import * as html2pdf from 'html2pdf.js';
+import { FullCalendarModule } from '@fullcalendar/angular';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin from '@fullcalendar/interaction';
+
 
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.css']
 })
-export class CalendarComponent {
+export class CalendarComponent implements OnInit {
   employeeId: string = '67f091e0a15fb50ce3b5d81e';
   selectedDate: string = '';
   selectedOption: string = 'payroll';
@@ -25,27 +29,94 @@ export class CalendarComponent {
   selectedE!: Employee;
   payrollE!: Payroll;
 
+  calendarEvents: any[] = []; // Tableau des événements pour le calendrier
+
+  calendarOptions: any; // Déclaration de l'option du calendrier
+  
+  calendarPlugins = [dayGridPlugin, interactionPlugin];
+
   constructor(
     private payrollService: PayrollService,
     private paymentService: PaymentService,
     private employeeService: EmployeeService
   ) {}
 
+  ngOnInit() : void {
+    // Initialisation des options du calendrier
+    this.calendarOptions = {
+      initialView: 'dayGridMonth',
+      plugins: [dayGridPlugin, interactionPlugin],
+      events: this.calendarEvents,
+      dateClick: this.handleDateClick.bind(this),
+      eventContent: function(arg: any) {
+        const lines = arg.event.title.split('\n');
+      
+        return {
+          html: `
+            <div style="
+              border: 1px solid #ccc;
+              border-radius: 6px;
+              padding: 4px;
+              background-color: #f8f9fa;
+              margin-top: 4px;
+              font-size: 11px;
+              line-height: 1.4;
+              text-align: left;
+              box-shadow: 0 0 3px rgba(0,0,0,0.1);
+            ">
+              <div style="color: #28a745;"><strong>${lines[0]}</strong></div>
+              <div style="color: #17a2b8;"><strong>${lines[1]}</strong></div>
+            </div>
+          `
+        };
+      }
+      
+    };
+  
+    // Charger les paiements de l'employé
+    this.loadEmployeePayments();
+  }
+  
+
+  loadEmployeePayments() {
+    this.paymentService.getPaymentsByEmployee(this.employeeId).subscribe(payments => {
+      this.calendarEvents = [];
+  
+      payments.forEach(payment => {
+        if (payment.payrollId) {
+          this.payrollService.getPayrollById(payment.payrollId).subscribe(payroll => {
+            this.calendarEvents.push({
+              title: `Salaire: ${payroll.salary} TND\nBonus: ${payroll.bonus} TND`,
+              start: new Date(payment.paymentDate),
+              id: payment.id
+            });
+  
+            this.calendarOptions.events = [...this.calendarEvents];
+          });
+        }
+      });
+    });
+  }
+  
+  
+  
+
+  // Fonction pour récupérer les données en fonction de la date et de l'option choisie
   fetchData(): void {
     if (!this.employeeId || !this.selectedDate) return;
-  
+
     const formattedDate = this.selectedDate;
-  
+
     if (this.selectedOption === 'payroll') {
       this.paymentService.getPaymentsByEmployee(this.employeeId).subscribe(payments => {
         const matchedPayment = payments.find(p => p.paymentDate?.startsWith(formattedDate));
         if (matchedPayment) {
           this.selectedPayment = matchedPayment;
-  
+
           this.employeeService.getEmployeeById(this.employeeId).subscribe(emp => {
             this.selectedE = emp;
           });
-  
+
           if (matchedPayment.payrollId) {
             this.payrollService.getPayrollById(matchedPayment.payrollId).subscribe(payroll => {
               this.payrollE = payroll;
@@ -57,7 +128,7 @@ export class CalendarComponent {
           alert("Aucun paiement trouvé pour cette date.");
         }
       });
-  
+
     } else if (this.selectedOption === 'details') {
       this.paymentService.getPaymentsByEmployee(this.employeeId).subscribe(payments => {
         const matched = payments.find(p => p.paymentDate?.startsWith(formattedDate));
@@ -70,12 +141,12 @@ export class CalendarComponent {
           alert("Aucun paiement trouvé pour cette date.");
         }
       });
-  
+
     } else if (this.selectedOption === 'status') {
       this.paymentService.getPaymentStatus(this.employeeId, formattedDate).subscribe(status => {
         this.result = status;
       });
-  
+
     } else if (this.selectedOption === 'prediction') {
       // Partie prédiction
       this.paymentService.getPaymentsByEmployee(this.employeeId).subscribe(payments => {
@@ -83,18 +154,18 @@ export class CalendarComponent {
         if (matchedPayment && matchedPayment.payrollId) {
           this.payrollService.getPayrollById(matchedPayment.payrollId).subscribe(payroll => {
             this.payrollE = payroll;
-  
+
             const data = {
               salary: payroll.salary,
               bonus: payroll.bonus,
               previousDelays: 2 // Tu peux calculer ça plus tard à partir de l'historique
             };
-  
+
             this.paymentService.predictPaymentStatus(data).subscribe(res => {
               this.predictedStatus = Number(res.prediction);
               this.result = 'prediction'; // Affiche la section dans le HTML
             });
-  
+
           });
         } else {
           this.result = null;
@@ -104,11 +175,11 @@ export class CalendarComponent {
       });
     }
   }
-  
 
   downloadPDF(): void {
     setTimeout(() => {
       const element = document.getElementById('fiche-paie');
+  
       if (element) {
         const options = {
           filename: `fiche-paie-${this.selectedPayment.referenceNumber}.pdf`,
@@ -116,23 +187,29 @@ export class CalendarComponent {
           html2canvas: { scale: 2 },
           jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
         };
+  
         html2pdf().set(options).from(element).save();
       }
-    }, 300);
+    }, 300); // attends 300ms pour s'assurer que le DOM est prêt
+    
   }
-
+ 
   predict() {
     const data = {
       salary: this.payrollE.salary,
       bonus: this.payrollE.bonus,
       previousDelays: 2  // À ajuster selon ton historique
     };
-  
+
     this.paymentService.predictPaymentStatus(data).subscribe(res => {
       // Convertir la valeur en number avant de l'assigner
       this.predictedStatus = Number(res.prediction);  // Conversion en nombre
     });
   }
-  
-  
+
+  // Gestion du clic sur une date dans le calendrier
+  handleDateClick(event: any) {
+    this.selectedDate = event.dateStr; // Récupère la date cliquée dans le calendrier
+    this.fetchData(); // Charge les données liées à la date sélectionnée
+  }
 }

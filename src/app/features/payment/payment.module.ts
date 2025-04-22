@@ -8,8 +8,8 @@ import { PaymentAddComponent } from './components/payment-add/payment-add.compon
 import { PaymentEditComponent } from './components/payment-edit/payment-edit.component';
 import { PaymentDetailComponent } from './components/payment-detail/payment-detail.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
-import { FullCalendarModule } from '@fullcalendar/angular'; // Ajout de l'importation de module
-
+import { FullCalendarModule } from '@fullcalendar/angular';
+import { CalendartestComponent } from './components/calendartest/calendartest.component';
 
 
 @NgModule({
@@ -19,6 +19,7 @@ import { FullCalendarModule } from '@fullcalendar/angular'; // Ajout de l'import
     PaymentEditComponent,
     PaymentDetailComponent,
     CalendarComponent,
+    CalendartestComponent,
   ],
   imports: [
     CommonModule,

@@ -1,23 +1,12 @@
 <section class="bg-light" style="padding-top: 15vh;">
   <main class="main-wrapper container mt-5" style="max-width: 900px;">
-    <form (ngSubmit)="fetchData()" class="custom-card">
-      <div class="mb-4">
-        <label class="form-label">Date :</label>
-        <input type="date" class="form-control custom-input" [(ngModel)]="selectedDate" name="date" required />
-      </div>
 
-      <div class="mb-4">
-        <label class="form-label">Que souhaitez-vous afficher ?</label>
-        <select class="form-select custom-input" [(ngModel)]="selectedOption" name="option">
-          <option value="payroll">Fiche de Paie</option>
-          <option value="details">Détail salaire</option>
-          <!--option value="status">Statut de paiement</option-->
-          <option value="prediction">Prédiction de Statut</option>
-        </select>
-      </div>
-      <button type="submit" class="custom-btn">Afficher</button>
-    </form>
-    
+    <!-- Affichage du calendrier -->
+    <div class="calendar mt-5">
+      <full-calendar [options]="calendarOptions"></full-calendar>
+   
+    </div>
+
     <!-- Affichage du Statut Prédit -->
     <div *ngIf="selectedOption === 'prediction' && result === 'prediction'" class="mt-4">
       <h3>Résultat de la prédiction</h3>
@@ -27,9 +16,8 @@
         </span>
       </p>
     </div>
-    
-    
-        <!-- Affichage du Résultat -->
+
+    <!-- Affichage du Résultat -->
     <div *ngIf="result === 'payroll'" id="fiche-paie" class="mt-5">
       <div class="bg-white rounded-4 shadow p-5 mx-auto" style="max-width: 900px;">
         <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
