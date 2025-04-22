@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -8,26 +8,37 @@ export class ThemeService {
   private themeReady = new BehaviorSubject<boolean>(false);
   
   initializeTheme() {
-    // Wait for DOM to be ready
-    if (document.readyState === 'complete') {
-      this.applyTheme();
-    } else {
-      window.addEventListener('load', () => this.applyTheme());
-    }
+    // Wrap in requestAnimationFrame to ensure DOM is ready
+    requestAnimationFrame(() => {
+      try {
+        this.applyTheme();
+      } catch (error) {
+        console.error('Theme initialization error:', error);
+      }
+    });
   }
 
   private applyTheme() {
-    try {
-      // Add any theme-specific initialization here
-      const elements = document.querySelectorAll('[data-theme]');
-      elements.forEach(element => {
-        if (element instanceof HTMLElement) {
-          element.classList.add(element.dataset['theme'] || '');
-        }
-      });
-      this.themeReady.next(true);
-    } catch (error) {
-      console.error('Error initializing theme:', error);
+    // Initialize theme elements
+    const elements = document.querySelectorAll('[data-theme]');
+    if (elements.length === 0) {
+      console.warn('No theme elements found');
+      return;
     }
+
+    elements.forEach(element => {
+      if (element instanceof HTMLElement) {
+        const themeClass = element.dataset['theme'];
+        if (themeClass) {
+          element.classList.add(themeClass, 'theme-initialized');
+        }
+      }
+    });
+
+    this.themeReady.next(true);
+  }
+
+  isThemeReady(): Observable<boolean> {
+    return this.themeReady.asObservable();
   }
 }
