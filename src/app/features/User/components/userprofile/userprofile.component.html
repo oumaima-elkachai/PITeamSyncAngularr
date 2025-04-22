@@ -1,0 +1,95 @@
+<app-user-header></app-user-header>
+
+<main class="main-wrapper" style="display: flex; align-items: center; justify-content: center; min-height: 100vh; background: #f8f9fa;">
+  <div class="container-fluid py-4">
+    <!-- Profile Banner with Decorative Shapes -->
+    <div class="row">
+      <div class="col-12">
+        <div class="profile-banner position-relative" style="background: linear-gradient(135deg, #6a11cb, #2575fc); height: 220px; border-radius: 8px; overflow: hidden;">
+          <div class="banner-shape position-absolute" style="width: 120px; height: 120px; background: rgba(255,255,255,0.3); border-radius: 50%; top: -30px; left: -30px;"></div>
+          <div class="banner-shape position-absolute" style="width: 80px; height: 80px; background: rgba(255,255,255,0.2); border-radius: 50%; bottom: -20px; right: -20px;"></div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- User Profile Card -->
+    <div class="row justify-content-center mt-4">
+      <div class="col-md-8">
+        <div class="card shadow-sm">
+          <div class="row g-0">
+            <div class="col-md-4 d-flex align-items-center justify-content-center" style="background: #2575fc; border-top-left-radius: 8px; border-bottom-left-radius: 8px;">
+              <img [src]="encodedPhotoUrl" alt="User Image" class="img-fluid rounded-circle" style="width: 120px; height: 120px; border: 4px solid #fff;">
+             
+            </div>
+            <div class="col-md-8">
+              <div class="card-body">
+                <h3 class="card-title">{{ loggedInUser?.name || 'User Name' }}</h3>
+                <p class="card-text"><i class="bi bi-envelope"></i> {{ loggedInUser?.email || 'user@example.com' }}</p>
+                <p class="card-text"><i class="bi bi-telephone"></i> {{ loggedInUser?.telephone }}</p>
+                <p class="card-text"><i class="bi bi-person-check"></i> Role: <strong>{{ loggedInUser?.role || 'EMPLOYEE' }}</strong></p>
+                <p class="card-text">Welcome to your profile dashboard. Here you can view and update your personal information, manage your account, and access exclusive features.</p>
+                <a href="/edituserprofile" class="btn btn-primary rounded-5">Edit Profile</a>
+                <a (click)="logout()" class="btn btn-warning rounded-5">Logout</a>
+                <a (click)="logout()" class="btn btn-danger  rounded-5">Delete Profile</a>
+                <a href="/askchat" class="btn btn-primary rounded-5">Ask Chat</a>
+
+                
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Section -->
+    <div class="row mt-5">
+      <div class="col-12">
+        <div class="contact-section bg-light p-4 rounded shadow-sm">
+          <h4>Contact Us</h4>
+          <p>If you have any questions or need assistance, please get in touch with our support team.</p>
+          <div class="row">
+            <div class="col-md-4">
+              <h6>Address</h6>
+              <p>123 Main Street,<br>City, Country</p>
+            </div>
+            <div class="col-md-4">
+              <h6>Email</h6>
+              <p>supportexample.com</p>
+            </div>
+            <div class="col-md-4">
+              <h6>Phone</h6>
+              <p>+123 456 7890</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</main>
+
+<footer class="bg-dark text-white text-center py-3 mt-4">
+  <div class="container">
+    <p class="mb-0">&copy; 2025 Your Company. All rights reserved.</p>
+  </div>
+</footer>
+<link rel="shortcut icon" type="image/x-icon" href="/assets/user-template/imgs/theme/favicon.svg" />
+ <!-- Template CSS -->
+ <link rel="stylesheet" href="/assets/user-template/css/plugins/animate.min.css" />
+ <link rel="stylesheet" href="/assets/user-template/css/mainc619.css?v=1.0" />
+  <!-- Vendor JS-->
+  <script src="/assets/user-template/js/vendor/modernizr-3.6.0.min.js"></script>
+  <script src="/assets/user-template/js/vendor/jquery-3.6.0.min.js"></script>
+  <script src="/assets/user-template/js/vendor/jquery-migrate-3.3.0.min.js"></script>
+  <script src="/assets/user-template/js/vendor/bootstrap.bundle.min.js"></script>
+  <script src="/assets/user-template/js/plugins/waypoints.js"></script>
+  <script src="/assets/user-template/js/plugins/wow.js"></script>
+  <script src="/assets/user-template/js/plugins/magnific-popup.js"></script>
+  <script src="/assets/user-template/js/plugins/perfect-scrollbar.min.js"></script>
+  <script src="/assets/user-template/js/plugins/select2.min.js"></script>
+  <script src="/assets/user-template/js/plugins/isotope.js"></script>
+  <script src="/assets/user-template/js/plugins/scrollup.js"></script>
+  <script src="/assets/user-template/js/plugins/swiper-bundle.min.js"></script>
+  <!-- Template  JS -->
+  <script src="/assets/user-template/js/mainc619.js?v=1.0"></script>
+<app-user-footer></app-user-footer>

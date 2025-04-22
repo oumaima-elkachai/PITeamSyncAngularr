@@ -1,0 +1,18 @@
+/* Center the card on the page */
+.card {
+    margin-top: 20px;
+  }
+  
+  /* Adjust the main wrapper padding if needed */
+  .main-wrapper {
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+  .main-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px; /* Optional: adds some padding around the content */
+  }
+  

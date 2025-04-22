@@ -1,0 +1,42 @@
+<div class="row">
+    <div class="col-xl-7 col-lg-7 col-md-6 d-none d-md-flex align-items-center justify-content-center" style="height: calc(100vh - 100px);">
+      <img src="assets/img/company.jpg" alt="Company Image" class="img-fluid">
+    </div>
+  
+    <div class="col-xl-5 col-lg-5 col-md-6">
+      <div class="d-flex align-items-center justify-content-center vh-100 bg-white">
+        <div class="card rounded-0 border-0 p-5 w-100">
+          <div class="card-header border-0 p-0 text-center">
+            <a routerLink="/" class="d-inline-block mb-4">
+              <img src="assets/img/logo.svg" alt="Logo">
+            </a>
+            <h2>Welcome Back!</h2>
+            <p class="text-dark mt-3">Please login to access your account.</p>
+          </div>
+  
+          <div class="card-body p-0">
+            <form (ngSubmit)="onLogin()" #loginForm="ngForm">
+              <div class="form-group">
+                <input type="email" class="form-control" name="email" [(ngModel)]="credentials.email" placeholder="Email" required>
+              </div>
+  
+              <div class="form-group mt-3">
+                <input type="password" class="form-control" name="password" [(ngModel)]="credentials.password" placeholder="Password" required>
+              </div>
+  
+              <button type="submit" class="btn btn-primary w-100 text-uppercase rounded-2 fw-bold shadow mt-3">Login</button>
+  
+              <p class="text-center mt-3">
+                <a routerLink="/forgotpassword" class="text-primary fw-bold text-decoration-underline">Forgot Password?</a>
+              </p>
+  
+              <p class="text-center mt-3">Don't have an account? 
+                <a routerLink="/signup" class="text-primary fw-bold text-decoration-underline">Sign Up</a>
+              </p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
