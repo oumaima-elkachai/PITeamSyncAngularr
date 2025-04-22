@@ -1,0 +1,79 @@
+<app-user-header> </app-user-header>
+<link rel="shortcut icon" type="image/x-icon" href="/assets/user-template/imgs/theme/favicon.svg" />
+ <!-- Template CSS -->
+ <link rel="stylesheet" href="/assets/user-template/css/plugins/animate.min.css" />
+ <link rel="stylesheet" href="/assets/user-template/css/mainc619.css?v=1.0" />
+  <!-- Vendor JS-->
+  <script src="/assets/user-template/js/vendor/modernizr-3.6.0.min.js"></script>
+  <script src="/assets/user-template/js/vendor/jquery-3.6.0.min.js"></script>
+  <script src="/assets/user-template/js/vendor/jquery-migrate-3.3.0.min.js"></script>
+  <script src="/assets/user-template/js/vendor/bootstrap.bundle.min.js"></script>
+  <script src="/assets/user-template/js/plugins/waypoints.js"></script>
+  <script src="/assets/user-template/js/plugins/wow.js"></script>
+  <script src="/assets/user-template/js/plugins/magnific-popup.js"></script>
+  <script src="/assets/user-template/js/plugins/perfect-scrollbar.min.js"></script>
+  <script src="/assets/user-template/js/plugins/select2.min.js"></script>
+  <script src="/assets/user-template/js/plugins/isotope.js"></script>
+  <script src="/assets/user-template/js/plugins/scrollup.js"></script>
+  <script src="/assets/user-template/js/plugins/swiper-bundle.min.js"></script>
+  <!-- Template  JS -->
+  <script src="/assets/user-template/js/mainc619.js?v=1.0"></script>
+
+ 
+
+  <div class="container mt-5">
+    <h2 class="mb-4">Edit Your Profile</h2>
+    <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+      <div class="mb-3">
+        <label for="name" class="form-label">Name:</label>
+        <input type="text" class="form-control" formControlName="name" />
+      <div *ngIf="editForm.controls['name'].touched && editForm.controls['name'].invalid" class="text-danger">
+        <p *ngIf="editForm.controls['name'].errors?.['required']">Name is required</p>
+        <p *ngIf="editForm.controls['name'].errors?.['pattern']">Only letters allowed</p>
+      </div>
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Email:</label>
+        <input type="email" class="form-control" formControlName="email" />
+      <div *ngIf="editForm.controls['email'].touched && editForm.controls['email'].invalid" class="text-danger">
+        <p *ngIf="editForm.controls['email'].errors?.['required']">Email is required</p>
+        <p *ngIf="editForm.controls['email'].errors?.['email']">Invalid email</p>
+      </div>
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Password:</label>
+        <input type="password" class="form-control" formControlName="password" />
+        <div *ngIf="editForm.controls['password'].touched && editForm.controls['password'].invalid" class="text-danger">
+          <p *ngIf="editForm.controls['password'].errors?.['required']">Password is required</p>
+          <p *ngIf="editForm.controls['password'].errors?.['minlength']">Minimum 6 characters</p>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="telephone" class="form-label">Telephone:</label>
+        <input type="text" class="form-control" formControlName="telephone" placeholder="8 digits" />
+      <div *ngIf="editForm.controls['telephone'].touched && editForm.controls['telephone'].invalid" class="text-danger">
+        <p>Telephone must be 8 digits</p>
+      </div>
+      </div>
+      <div class="mb-3">
+        <label for="photo" class="form-label">Select Photo:</label>
+        <input 
+          type="file" 
+          id="photo" 
+          name="photo" 
+          accept="image/*" 
+          class="form-control"
+          (change)="onFileSelected($event)">
+      </div>
+      <div class="mb-3">
+        <label for="role" class="form-label">Role:</label>
+        <select class="form-control" formControlName="role">
+          <option [value]="RolesUser.EMPLOYEE">Employee</option>
+          <option [value]="RolesUser.CANDIDATE">Candidate</option>
+        </select>
+      
+      </div>
+      <button type="submit" class="btn btn-primary w-100">Save Changes</button>
+    </form>
+  </div>
+  

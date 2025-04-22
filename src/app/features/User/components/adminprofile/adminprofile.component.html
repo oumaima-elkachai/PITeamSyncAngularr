@@ -1,0 +1,50 @@
+<app-admin-header></app-admin-header>
+<app-admin-sidebar></app-admin-sidebar>
+<main class="main-wrapper">
+  <div class="container-fluid">
+    <div class="inner-contents">
+      <!-- Page Header -->
+      <div class="page-header d-flex align-items-center justify-content-between mr-bottom-30">
+        <div class="left-part">
+          <h2 class="text-dark">Admin Profile</h2>
+          <p class="text-gray mb-0">Welcome to the Admin Dashboard</p>
+        </div>
+      </div>
+      
+      <!-- Admin Info Card -->
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <div class="card text-white mb-3" style="background: linear-gradient(135deg, #c75fff, #feb47b); box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+            <div class="card-header d-flex align-items-center justify-content-between" style="border-bottom: 2px solid rgba(255,255,255,0.3);">
+              <h3 class="mb-0">Admin Profile</h3>
+              <div>
+                <a href="/editadminprofile" class="btn btn-light btn-sm me-2">Edit Profile</a>
+                <a (click)="logout()" class="btn btn-outline-light btn-sm">Logout</a>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <img [src]="encodedPhotoUrl" alt="User Image" class="img-fluid rounded-circle" style="width: 120px; height: 120px; border: 4px solid #fff;">
+                <div>
+                  <h4 class="card-title mb-1">{{ loggedInUser?.name || 'Admin Name' }}</h4>
+                  <p class="card-text mb-0">{{ loggedInUser?.email || 'admin@example.com' }}</p>
+                  <small class="fst-italic">Role: {{ loggedInUser?.role || 'ADMIN' }}</small>
+                </div>
+              </div>
+              <hr class="bg-white">
+              <p class="card-text">
+                Welcome to your admin dashboard. Here you can manage users, monitor system activity, and perform various administrative tasks with ease.
+              </p>
+            </div>
+            <div class="card-footer d-flex justify-content-end" style="border-top: 2px solid rgba(255,255,255,0.3);">
+              <a href="/addadmin" class="btn btn-light">Add Admin</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- End Admin Info Card -->
+
+      <!-- Additional content can be added here -->
+    </div>
+  </div>
+</main>

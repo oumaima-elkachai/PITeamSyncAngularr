@@ -1,0 +1,67 @@
+<app-admin-header></app-admin-header>
+<div class="container mt-5">
+  <h2>Add New Admin</h2>
+  <form (ngSubmit)="onSubmit()" #adminForm="ngForm">
+    <div class="mb-3">
+      <label for="name" class="form-label">Name:</label>
+      <input
+        type="text"
+        id="name"
+        name="name"
+        class="form-control"
+        [(ngModel)]="newAdmin.name"
+        required>
+    </div>
+    <div class="mb-3">
+      <label for="email" class="form-label">Email:</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        class="form-control"
+        [(ngModel)]="newAdmin.email"
+        required>
+    </div>
+    <div class="mb-3">
+      <label for="password" class="form-label">Password:</label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        class="form-control"
+        [(ngModel)]="newAdmin.password"
+        required>
+    </div>
+    <div class="mb-3">
+      <label for="telephone" class="form-label">Telephone:</label>
+      <input
+        type="text"
+        id="telephone"
+        name="telephone"
+        class="form-control"
+        [(ngModel)]="newAdmin.telephone">
+    </div>
+    <div class="mb-3">
+      <label for="photo" class="form-label">Select Photo:</label>
+      <input
+        type="file"
+        id="photo"
+        name="photo"
+        accept="image/*"
+        class="form-control"
+        (change)="onFileSelected($event)">
+    </div>
+    <div class="mb-3">
+      <label for="role" class="form-label">Role:</label>
+      <input
+        type="text"
+        id="role"
+        name="role"
+        class="form-control"
+        [(ngModel)]="newAdmin.role"
+        readonly>
+    </div>
+    <button type="submit" class="btn btn-primary">Add Admin</button>
+  </form>
+</div>
+<app-admin-footer></app-admin-footer>

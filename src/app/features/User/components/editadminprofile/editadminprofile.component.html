@@ -1,0 +1,47 @@
+<app-admin-header></app-admin-header>
+<app-admin-sidebar></app-admin-sidebar>
+<div class="container mt-5">
+  <h2 class="mb-4">Edit Admin Profile</h2>
+  <form [formGroup]="adminForm"  (ngSubmit)="onSubmit()">
+    <div class="form-group mb-3">
+      <label for="name" class="form-label">Name:</label>
+      <input type="text" class="form-control" formControlName="name">
+      <div *ngIf="adminForm.controls['name'].touched && adminForm.controls['name'].invalid" class="text-danger">
+        <p>Name is required</p>
+      </div>
+    </div>
+    <div class="form-group mb-3">
+      <label for="email" class="form-label">Email:</label>
+      <input type="email" class="form-control" formControlName="email">
+      <div *ngIf="adminForm.controls['email'].touched && adminForm.controls['email'].invalid" class="text-danger">
+        <p *ngIf="adminForm.controls['email'].errors?.['required']">Email is required</p>
+        <p *ngIf="adminForm.controls['email'].errors?.['email']">Invalid email</p>
+      </div>    </div>
+    <div class="form-group mb-3">
+      <label for="password" class="form-label">Password:</label>
+      <input type="password" class="form-control" formControlName="password">
+      <div *ngIf="adminForm.controls['password'].touched && adminForm.controls['password'].invalid" class="text-danger">
+        <p>Password is required</p>
+        <p *ngIf="adminForm.controls['password'].errors?.['minlength']">Minimum 6 characters</p>
+      </div>    </div>
+    <div class="form-group mb-3">
+      <label for="telephone" class="form-label">Telephone:</label>
+      <input type="text" class="form-control" formControlName="telephone">
+      <div *ngIf="adminForm.controls['telephone'].touched && adminForm.controls['telephone'].invalid" class="text-danger">
+        <p>Telephone must be 8 digits</p>
+      </div>    </div>
+    <div class="form-group mb-3">
+      <label for="photo" class="form-label">Select Photo:</label>
+      <input type="file" id="photo" name="photo" accept="image/*" class="form-control" (change)="onFileSelected($event)">
+    </div>
+    <div class="form-group mb-3">
+      <label for="role" class="form-label">Role:</label>
+      <select class="form-control" formControlName="role">
+        <option [value]="RolesUser.ADMIN">Admin</option>
+        <option [value]="RolesUser.EMPLOYEE">Employee</option>
+        <option [value]="RolesUser.CANDIDATE">Candidate</option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+  </form>
+</div>

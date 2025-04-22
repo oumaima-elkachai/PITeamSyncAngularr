@@ -1,0 +1,13 @@
+<div class="chat-container">
+    <div class="chat-history">
+      <div *ngFor="let msg of messages" class="chat-message" [ngClass]="msg.sender">
+        <div class="bubble">{{ msg.message }}</div>
+      </div>
+    </div>
+  
+    <div class="chat-input-container">
+      <input [(ngModel)]="userInput" (keyup.enter)="sendMessage()" placeholder="Type your question..." />
+      <button (click)="sendMessage()" [disabled]="isLoading || !userInput.trim()">&#10148;</button>
+    </div>
+  </div>
+  

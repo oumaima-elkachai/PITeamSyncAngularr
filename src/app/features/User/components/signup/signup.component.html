@@ -1,0 +1,95 @@
+<div class="row">
+    <div class="col-xl-7 col-lg-7 col-md-6 d-none d-md-flex align-items-center justify-content-center" style="height: calc(100vh - 100px);">
+      <img src="assets/img/company.jpg" alt="Company Image" class="img-fluid">
+    </div>
+  
+    <div class="col-xl-5 col-lg-5 col-md-6">
+      <div class="d-flex align-items-center justify-content-center vh-100 bg-white">
+        <div class="card rounded-0 border-0 p-5 w-100">
+          <div class="card-header border-0 p-0 text-center">
+            <a routerLink="/" class="d-inline-block mb-4">
+              <img src="assets/img/logo.svg" alt="Logo">
+            </a>
+            <h2>Welcome to TeamSync!</h2>
+            <p class="text-dark mt-3">Signup here to create your own dashboard.</p>
+          </div>
+  
+  
+          <div class="card-body p-0">
+            <form (ngSubmit)="onSignup()" [formGroup]="signupForm">
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <input type="text" class="form-control" formControlName="name" placeholder="Your name" />
+                    <div *ngIf="signupForm.controls['name'].touched && signupForm.controls['name'].invalid" class="text-danger">
+                      <p *ngIf="signupForm.controls['name'].errors?.['required']">Name is required</p>
+                      <p *ngIf="signupForm.controls['name'].errors?.['pattern']">Name should not contain numbers</p>
+                    </div>
+                   </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <input type="email" class="form-control" formControlName="email" placeholder="Email" />
+                    <div *ngIf="signupForm.controls['email'].touched && signupForm.controls['email'].invalid" class="text-danger">
+                      <p *ngIf="signupForm.controls['email'].errors?.['required']">Email is required</p>
+                      <p *ngIf="signupForm.controls['email'].errors?.['email']">Invalid email format</p>
+                    </div>                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <input type="password" class="form-control" formControlName="password" placeholder="Password" />
+                    <div *ngIf="signupForm.controls['password'].touched && signupForm.controls['password'].invalid" class="text-danger">
+                      <p *ngIf="signupForm.controls['password'].errors?.['required']">Password is required</p>
+                      <p *ngIf="signupForm.controls['password'].errors?.['minlength']">Password must be at least 6 characters</p>
+                    </div>                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <input type="password" class="form-control" formControlName="confirmPassword" placeholder="Confirm Password" />
+                    <div *ngIf="signupForm.controls['confirmPassword'].touched && signupForm.controls['confirmPassword'].invalid" class="text-danger">
+                      <p>Confirmation is required</p>
+                    </div>                  </div>
+                </div>
+                <!-- Existing form fields -->
+<div class="col-lg-6">
+  <div class="form-group">
+    
+    <input type="file" id="photo" (change)="onFileSelected($event)" accept="image/*" class="form-control" placeholder="Photo"> 
+ </div>
+</div>
+  <div class="col-lg-6">
+    <div class="form-group">
+      <input type="text" class="form-control" formControlName="telephone" placeholder="8 digits" />
+      <div *ngIf="signupForm.controls['telephone'].touched && signupForm.controls['telephone'].invalid" class="text-danger">
+        <p>Telephone must be 8 digits</p>
+      </div>  </div>
+  </div>
+  
+                <div class="col-lg-12">
+                  <div class="form-group">
+                    <label for="role">Role</label>
+                    <select class="form-control" formControlName="role">
+                      <option value="EMPLOYEE">Employer</option>
+                      <option value="CANDIDATE">Candidate</option>
+                    </select>
+                    <div *ngIf="signupForm.controls['role'].touched && signupForm.controls['role'].invalid" class="text-danger">
+                      <p>Role is required</p>
+                    </div>
+                    
+                      
+                  </div>
+                </div>
+              </div>
+  
+              <button type="submit" class="btn btn-primary w-100 text-uppercase rounded-2 fw-bold shadow mt-3">Register</button>
+  
+              <p class="mt-4 text-center">Already have an account? 
+                <a routerLink="/login" class="text-primary fw-bold text-decoration-underline">Sign In</a>
+              </p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

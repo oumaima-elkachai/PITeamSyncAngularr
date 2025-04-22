@@ -1,0 +1,18 @@
+.container {
+    max-width: 600px;
+  }
+  
+  .form-label {
+    font-weight: 600;
+  }
+  
+  .btn-primary {
+    width: 100%;
+  }
+  .main-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px; /* Optional: adds some padding around the content */
+  }
