@@ -12,5 +12,5 @@ export interface Event {
   reminderSent?: boolean;
   participantIds?: string[];
   timeZone?: string;
+  capacity?: number;
 }
-

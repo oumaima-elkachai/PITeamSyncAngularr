@@ -22,7 +22,9 @@ export class EventsListComponent implements OnInit {
 
     showEditModal = false;
     showAddModal = false;
+    showViewModal = false;
     selectedEvent: Event | null = null;
+    viewingEvent: Event | null = null;
 
     // Add these Outputs to communicate with parent
     @Output() editEvent = new EventEmitter<string>();
@@ -45,7 +47,7 @@ export class EventsListComponent implements OnInit {
         this.isLoading = true;
         this.eventService.getAllEvents().subscribe({
             next: (data: any) => {
-                this.events = Array.isArray(data.data) ? data.data : [];
+                this.events = Array.isArray(data) ? data : [];
                 this.calculateTotalPages();
                 this.isLoading = false;
             },
@@ -96,29 +98,49 @@ export class EventsListComponent implements OnInit {
         this.showAddModal = true;
     }
 
-    navigateToView(eventId: string): void {
-        this.router.navigate(['/events/view', eventId]);
+    openView(eventId: string): void {
+        const event = this.events.find(e => e.idEvent === eventId);
+        if (event) {
+            this.viewingEvent = event;
+            this.showViewModal = true;
+            document.body.classList.add('modal-open');
+        }
+    }
+
+    closeViewModal(): void {
+        this.showViewModal = false;
+        this.viewingEvent = null;
+        document.body.classList.remove('modal-open');
     }
 
     handleEventUpdated(updatedEvent: Event): void {
         const index = this.events.findIndex(e => e.idEvent === updatedEvent.idEvent);
         if (index !== -1) {
             this.events[index] = updatedEvent;
-            this.events = [...this.events]; // Create new reference to trigger change detection
+            this.events = [...this.events]; 
         }
         this.closeModals();
     }
 
     handleEventAdded(newEvent: Event): void {
-        this.events.push(newEvent);
-        this.calculateTotalPages();
-        // Navigate to the last page where the new event was added
-        this.currentPage = this.totalPages;
-        this.closeModals();
+        this.eventService.addEvent(newEvent).subscribe({
+            next: (createdEvent) => {
+                this.events = [...this.events, createdEvent];
+                this.calculateTotalPages();
+                this.currentPage = this.totalPages;
+                this.closeModals();
+                this.refreshEvents();
+            },
+            error: (error) => {
+                console.error('Error creating event:', error);
+                alert('Failed to create event. Please try again.');
+            }
+        });
     }
 
     openAddModal(): void {
         this.showAddModal = true;
+        document.body.classList.add('modal-open');
     }
 
     closeAddModal(): void {
@@ -129,12 +151,32 @@ export class EventsListComponent implements OnInit {
         this.showEditModal = false;
         this.showAddModal = false;
         this.selectedEvent = null;
+        document.body.classList.remove('modal-open');
+    }
+
+    isOverlapping(event: Event, index: number): boolean {
+        if (index === 0) return false;
+        
+        const previousEvent = this.paginatedEvents[index - 1];
+        const isSameDate = new Date(previousEvent.startDate).toDateString() === 
+                           new Date(event.startDate).toDateString();
+        const isSameTime = previousEvent.startTime === event.startTime;
+        
+        return isSameDate && isSameTime;
     }
 
     get paginatedEvents(): Event[] {
         const startIndex = (this.currentPage - 1) * this.itemsPerPage;
         const endIndex = startIndex + this.itemsPerPage;
-        return this.events.slice(startIndex, endIndex);
+        return this.events
+            .sort((a, b) => {
+                // First sort by date
+                const dateComparison = new Date(a.startDate).getTime() - new Date(b.startDate).getTime();
+                if (dateComparison !== 0) return dateComparison;
+                // Then sort by time if dates are equal
+                return (a.startTime || '').localeCompare(b.startTime || '');
+            })
+            .slice(startIndex, endIndex);
     }
 
     refreshEvents(): void {

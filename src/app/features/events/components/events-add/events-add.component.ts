@@ -5,6 +5,7 @@ import { EventStatus } from '../../models/event-status.enum';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { ParticipantService } from 'src/app/core/services/participant/participant.service';
 import { Participant } from '../../../participants/models/participant.model';
+import { EventService } from 'src/app/core/services/events/events.service';
 
 @Component({
   selector: 'app-events-add',
@@ -26,7 +27,8 @@ export class EventsAddComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private participantService: ParticipantService
+    private participantService: ParticipantService,
+    private eventService: EventService
   ) {
     this.createForm();
     this.setupSearch();
@@ -225,15 +227,13 @@ export class EventsAddComponent implements OnInit {
         endDate: formValue.endDate,
         startTime: formValue.startTime,
         endTime: formValue.endTime,
-        typeS: EventStatus.PLANNED, // Always set to PLANNED
+        typeS: EventStatus.PLANNED,
         participantIds: this.selectedParticipants
           .map(p => p.id)
           .filter((id): id is string => id !== undefined)
       };
       this.eventAdded.emit(event);
       this.eventForm.reset();
-      this.selectedParticipants = [];
-      this.submitted = false;
     }
   }
 

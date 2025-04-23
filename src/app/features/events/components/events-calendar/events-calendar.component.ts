@@ -78,7 +78,9 @@ export class EventsCalendarComponent implements OnInit {
 
     this.eventService.getEventsInRange(start, end).subscribe({
       next: (events) => {
+      
         this.calendarOptions.events = this.formatEvents(events);
+        console.log('Formatted events:', this.calendarOptions.events);
         this.loading = false;
       },
       error: (error) => {
