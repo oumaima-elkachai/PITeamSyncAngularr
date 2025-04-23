@@ -21,11 +21,11 @@ export class ApplyJobComponent implements OnInit {
     candidateId: '',
     cvUrl: '',
     experience:0,
-    candidatePhone: 0,
+    candidatePhone: '',
     candidatePortfolio: '',
     candidateLinkedIn: '', // Default value for experience
     candidateGithub: '',
-  
+    score: 0
   };
 
   selectedFile: File | null = null;
@@ -69,6 +69,7 @@ export class ApplyJobComponent implements OnInit {
           this.application.candidateName = candidate.name;
           this.application.candidateEmail = candidate.email;
           this.application.candidatePhone = candidate.phone;
+         
           this.application.candidatePortfolio = candidate.portfolio;
           this.application.candidateLinkedIn = candidate.linkedIn;
           this.application.candidateGithub = candidate.github;

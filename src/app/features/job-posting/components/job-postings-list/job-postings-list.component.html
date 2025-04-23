@@ -1,5 +1,4 @@
 
-
 <!-- Main Wrapper-->
 <main class="main-wrapper">
     <div class="container-fluid">
@@ -15,11 +14,18 @@
                         <button type="submit" class="btn"><img src="/assets/admin-template/img/svg/search.svg" alt=""></button>
                     </form>
                     <div>
-                        <a  [routerLink]="['/admin/job-postings/add']" class="btn btn-primary ff-heading fs-18 fw-bold py-3"><span class="fs-21"><i class="bi bi-bookmark-plus-fill"></i></span> <i class="bi bi-plus"></i> New Job</a>
+                        <a [routerLink]="['/admin/job-postings/add']" class="btn btn-primary ff-heading fs-18 fw-bold py-3">
+                            <span class="fs-21"><i class="bi bi-bookmark-plus-fill"></i></span> <i class="bi bi-plus"></i> New Job
+                        </a>
                     </div>
                     <div class="filtering d-flex align-items-center gap-3 ms-3">
-                        <a href="#" class="btn list-view p-0 fs-30"><i class="bi bi-list"></i></a>
-                        <a href="#" class="btn grid-view p-0 fs-30 active"><i class="bi bi-grid"></i></a>
+                        <a  class="btn list-view p-0 fs-30"><i class="bi bi-list"></i></a>
+                        <a [routerLink]="['/admin/stat']" class="btn list-view p-0 fs-30">
+                            <i class="bi bi-bar-chart-line"></i> <!-- Icône de graphique pour les statistiques -->
+                          </a>
+                          
+                       
+                        <a  class="btn grid-view p-0 fs-30 active"><i class="bi bi-grid"></i></a>
                     </div>
                 </div>
             </div>
@@ -28,10 +34,8 @@
                 <!-- Classic Tab -->
                 <ul class="nav nav-tabs mb-0 justify-content-start justify-content-md-end" id="pills-tab" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#tab-7" data-bs-toggle="tab" role="tab">ALL JOBS</a>
+                        <a class="nav-link active" data-bs-toggle="tab" role="tab">ALL JOBS</a>
                     </li>
-                    
-                   
                 </ul>
             </div>
 
@@ -39,37 +43,29 @@
                 <div class="tab-pane fade show active" id="tab-7" role="tabpanel">
                     <div class="row">
                         <!-- Loop through job postings -->
-                        <div *ngFor="let job of filteredJobs" class="col-lg-4 col-md-6 mb-4">
+                        <div *ngFor="let job of paginatedJobs" class="col-lg-4 col-md-6 mb-4">
                             <div class="card shadow-sm border-0 job-card rounded-4 p-3 position-relative h-100">
-                                <img
-                                    class="card-img-top rounded-3 mb-3 object-fit-cover"
-                                    [src]="job.imageUrl"
-                                    alt="Job Image"
-                                    style="height: 180px; object-fit: cover;"
-                                />
+                                <img class="card-img-top rounded-3 mb-3 object-fit-cover" [src]="job.imageUrl" alt="Job Image" style="height: 180px; object-fit: cover;" />
                                 <div class="card-body p-0">
                                     <div class="d-flex justify-content-between align-items-start mb-2">
                                         <div>
                                             <h5 class="fw-bold text-dark mb-1">{{ job.title }}</h5>
-                                            <span 
-                                            class="badge" 
-                                            [ngClass]="{
+                                            <span class="badge" [ngClass]="{
                                                 'bg-success': job.status === 'ENABLE',
                                                 'bg-danger': job.status === 'DISABLE', 
                                                 'text-white': true
                                             }">
                                             {{ job.status }}
-                                        </span>
+                                            </span>
                                         </div>
-                                        
                                         <div class="dropdown">
-                                            <a href="#" data-bs-toggle="dropdown" class="text-muted">
+                                            <a  data-bs-toggle="dropdown" class="text-muted">
                                                 <i class="bi bi-three-dots-vertical fs-2"></i>
                                             </a>
                                             <div class="dropdown-menu dropdown-menu-end">
-                                                <a class="dropdown-item" href="#" [routerLink]="['/admin/job-postings/details/', job.id]">View</a>
+                                                <a class="dropdown-item"  [routerLink]="['/admin/job-postings/details/', job.id]">View</a>
                                                 <a class="dropdown-item" [routerLink]="['/admin/job-postings/edit', job.id]">Edit</a>
-                                                <a class="dropdown-item text-danger" href="#" (click)="job.id ? deleteJob(job.id) : null; $event.preventDefault();">Delete</a>
+                                                <a class="dropdown-item text-danger"  (click)="job.id ? deleteJob(job.id) : null; $event.preventDefault();">Delete</a>
                                             </div>
                                         </div>
                                     </div>
@@ -82,13 +78,34 @@
                         </div>
                         <!-- End Loop -->
                     </div>
+
+                    <!-- Pagination -->
+                    <nav aria-label="Page navigation" class="mt-4">
+                        <ul class="pagination pagination-lg justify-content-center">
+                            <li class="page-item" [class.disabled]="currentPage === 1">
+                                <a class="page-link"  (click)="changePage(currentPage - 1)">
+                                    <i class="bi bi-chevron-left"></i>
+                                </a>
+                            </li>
+                            <li class="page-item"
+                                *ngFor="let page of [].constructor(totalPages); let i = index"
+                                [class.active]="currentPage === i + 1">
+                                <a class="page-link"  (click)="changePage(i + 1)">{{ i + 1 }}</a>
+                            </li>
+                            <li class="page-item" [class.disabled]="currentPage === totalPages">
+                                <a class="page-link"  (click)="changePage(currentPage + 1)">
+                                    <i class="bi bi-chevron-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                    <!-- End Pagination -->
+
                 </div>
             </div>
         </div>
     </div>
 </main>
-
-
 <!-- CSS for the card styling -->
 <style>
     .job-card {

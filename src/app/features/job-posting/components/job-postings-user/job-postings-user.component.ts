@@ -26,7 +26,9 @@ export class JobPostingsUserComponent implements OnInit {
     this.jobService.getAllJobs().subscribe({
       next: (jobs: JobPosting[]) => {
         this.jobList = jobs;
+        
         this.paginateJobs(); // Appelle la pagination après avoir récupéré les jobs
+        
       },
       error: (error) => {
         console.error('Erreur lors de la récupération des offres :', error);
@@ -38,6 +40,7 @@ export class JobPostingsUserComponent implements OnInit {
     const startIndex = (this.currentPage - 1) * this.pageSize;
     const endIndex = startIndex + this.pageSize;
     this.paginatedJobs = this.jobList.slice(startIndex, endIndex);
+    
   }
 
   onPageChange(page: number): void {

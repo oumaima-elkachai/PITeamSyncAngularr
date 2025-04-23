@@ -1,0 +1,31 @@
+<main class="main-wrapper">
+    <div class="container-fluid">
+      <div class="inner-contents">
+        <div class="page-header d-flex align-items-center justify-content-between mb-4">
+          <div class="left-part">
+            <h2 class="text-dark fw-semibold">Statistiques des Postes</h2>
+            <p class="text-muted mb-0">Les postes ayant reçu le plus de candidatures</p>
+          </div>
+        </div>
+  
+        <div class="card border-light shadow-sm rounded-3 p-3" style="max-width: 520px; margin: 20px auto;">
+          <div class="card-header border-0 d-flex align-items-center justify-content-between p-3">
+            <h5 class="mb-0 text-dark">Les postes ayant reçu le plus de candidatures</h5>
+          </div>
+          <div class="card-body p-0 p-5">
+            <canvas baseChart
+              [data]="{ labels: doughnutChartLabels, datasets: [{ data: doughnutChartData }] }"
+              [options]="doughnutChartOptions"
+              [type]="'doughnut'">
+            </canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+ 
+
+
+  </main>
+  

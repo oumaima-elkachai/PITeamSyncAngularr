@@ -3,7 +3,7 @@ export interface Candidate {
     id: string;
     name: string;
     email: string;
-    phone: number;
+    phone: string;
     portfolio: string;
     linkedIn: string;
     github: string;

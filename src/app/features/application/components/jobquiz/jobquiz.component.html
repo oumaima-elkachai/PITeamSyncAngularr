@@ -1,0 +1,24 @@
+<main class="main">
+    <section class="section-box">
+        <div class="box-head-single">
+            <div class="container">
+                <h3></h3>
+                <ul class="breadcrumbs">
+                    <li><a href="#"></a></li>
+                    <li>APPLY your Job MR </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <div class="job-quiz">
+        <h2>Questions d'entretien générées par IA</h2>
+        <p><strong>Description du poste :</strong> {{ jobDescription }}</p>
+      
+        <div *ngFor="let question of questions; let i = index">
+            <p><strong>Question {{ i + 1 }}:</strong> {{ question }}</p>
+            <textarea [(ngModel)]="answers[i]" placeholder="Écrivez votre réponse ici..."></textarea>
+          </div>
+          
+      </div>
+      

@@ -21,6 +21,10 @@ import { SafeUrlPipe } from 'src/app/features/application/components/SafeUrlPipe
 import { ApplyJobComponent } from './features/application/components/apply-job/apply-job.component';
 import { CandidateComponent } from './features/candidate/components/candidate/candidate.component';
 import { ApplicationDetailsComponent } from './features/application/components/application-details/application-details.component';
+import { JobQuizComponent } from './features/application/components/jobquiz/jobquiz.component';
+import { JobStatsComponent } from './features/application/components/job-stats/job-stats.component';
+import { NgChartsModule } from 'ng2-charts'; 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -29,7 +33,9 @@ import { ApplicationDetailsComponent } from './features/application/components/a
     ApplyJobComponent,
     CandidateComponent,
     ApplicationDetailsComponent,
-    SafeUrlPipe
+    SafeUrlPipe,
+    JobQuizComponent,
+    JobStatsComponent 
    
   ],
   imports: [
@@ -41,6 +47,7 @@ import { ApplicationDetailsComponent } from './features/application/components/a
     HttpClientModule,
     RouterModule,
     JobPostingModule,
+    NgChartsModule, 
     
    
   ],

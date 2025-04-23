@@ -16,7 +16,8 @@ export class JobPostingsDetailsComponent implements OnInit {
   applications: Application[] = [];
   activeTab: 'description' | 'details' | 'applications' = 'description';
   successMessage: string = '';
-
+  strokeDashArray: number = 0;
+  strokeDashOffset: number = 0;
   constructor(
     private route: ActivatedRoute,
     private jobService: JobPostingService,
@@ -46,6 +47,31 @@ export class JobPostingsDetailsComponent implements OnInit {
     });
   }
 
+
+/// ranked
+loadRankedScores(): void {
+  this.applicationService.getRankedApplications(this.jobId).subscribe((rankedApps) => {
+    // Trie du plus grand au plus petit score
+    rankedApps.sort((a, b) => (b.score || 0) - (a.score || 0));
+    this.applications = rankedApps;
+  });
+}
+
+
+
+// Logic to update stroke values based on the score
+  getStrokeValues(score: number): void {
+    this.strokeDashArray = 2 * Math.PI * 15.9155;  // Circle perimeter (36px radius)
+    this.strokeDashOffset = this.strokeDashArray - (score / 10) * this.strokeDashArray;
+  }
+
+  
+/*   loadApplications(): void {
+    this.applicationService.getRankedApplications(this.jobId).subscribe((apps) => {
+      console.log(apps);  // Tu verras les scores ici
+      this.applications = apps;
+    });
+  } */
   updateStatus(appId: string, newStatus: string): void {
     this.applicationService.updateApplicationStatus(appId, newStatus).subscribe(() => {
       alert(`✅ Statut mis à jour en ${newStatus}`);

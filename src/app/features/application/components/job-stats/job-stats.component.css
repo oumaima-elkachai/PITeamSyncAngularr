@@ -1,0 +1,47 @@
+/* Card styling with a subtle, minimalist approach */
+.card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    padding: 1.5rem;
+  }
+  
+  .card-header {
+    padding: 1rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+  
+  .card-body {
+    padding: 0;
+  }
+  
+  /* Text and page header styling */
+  .page-header h2 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .page-header p {
+    font-size: 1rem;
+    color: #777;
+  }
+  
+  /* Make chart body compact */
+  canvas {
+    max-height: 300px; /* Ensuring the chart doesn't overflow */
+  }
+  
+  /* Responsive for smaller screens */
+  @media (max-width: 768px) {
+    .card {
+      max-width: 100%;
+      padding: 1rem;
+    }
+  
+    .page-header h2 {
+      font-size: 1.5rem;
+    }
+  }
+  

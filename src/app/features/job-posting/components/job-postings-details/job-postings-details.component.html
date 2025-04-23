@@ -52,7 +52,7 @@
                   <i class="bi bi-three-dots-vertical"></i>
                 </a>
                 <div class="dropdown-menu p-0">
-                  <a class="dropdown-item" href="#">Edit</a>
+                  <a class="dropdown-item" (click)="loadRankedScores()" > 📊 Afficher les scores</a>
                   <a class="dropdown-item" href="#">Duplicate</a>
                   <a class="dropdown-item text-danger" href="#">Close</a>
                 </div>
@@ -187,8 +187,7 @@
 </div>
 
 
-            <!-- Applications Tab -->
-         <!-- Applications Tab -->
+          
 <!-- Applications Tab -->
 <div class="tab-pane fade" id="applications" role="tabpanel">
   <div class="alert alert-info" *ngIf="applications.length === 0">
@@ -204,8 +203,15 @@
                class="rounded-circle shadow-sm me-3" width="60" height="60" />
           <div>
             <h6 class="mb-0 fw-bold text-dark">{{ app.candidateName }}</h6>
+
+            
+           
+              
+           
+            
             <small class="text-muted">Application</small>
           </div>
+          
         </div>
 
         <!-- Status -->
@@ -216,6 +222,35 @@
   {{ app.status || 'N/A' }}
 </span>
 
+        </div>
+
+
+        <div class="d-flex align-items-center justify-content-between gap-4">
+          <!-- Barre de progression -->
+          <div
+            class="progress flex-grow-1 rounded-1 bg-light-200"
+            role="progressbar"
+            aria-label="progress"
+            aria-valuemin="0"
+            aria-valuemax="100"
+          >
+            <div
+              class="progress-bar rounded-1"
+              [ngClass]="{
+                'bg-success': app.score >= 8,
+                'bg-warning': app.score >= 5 && app.score < 8,
+                'bg-danger': app.score < 5
+              }"
+              [style.width.%]="(app.score || 0) * 10"
+              [attr.title]="app.score + ' / 10'"
+            >
+            </div>
+          </div>
+      
+          <!-- Affichage du pourcentage -->
+          <div class="ff-heading fs-16 fw-semibold">
+            {{ (app.score || 0) * 10 | number: '1.0-0' }}%
+          </div>
         </div>
 
         <!-- Actions -->

@@ -113,7 +113,7 @@
 
             <!-- JOB LIST -->
             <div class="row">
-                <div class="col-lg-4 col-md-6" *ngFor="let job of paginatedJobs">
+                <div class="col-lg-4 col-md-6" *ngFor="let job of paginatedJobs ">
                     <div class="card-grid-2 hover-up wow animate__animated animate__fadeIn" data-wow-delay=".1s">
                     <div class="text-center card-grid-2-image">
                     <a [routerLink]="['/user/job-postings/details', job.id]">

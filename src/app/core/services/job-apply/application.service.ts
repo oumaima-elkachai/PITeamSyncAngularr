@@ -84,5 +84,15 @@ deleteApplication(id: string): Observable<void> {
   return this.http.delete<void>(`${this.apiUrl}/${id}`);
 }
 
+getRankedApplications(jobId: string): Observable<Application[]> {
+  return this.http.get<Application[]>(`${this.apiUrl}/ranked/${jobId}`);
+}
+
+getApplicationsCountByJob(): Observable<{ [jobTitle: string]: number }> {
+  return this.http.get<{ [jobTitle: string]: number }>(`${this.apiUrl}/stats/by-job`);
+}
+getApplicationsCountByStatus(): Observable<{ [status: string]: number }> {
+  return this.http.get<{ [status: string]: number }>(`${this.apiUrl}/stats`);
+}
 
 }

@@ -10,10 +10,11 @@
     status?: string;
     submittedAt?: Date;
     experience: number;
-    candidatePhone:  number;
+    candidatePhone:  string;
     candidatePortfolio: string;
     candidateLinkedIn: string;
     candidateGithub: string;
+    score: number;
 
   }
   

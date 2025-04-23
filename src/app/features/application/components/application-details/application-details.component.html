@@ -27,6 +27,15 @@
                       <div class="mt-0 mt-sm-5"> 
                           <h2>{{ application.candidateName }}</h2>
                           <p class="fw-semibold text-gray mb-0">{{ application.jobTitle }}</p> 
+                          
+                          <p class="text-gray mb-0">Statut de la candidature : 
+                              <span class="badge" [ngClass]="{
+                                  'bg-success': application.status === 'ACCEPTED',
+                                  'bg-danger': application.status === 'REJECTED',
+                                  'bg-warning': application.status === 'PENDING'
+                              }">
+                                  {{ application.status }}
+                              </span>
                       </div>
                   </div> 
                   <div class="d-flex align-items-center gap-2 gap-sm-3 flex-wrap">
