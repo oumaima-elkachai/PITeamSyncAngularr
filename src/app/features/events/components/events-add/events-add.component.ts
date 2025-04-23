@@ -2,6 +2,9 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { Event } from '../../models/event.model';
 import { EventStatus } from '../../models/event-status.enum';
+import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
+import { ParticipantService } from 'src/app/core/services/participant/participant.service';
+import { Participant } from 'src/app/features/participants/models/participant.model';
 
 @Component({
   selector: 'app-events-add',
@@ -16,11 +19,23 @@ export class EventsAddComponent implements OnInit {
   eventStatuses = Object.values(EventStatus);
   submitted = false;
 
-  constructor(private fb: FormBuilder) {
+  searchTerm: string = '';
+  searchSubject = new Subject<string>();
+  participants: Participant[] = [];
+  filteredParticipants: Participant[] = [];
+  selectedParticipants: Participant[] = [];
+
+  constructor(
+    private fb: FormBuilder,
+    private participantService: ParticipantService
+  ) {
     this.createForm();
+    this.setupSearch();
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.loadParticipants();
+  }
 
   private getCurrentDateString(): string {
     return new Date().toISOString().split('T')[0];
@@ -62,7 +77,7 @@ export class EventsAddComponent implements OnInit {
     };
   }
 
-  createForm() {
+  private createForm() {
     const currentDate = this.getCurrentDateString();
     const currentTime = this.getCurrentTimeString();
 
@@ -80,8 +95,69 @@ export class EventsAddComponent implements OnInit {
         Validators.pattern('^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$')
       ]],
       typeS: ['', Validators.required],
-      description: ['', [Validators.required, Validators.minLength(10)]]
+      description: ['', [Validators.required, Validators.minLength(10)]],
+      participantIds: [[], [Validators.required]],
     }, { validator: this.dateTimeValidator });
+  }
+
+  private setupSearch() {
+    this.searchSubject.pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    ).subscribe(term => {
+      this.filterParticipants(term);
+    });
+  }
+
+  private loadParticipants() {
+    this.participantService.getAllParticipants().subscribe({
+      next: (participants) => {
+        this.participants = participants;
+        this.filteredParticipants = [];
+      },
+      error: (error) => {
+        console.error('Error loading participants:', error);
+      }
+    });
+  }
+
+  onSearchInput(term: string) {
+    this.searchSubject.next(term);
+  }
+
+  private filterParticipants(term: string) {
+    if (!term) {
+      this.filteredParticipants = [];
+      return;
+    }
+
+    term = term.toLowerCase();
+    this.filteredParticipants = this.participants.filter(participant => 
+      participant.name.toLowerCase().includes(term) || 
+      participant.email.toLowerCase().includes(term)
+    );
+  }
+
+  selectParticipant(participant: Participant) {
+    if (!this.isParticipantSelected(participant.id)) {
+      this.selectedParticipants.push(participant);
+      this.eventForm.patchValue({
+        participantIds: this.selectedParticipants.map(p => p.id)
+      });
+      this.searchTerm = '';
+      this.filteredParticipants = [];
+    }
+  }
+
+  removeParticipant(participantId: string) {
+    this.selectedParticipants = this.selectedParticipants.filter(p => p.id !== participantId);
+    this.eventForm.patchValue({
+      participantIds: this.selectedParticipants.map(p => p.id)
+    });
+  }
+
+  isParticipantSelected(participantId: string): boolean {
+    return this.selectedParticipants.some(p => p.id === participantId);
   }
 
   private dateValidator() {
@@ -157,11 +233,13 @@ export class EventsAddComponent implements OnInit {
         endDate: formValue.endDate,
         startTime: formValue.startTime,
         endTime: formValue.endTime,
-        typeS: formValue.typeS as EventStatus,
-        description: formValue.description
+        typeS: EventStatus.PLANNED,
+        description: formValue.description,
+        participantIds: this.selectedParticipants.map(p => p.id)
       };
       this.eventAdded.emit(event);
       this.eventForm.reset();
+      this.selectedParticipants = [];
       this.submitted = false;
     }
   }
