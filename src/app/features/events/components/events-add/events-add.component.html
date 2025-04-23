@@ -54,20 +54,6 @@
 
             <div class="col-lg-12">
               <div class="form-group">
-                <label class="form-label">Event Status</label>
-                <select class="form-control" formControlName="typeS"
-                        [ngClass]="{ 'is-invalid': submitted && f['typeS'].errors }">
-                  <option value="">Select status</option>
-                  <option *ngFor="let status of eventStatuses" [value]="status">{{ status }}</option>
-                </select>
-                <div *ngIf="submitted && f['typeS'].errors" class="invalid-feedback">
-                  {{ getErrorMessage('typeS') }}
-                </div>
-              </div>
-            </div>
-
-            <div class="col-lg-12">
-              <div class="form-group">
                 <label class="form-label">Title</label>
                 <input type="text" class="form-control" formControlName="title"
                        [ngClass]="{ 'is-invalid': submitted && f['title'].errors }">

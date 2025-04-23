@@ -16,7 +16,6 @@ export class EventsAddComponent implements OnInit {
   @Output() cancel = new EventEmitter<void>();
 
   eventForm!: FormGroup;
-  eventStatuses = Object.values(EventStatus);
   submitted = false;
 
   searchTerm: string = '';
@@ -82,21 +81,13 @@ export class EventsAddComponent implements OnInit {
     const currentTime = this.getCurrentTimeString();
 
     this.eventForm = this.fb.group({
-      title: ['', [Validators.required, Validators.minLength(3)]],
+      title: ['', [Validators.required]],
+      description: ['', [Validators.required]],
       startDate: [currentDate, [Validators.required, this.dateValidator()]],
       endDate: [currentDate, [Validators.required, this.dateValidator()]],
-      startTime: [currentTime, [
-        Validators.required, 
-        Validators.pattern('^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$'),
-        this.timeValidator()
-      ]],
-      endTime: [currentTime, [
-        Validators.required, 
-        Validators.pattern('^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$')
-      ]],
-      typeS: ['', Validators.required],
-      description: ['', [Validators.required, Validators.minLength(10)]],
-      participantIds: [[], [Validators.required]],
+      startTime: [currentTime, [Validators.required, this.timeValidator()]],
+      endTime: [currentTime, [Validators.required]],
+      participantIds: [[], [Validators.required]]
     }, { validator: this.dateTimeValidator });
   }
 
@@ -223,11 +214,18 @@ export class EventsAddComponent implements OnInit {
   }
 
   onSubmit() {
+    this.submitted = true;
+
     if (this.eventForm.valid) {
       const formValue = this.eventForm.value;
       const event: Event = {
-        ...formValue,
-        typeS: EventStatus.PLANNED,
+        title: formValue.title,
+        description: formValue.description,
+        startDate: formValue.startDate,
+        endDate: formValue.endDate,
+        startTime: formValue.startTime,
+        endTime: formValue.endTime,
+        typeS: EventStatus.PLANNED, // Always set to PLANNED
         participantIds: this.selectedParticipants
           .map(p => p.id)
           .filter((id): id is string => id !== undefined)
