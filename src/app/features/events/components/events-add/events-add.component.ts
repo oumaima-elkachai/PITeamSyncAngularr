@@ -4,7 +4,7 @@ import { Event } from '../../models/event.model';
 import { EventStatus } from '../../models/event-status.enum';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { ParticipantService } from 'src/app/core/services/participant/participant.service';
-import { Participant } from 'src/app/features/participants/models/participant.model';
+import { Participant } from '../../../participants/models/participant.model';
 
 @Component({
   selector: 'app-events-add',
@@ -139,10 +139,10 @@ export class EventsAddComponent implements OnInit {
   }
 
   selectParticipant(participant: Participant) {
-    if (!this.isParticipantSelected(participant.id)) {
+    if (participant.id && !this.isParticipantSelected(participant.id)) {
       this.selectedParticipants.push(participant);
       this.eventForm.patchValue({
-        participantIds: this.selectedParticipants.map(p => p.id)
+        participantIds: this.selectedParticipants.map(p => p.id).filter((id): id is string => id !== undefined)
       });
       this.searchTerm = '';
       this.filteredParticipants = [];
@@ -152,7 +152,7 @@ export class EventsAddComponent implements OnInit {
   removeParticipant(participantId: string) {
     this.selectedParticipants = this.selectedParticipants.filter(p => p.id !== participantId);
     this.eventForm.patchValue({
-      participantIds: this.selectedParticipants.map(p => p.id)
+      participantIds: this.selectedParticipants.map(p => p.id).filter((id): id is string => id !== undefined)
     });
   }
 
@@ -223,19 +223,14 @@ export class EventsAddComponent implements OnInit {
   }
 
   onSubmit() {
-    this.submitted = true;
-
     if (this.eventForm.valid) {
       const formValue = this.eventForm.value;
       const event: Event = {
-        title: formValue.title,
-        startDate: formValue.startDate,
-        endDate: formValue.endDate,
-        startTime: formValue.startTime,
-        endTime: formValue.endTime,
+        ...formValue,
         typeS: EventStatus.PLANNED,
-        description: formValue.description,
-        participantIds: this.selectedParticipants.map(p => p.id)
+        participantIds: this.selectedParticipants
+          .map(p => p.id)
+          .filter((id): id is string => id !== undefined)
       };
       this.eventAdded.emit(event);
       this.eventForm.reset();

@@ -9,12 +9,9 @@ import { RouterModule, Routes } from "@angular/router";
 import { HttpClientModule } from '@angular/common/http';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { EventsEditComponent } from './components/events-edit/events-edit.component';
-import { EventNotificationComponent } from './components/event-notification/event-notification.component';
-import { WebSocketService } from 'src/app/core/services/websocket/websocket.service';
 import { ToastrModule } from "ngx-toastr";
 import { UpcomingEventsComponent } from './components/upcoming-events/upcoming-events.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { ParticipationNotificationService } from 'src/app/core/services/participation-notification/participation-notification.service';
 
 const routes: Routes = [
   {
@@ -36,7 +33,6 @@ const routes: Routes = [
     EventsCalendarComponent,
     EventsAddComponent,
     EventsEditComponent,
-    EventNotificationComponent,
     UpcomingEventsComponent,
   ],
   imports: [
@@ -50,8 +46,6 @@ const routes: Routes = [
     ToastrModule
   ],
   providers: [
-    WebSocketService,
-    ParticipationNotificationService,
     {
       provide: 'SOCKET_CONFIG',
       useValue: {
