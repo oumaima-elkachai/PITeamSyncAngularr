@@ -12,6 +12,8 @@ import { EventsEditComponent } from './components/events-edit/events-edit.compon
 import { ToastrModule } from "ngx-toastr";
 import { UpcomingEventsComponent } from './components/upcoming-events/upcoming-events.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { AuditLogListComponent } from './components/audit-log-list/audit-log-list.component';
+
 
 const routes: Routes = [
   {
@@ -21,7 +23,8 @@ const routes: Routes = [
       { path: 'add', component: EventsAddComponent },
       { path: 'edit/:id', component: EventsEditComponent },
       { path: 'view/:id', component: EventsCalendarComponent },
-      { path: 'list', component: EventsListComponent }
+      { path: 'list', component: EventsListComponent },
+      { path: 'audit', component: AuditLogListComponent }
     ]
   }
 ];
@@ -34,6 +37,7 @@ const routes: Routes = [
     EventsAddComponent,
     EventsEditComponent,
     UpcomingEventsComponent,
+    AuditLogListComponent
   ],
   imports: [
     CommonModule,
@@ -58,5 +62,14 @@ const routes: Routes = [
       }
     }
   ],
+  exports: [
+    EventsDashboardComponent,
+    EventsListComponent,
+    EventsCalendarComponent,
+    EventsAddComponent,
+    EventsEditComponent,
+    UpcomingEventsComponent,
+    AuditLogListComponent
+  ]
 })
 export class EventsModule { }

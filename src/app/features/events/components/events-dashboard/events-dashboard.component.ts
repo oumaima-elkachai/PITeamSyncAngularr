@@ -20,7 +20,7 @@ export class EventsDashboardComponent implements OnInit{
 
   // Add new properties
   isLoading = false;
-  viewMode: 'list' | 'calendar' = 'list';
+  viewMode: 'list' | 'calendar' | 'audit' = 'list';
   searchTerm = '';
 
   ngOnInit(): void {
@@ -61,8 +61,8 @@ export class EventsDashboardComponent implements OnInit{
     );
   }
 
-  toggleView(): void {
-    this.viewMode = this.viewMode === 'list' ? 'calendar' : 'list';
+  toggleView(mode: 'list' | 'calendar' | 'audit'): void {
+    this.viewMode = mode;
   }
 
   // Modal control methods

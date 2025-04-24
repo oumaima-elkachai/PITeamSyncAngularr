@@ -1,0 +1,106 @@
+<div class="card border-0 overflow-auto">
+    <div class="card-header p-5 pb-0 bg-transparent border-0 d-flex align-items-center justify-content-between gap-3 flex-wrap">
+        <h4 class="mb-0">Audit Log History</h4>
+        <div class="ms-auto d-flex align-items-center gap-3">
+            <form class="search-form card-search w-auto flex-shrink-0">
+                <input type="text" class="bg-white form-control" placeholder="Search logs...">
+                <button type="submit" class="btn"><i class="bi bi-search"></i></button>
+            </form>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <!-- Loading State -->
+        <div class="text-center p-4" *ngIf="loading">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+
+        <!-- Error State -->
+        <div class="alert alert-danger" *ngIf="error">
+            {{ error }}
+        </div>
+
+        <!-- Table Content -->
+        <div class="table-responsive" *ngIf="!loading && !error">
+            <table class="defaultTable text-center w-100">
+                <thead>
+                    <tr>
+                        <th>Action</th>
+                        <th>Performed By</th>
+                        <th>Details</th>
+                        <th>Event ID</th>
+                        <th>Timestamp</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let log of auditLogs">
+                        <td>
+                            <span class="badge" [ngClass]="{'badge-soft-success': log.action === 'ADD',
+                                                          'badge-soft-warning': log.action === 'UPDATE',
+                                                          'badge-soft-danger': log.action === 'REMOVE'}">
+                                <i class="bi" [ngClass]="{'bi-plus-circle': log.action === 'ADD',
+                                                        'bi-pencil': log.action === 'UPDATE',
+                                                        'bi-trash': log.action === 'REMOVE'}"></i>
+                                {{ log.action }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center justify-content-center gap-2">
+                                <i class="bi bi-person-circle fs-5"></i>
+                                {{ log.performedBy }}
+                            </div>
+                        </td>
+                        <td>{{ log.details }}</td>
+                        <td>
+                            <span class="text-primary">#{{ log.eventId }}</span>
+                        </td>
+                        <td>{{ log.timestamp | date:'medium' }}</td>
+                        <td>
+                            <div class="dropdown text-end">
+                                <a href="#" data-bs-toggle="dropdown" class="fs-24 text-gray">
+                                    <i class="bi bi-three-dots-vertical"></i>
+                                </a>
+                                <div class="dropdown-menu p-0">
+                                    <a class="dropdown-item" href="#">View Details</a>
+                                    <a class="dropdown-item" href="#">Export Log</a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Empty State -->
+        <div class="text-center p-4" *ngIf="!loading && !error && auditLogs.length === 0">
+            <i class="bi bi-clock-history fs-1 text-muted"></i>
+            <p class="mt-2">No audit logs available</p>
+        </div>
+
+        <!-- Pagination -->
+        <div class="mt-5 d-flex justify-content-center justify-content-md-between align-items-center flex-wrap">
+            <p class="mb-0">Showing <span class="fw-bold">1-{{auditLogs.length}}</span> from <span class="fw-bold">{{auditLogs.length}}</span> logs</p>
+            
+            <nav>
+                <ul class="pagination mb-0">
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Previous">
+                            <span aria-hidden="true">«</span>
+                        </a>
+                    </li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Next">
+                            <span aria-hidden="true">»</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>

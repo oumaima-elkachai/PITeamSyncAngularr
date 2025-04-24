@@ -13,11 +13,14 @@ import { EventsModule } from './features/events/events.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { HttpClient } from '@angular/common/http';
+import {ParticipationsModule} from './features/participation/participations.module';
+import { ParticipantsModule } from './features/participants/participants.module';
 @NgModule({
   declarations: [
     AppComponent,
     AdminLayoutComponent,
-    UserLayoutComponent
+    UserLayoutComponent,
+  
   ],
   imports: [
     BrowserModule,
@@ -30,6 +33,8 @@ import { HttpClient } from '@angular/common/http';
     HttpClientModule,
     RouterModule,
     EventsModule,
+    ParticipationsModule,
+    ParticipantsModule,
     JobPostingModule,
     ToastrModule.forRoot({
       timeOut: 5000,

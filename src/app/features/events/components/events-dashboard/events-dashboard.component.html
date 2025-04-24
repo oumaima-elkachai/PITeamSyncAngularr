@@ -10,11 +10,14 @@
         </div>
         <div class="header-actions">
           <div class="view-toggle">
-            <button [class.active]="viewMode === 'list'" (click)="toggleView()">
+            <button [class.active]="viewMode === 'list'" (click)="toggleView('list')">
               <i class="fas fa-list"></i> List
             </button>
-            <button [class.active]="viewMode === 'calendar'" (click)="toggleView()">
+            <button [class.active]="viewMode === 'calendar'" (click)="toggleView('calendar')">
               <i class="fas fa-calendar"></i> Calendar
+            </button>
+            <button [class.active]="viewMode === 'audit'" (click)="toggleView('audit')">
+              <i class="fas fa-history"></i> Audit Log
             </button>
           </div>
         </div>
@@ -35,6 +38,10 @@
 
           <div *ngIf="viewMode === 'calendar'" class="calendar-container">
             <app-events-calendar [events]="events"></app-events-calendar>
+          </div>
+
+          <div *ngIf="viewMode === 'audit'" class="audit-log-container">
+            <app-audit-log-list></app-audit-log-list>
           </div>
         </section>
 
