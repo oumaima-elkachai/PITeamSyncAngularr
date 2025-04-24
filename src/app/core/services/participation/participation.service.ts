@@ -1,85 +1,88 @@
 import { Injectable } from '@angular/core';
-import { HttpClient,HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import {AuditLog} from 'src/app/features/events/models/AuditLog.model';
-import { catchError } from 'rxjs/operators';
+import { AuditLog } from 'src/app/features/events/models/AuditLog.model';
+import { catchError, map } from 'rxjs/operators';
 import { Participation } from 'src/app/features/participation/models/participation.model';
+import { Event } from 'src/app/features/events/models/event.model';
+import { Participant } from 'src/app/features/participants/models/participant.model'; // Fixed import path
+
 @Injectable({
   providedIn: 'root'
 })
 export class ParticipationService {
-  private readonly API_URL = 'http://localhost:8080/api';
+  private readonly API_URL = 'http://localhost:8080/api/participations';
 
   constructor(private http: HttpClient) {}
 
-  // Participation endpoints
+  // Participation endpoints matching ParticipationController
   addParticipation(participation: Participation): Observable<Participation> {
-    return this.http.post<Participation>(
-      `${this.API_URL}/participations`,
-      participation
-    ).pipe(
-      catchError(this.handleError)
-    );
+    return this.http.post<Participation>(this.API_URL, participation)
+      .pipe(catchError(this.handleError));
   }
 
   updateParticipationStatus(id: string, status: string): Observable<Participation> {
     const params = new HttpParams().set('status', status);
-    return this.http.patch<Participation>(
-      `${this.API_URL}/participations/${id}/status`,
-      {},
-      { params }
-    ).pipe(
-      catchError(this.handleError)
-    );
+    return this.http.patch<Participation>(`${this.API_URL}/${id}/status`, {}, { params })
+      .pipe(catchError(this.handleError));
   }
 
   getParticipationsByParticipant(participantId: string): Observable<Participation[]> {
-    return this.http.get<Participation[]>(
-      `${this.API_URL}/participations/by-participant/${participantId}`
-    ).pipe(
-      catchError(this.handleError)
-    );
+    return this.http.get<Participation[]>(`${this.API_URL}/by-participant/${participantId}`)
+      .pipe(catchError(this.handleError));
   }
 
   getParticipationsByEvent(eventId: string): Observable<Participation[]> {
-    return this.http.get<Participation[]>(
-      `${this.API_URL}/participations/by-event/${eventId}`
-    ).pipe(
-      catchError(this.handleError)
-    );
+    return this.http.get<Participation[]>(`${this.API_URL}/by-event/${eventId}`)
+      .pipe(catchError(this.handleError));
   }
 
-  // Audit Log endpoints
-  getAuditLogs(): Observable<AuditLog[]> {
-    return this.http.get<AuditLog[]>(
-      `${this.API_URL}/audit-logs`
-    ).pipe(
-      catchError(this.handleError)
-    );
+  getAllParticipations(): Observable<Participation[]> {
+    return this.http.get<Participation[]>(this.API_URL)
+      .pipe(catchError(this.handleError));
+  }
+
+  deleteParticipation(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.API_URL}/${id}`)
+      .pipe(catchError(this.handleError));
+  }
+
+  // Audit Log endpoints matching ParticipationController
+  getAllAuditLogs(): Observable<AuditLog[]> {
+    return this.http.get<AuditLog[]>(`${this.API_URL}/audit-logs`)
+      .pipe(catchError(this.handleError));
   }
 
   getAuditLogsByParticipation(participationId: string): Observable<AuditLog[]> {
-    return this.http.get<AuditLog[]>(
-      `${this.API_URL}/audit-logs/participation/${participationId}`
-    ).pipe(
-      catchError(this.handleError)
-    );
+    return this.http.get<AuditLog[]>(`${this.API_URL}/${participationId}/audit-logs`)
+      .pipe(catchError(this.handleError));
   }
 
   getAuditLogsByEvent(eventId: string): Observable<AuditLog[]> {
-    return this.http.get<AuditLog[]>(
-      `${this.API_URL}/audit-logs/event/${eventId}`
-    ).pipe(
-      catchError(this.handleError)
-    );
+    return this.http.get<AuditLog[]>(`${this.API_URL}/event/${eventId}/audit-logs`)
+      .pipe(catchError(this.handleError));
   }
 
   getAuditLogsByParticipant(participantId: string): Observable<AuditLog[]> {
-    return this.http.get<AuditLog[]>(
-      `${this.API_URL}/audit-logs/participant/${participantId}`
-    ).pipe(
-      catchError(this.handleError)
-    );
+    return this.http.get<AuditLog[]>(`${this.API_URL}/participant/${participantId}/audit-logs`)
+      .pipe(catchError(this.handleError));
+  }
+
+  // New methods for getting event title and participant email
+  getEventTitle(eventId: string): Observable<string> {
+    return this.http.get<Event>('http://localhost:8080/api/events/' + eventId)
+      .pipe(
+        map(event => event.title),
+        catchError(this.handleError)
+      );
+  }
+
+  getParticipantEmail(participantId: string): Observable<string> {
+    return this.http.get<Participant>('http://localhost:8080/api/participants/' + participantId)
+      .pipe(
+        map(participant => participant.email),
+        catchError(this.handleError)
+      );
   }
 
   private handleError(error: any): Observable<never> {
@@ -87,10 +90,8 @@ export class ParticipationService {
     let errorMessage = 'An error occurred while processing your request.';
     
     if (error.error instanceof ErrorEvent) {
-      // Client-side error
       errorMessage = error.error.message;
     } else {
-      // Server-side error
       errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
     }
     

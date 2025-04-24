@@ -25,7 +25,7 @@ import { ParticipantsModule } from './features/participants/participants.module'
   imports: [
     BrowserModule,
     HttpClientModule,
-    BrowserAnimationsModule, // Move this before ToastrModule
+    BrowserAnimationsModule, 
     AppRoutingModule,
     FormsModule,
     SharedModule,

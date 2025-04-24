@@ -1,1 +1,131 @@
-<p>participation-list works!</p>
+<main class="main-wrapper">
+
+<div class="container mt-4">
+    <h2>Participations List</h2>
+
+    <!-- Loading and Error Messages -->
+    <div *ngIf="loading" class="text-center">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <div *ngIf="error" class="alert alert-danger" role="alert">
+        {{ error }}
+    </div>
+
+    <!-- Filters -->
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <input type="text" class="form-control" placeholder="Search by Event ID" 
+                   #eventSearch (keyup.enter)="filterByEvent(eventSearch.value)">
+        </div>
+        <div class="col-md-6">
+            <input type="text" class="form-control" placeholder="Search by Participant ID" 
+                   #participantSearch (keyup.enter)="filterByParticipant(participantSearch.value)">
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="defaultTable text-center w-100">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" class="form-check-input" id="selectAll"></th>
+                        <th>Participant</th>
+                        <th>Event</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let participation of participations">
+                        <td><input type="checkbox" class="form-check-input"></td>
+                        <td>
+                            <div class="employee d-flex gap-3">
+                                <div class="profilepicture flex-shrink-0">
+                                    <img src="assets/img/default-avatar.jpg" alt="participant" width="50">
+                                </div>
+                                <div class="description">
+                                    <h6 class="mb-0">{{participation.participantEmail || 'Loading...'}}</h6>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="description">
+                                <h6 class="mb-0">{{participation.eventTitle || 'Loading...'}}</h6>
+                            </div>
+                        </td>
+                        <td>{{ participation.participationDate | date:'medium' }}</td>
+                        <td>
+                            <span class="badge" [ngClass]="{
+                                'bg-warning': participation.participationS === ParticipationStatus.PENDING,
+                                'bg-success': participation.participationS === ParticipationStatus.CONFIRMED,
+                                'bg-danger': participation.participationS === ParticipationStatus.CANCELLED,
+                                'bg-info': participation.participationS === ParticipationStatus.WAITLISTED
+                            }">
+                                {{ participation.participationS }}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn btn-outline-danger me-2" 
+                                  (click)="participation.id && updateStatus(participation.id, ParticipationStatus.CANCELLED)"
+                                  [disabled]="participation.participationS === ParticipationStatus.CANCELLED">
+                                Disapprove
+                            </button>
+                            <button class="btn btn-primary"
+                                  (click)="participation.id && updateStatus(participation.id, ParticipationStatus.CONFIRMED)"
+                                  [disabled]="participation.participationS === ParticipationStatus.CONFIRMED">
+                                Approve
+                            </button>
+                        </td>
+                        <td>
+                            <div class="dropdown text-end">
+                                <a href="#" data-bs-toggle="dropdown" class="fs-24 text-gray">
+                                    <i class="bi bi-three-dots-vertical"></i>
+                                </a>
+                                <div class="dropdown-menu p-0">
+                                    <a class="dropdown-item" href="#">View</a>
+                                    <a class="dropdown-item" href="#">Edit</a>
+                                    <a class="dropdown-item text-danger" href="#">Delete</a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="mt-5 d-flex justify-content-center justify-content-md-between align-items-center flex-wrap">
+            <p class="mb-0">Showing <span class="fw-bold">1-{{participations.length}}</span> from <span class="fw-bold">{{participations.length}}</span> data</p>
+
+            <nav>
+                <ul class="pagination mb-0">
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Previous">
+                            <span aria-hidden="true">«</span>
+                        </a>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Next">
+                            <span aria-hidden="true">»</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <!-- No Data Message -->
+    <div *ngIf="!loading && participations.length === 0" class="alert alert-info">
+        No participations found.
+    </div>
+</div>
+
+</main>
