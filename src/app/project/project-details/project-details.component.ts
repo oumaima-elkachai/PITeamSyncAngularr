@@ -34,7 +34,7 @@ export class ProjectDetailsComponent implements OnInit {
     private attachmentService: AttachmentService,
     private employeeService: EmployeeService // Add this line
 
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const projectId = this.route.snapshot.paramMap.get('id');
@@ -58,7 +58,7 @@ export class ProjectDetailsComponent implements OnInit {
     });
   }
 
-  
+
   loadProject(projectId: string): void {
     this.projectService.getProject(projectId).subscribe({
       next: (project) => {
@@ -78,6 +78,11 @@ export class ProjectDetailsComponent implements OnInit {
     this.taskService.getTasksByProject(projectId).subscribe({
       next: (tasks) => {
         this.tasks = tasks;
+        this.tasks.forEach(task => {
+          if (task.id) {
+            this.loadAttachments(task.id);
+          }
+        });
         this.loadingTasks = false;  // Update loading state
       },
       error: (err) => {
@@ -151,27 +156,37 @@ export class ProjectDetailsComponent implements OnInit {
     });
   }
 
+   
   downloadAttachment(attachmentId: string) {
-    this.taskService.downloadAttachment(attachmentId).subscribe(blob => {
-      const url = window.URL.createObjectURL(blob);
-      // Implement actual download logic
+    this.attachmentService.downloadAttachment(attachmentId).subscribe({
+      next: ({ blob, fileName }) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      },
+      error: (err) => {
+        console.error('Download failed:', err);
+        alert('Failed to download file');
+      }
     });
   }
 
-  // In project-details.component.ts
-loadingAttachments: { [taskId: string]: boolean } = {};
+   loadingAttachments: { [taskId: string]: boolean } = {};
 
-loadAttachments(taskId: string): void {
-  this.loadingAttachments[taskId] = true;
-  this.attachmentService.getTaskAttachments(taskId).subscribe({
-    next: (attachments) => {
-      const task = this.tasks.find(t => t.id === taskId);
-      if (task) task.attachments = attachments;
-      this.loadingAttachments[taskId] = false;
-    },
-    error: () => this.loadingAttachments[taskId] = false
-  });
-}
+  loadAttachments(taskId: string): void {
+    this.loadingAttachments[taskId] = true;
+    this.attachmentService.getTaskAttachments(taskId).subscribe({
+      next: (attachments) => {
+        const task = this.tasks.find(t => t.id === taskId);
+        if (task) task.attachments = attachments;
+        this.loadingAttachments[taskId] = false;
+      },
+      error: () => this.loadingAttachments[taskId] = false
+    });
+  }
 
 
 
@@ -187,6 +202,25 @@ loadAttachments(taskId: string): void {
     alert(message);
   }
 
+  // project-details.component.ts
+deleteAttachment(attachmentId: string) {
+  if (confirm('Are you sure you want to delete this attachment?')) {
+      this.attachmentService.deleteAttachment(attachmentId).subscribe({
+          next: () => {
+              // Remove from local state
+              this.tasks = this.tasks.map(task => ({
+                  ...task,
+                  attachments: task.attachments?.filter(a => a.id !== attachmentId)
+              }));
+          },
+          error: (err) => {
+              console.error('Delete failed:', err);
+              alert('Failed to delete attachment');
+          }
+      });
+  }
+}
 
-  
+
+
 }

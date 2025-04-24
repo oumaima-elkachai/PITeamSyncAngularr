@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Employee } from '../models/employee.model';
@@ -13,6 +13,13 @@ export class EmployeeService {
 
   getEmployeeAssignedTasks(employeeId: string): Observable<Task[]> {
     return this.http.get<Task[]>(`${this.baseUrl}/${employeeId}/tasks`);
+  }
+
+  getUpcomingDeadlines(employeeId: string, daysAhead = 7): Observable<Task[]> {
+    return this.http.get<Task[]>(
+      `${this.baseUrl}/${employeeId}/upcoming-deadlines`,
+      { params: new HttpParams().set('daysAhead', daysAhead.toString()) }
+    );
   }
 
   getAllEmployees(): Observable<Employee[]> {

@@ -33,6 +33,7 @@ import { MyTasksComponent } from './taskfront/my-tasks/my-tasks.component';
 import { MyProjectDetailsComponent } from './taskfront/my-project-details/my-project-details.component';
 import { MyTaskDetailsComponent } from './taskfront/my-task-details/my-task-details.component';
 import { FileSizePipe } from './shared/pipes/filesize.pipe';
+import { UpcomingDeadlinesComponent } from './employee/upcoming-deadlines/upcoming-deadlines.component';
 
 
 @NgModule({
@@ -62,7 +63,8 @@ import { FileSizePipe } from './shared/pipes/filesize.pipe';
     MyTasksComponent,
     MyProjectDetailsComponent,
     MyTaskDetailsComponent,
-    FileSizePipe
+    FileSizePipe,
+    UpcomingDeadlinesComponent
   ],
   imports: [
     BrowserModule,

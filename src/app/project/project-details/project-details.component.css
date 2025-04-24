@@ -183,3 +183,96 @@
   background-color: #f8f9fa;
   border-radius: 4px;
 }
+
+.attachments-section {
+  padding: 0.5rem;
+  background: #f8f9fa;
+  border-radius: 6px;
+}
+
+.attachment-item {
+  padding: 0.3rem 0.5rem;
+  transition: background-color 0.2s;
+  
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+  }
+}
+
+.spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+  border-width: 0.15em;
+}
+
+/* Task list container styles */
+.task-list-container {
+  max-height: 500px;
+  overflow-y: auto;
+  padding-right: 5px;
+  margin-right: -5px;
+}
+
+/* Scrollbar styling */
+.task-list-container::-webkit-scrollbar {
+  width: 5px;
+}
+
+.task-list-container::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 10px;
+}
+
+.task-list-container::-webkit-scrollbar-thumb {
+  background: #c5d0e6;
+  border-radius: 10px;
+}
+
+.task-list-container::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Search and filter styles */
+.search-filter-container {
+  background: #f8fafc;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 15px;
+}
+
+.input-group-text {
+  background-color: transparent;
+  border-right: none;
+  color: #64748b;
+}
+
+.form-control:focus {
+  box-shadow: none;
+  border-color: #ced4da;
+}
+
+.filter-buttons {
+  margin-top: 8px;
+}
+
+.btn-group {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.btn-group .btn {
+  font-size: 0.8rem;
+  padding: 6px 12px;
+}
+
+/* Make task cards more compact for better scroll view */
+.task-card {
+  margin-bottom: 12px;
+  padding: 12px;
+}
+
+/* Empty state styling */
+.text-center.text-muted {
+  padding: 30px 0;
+}

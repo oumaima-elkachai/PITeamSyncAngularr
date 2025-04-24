@@ -1,0 +1,39 @@
+.deadline-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+    transition: background 0.2s;
+    
+    &:hover {
+      background: #f8f9fa;
+    }
+  }
+  
+  .priority-indicator {
+    width: 8px;
+    height: 40px;
+    border-radius: 4px;
+    margin-right: 1rem;
+    
+    &.priority-high { background: #dc3545; }
+    &.priority-medium { background: #ffc107; }
+    &.priority-low { background: #28a745; }
+  }
+  
+  .status-badge {
+    margin-left: auto;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    
+    &.todo { background: #6c757d; color: white; }
+    &.in_progress { background: #17a2b8; color: white; }
+    &.done { background: #28a745; color: white; }
+  }
+  
+  .no-tasks {
+    text-align: center;
+    padding: 2rem;
+    color: #6c757d;
+  }

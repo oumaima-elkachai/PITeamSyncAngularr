@@ -13,6 +13,7 @@ import { TasksComponent } from './taskfront/tasks/tasks.component';
 import { MyTasksComponent } from './taskfront/my-tasks/my-tasks.component';
 import { MyProjectDetailsComponent } from './taskfront/my-project-details/my-project-details.component';
 import { MyTaskDetailsComponent } from './taskfront/my-task-details/my-task-details.component';
+import { UpcomingDeadlinesComponent } from './employee/upcoming-deadlines/upcoming-deadlines.component';
 
 const routes: Routes = [
 
@@ -39,6 +40,10 @@ const routes: Routes = [
   {
     path: 'projects/:projectId/new-task',
     component: TaskFormComponent
+  },
+  {
+    path: 'upcoming-deadlines',
+    component: UpcomingDeadlinesComponent,
   },
   {
     path: 'addprojects/new', component: ProjectFormComponent

@@ -1,17 +1,19 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Project } from '../models/project.model';
 
 @Injectable({ providedIn: 'root' })
 export class ProjectService {
   private baseUrl = `${environment.apiUrl}/projects`;
+  private projects: Project[] = [];
 
   constructor(private http: HttpClient) { }
 
   getAllProjects(): Observable<Project[]> {
-    return this.http.get<Project[]>(this.baseUrl);
+    return this.http.get<Project[]>(this.baseUrl).pipe(
+      tap(projects => this.projects = projects));
   }
 
   getProject(id: string): Observable<Project> {
@@ -30,5 +32,10 @@ export class ProjectService {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 
+  getProjectSync(id: string): Project | undefined {
+    // This assumes you have a local cache of projects
+    return this.projects.find(p => p.id === id);
+  }
+  
   
 }

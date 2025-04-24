@@ -416,48 +416,6 @@
             </div>
           </div>
 
-          <!-- Middle Column - Team Members -->
-          <div class="col-md-4">
-            <div class="project-card">
-              <div class="status-indicator"></div>
-              <div class="card-content">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                  <h5 class="card-title mb-0"><i class="bi bi-people"></i>Team Members</h5>
-
-                </div>
-
-                <div *ngIf="loadingMembers" class="spinner-container">
-                  <div class="spinner-border" role="status"></div>
-                </div>
-
-                <div *ngIf="memberError" class="alert alert-warning">{{ memberError }}</div>
-
-                <ul class="list-group" *ngIf="!loadingMembers && !memberError">
-                  <li class="list-group-item d-flex align-items-center" *ngFor="let member of teamMembers">
-                    <div class="member-avatar">
-                      <i class="bi bi-person"></i>
-                    </div>
-                    <div>
-                      <strong>{{ member.name }}</strong>
-                      <div class="small text-muted">
-                        {{ member.position }} · {{ member.email }}
-                      </div>
-                      <div class="small mt-1">
-                        <span class="badge bg-light text-dark">
-                          <i class="bi bi-check-circle"></i>
-                          Tasks: {{ member.assignedTaskIds?.length || 0 }}
-                        </span>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item text-center text-muted" *ngIf="!teamMembers.length">
-                    <i class="bi bi-exclamation-circle me-2"></i>No team members found
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
           <!-- Right Column - Tasks -->
           <div class="col-md-4">
             <div class="project-card">
@@ -538,25 +496,39 @@
 
                       <!-- Add attachments section -->
                       <!-- project-details.component.html -->
+                      <!-- In the task card section -->
                       <div class="attachments-section mt-2">
-
-                        
                         <h6 class="text-muted">Attachments:</h6>
-                        <div *ngIf="task.attachments?.length; else noAttachments">
-                          <div *ngFor="let attachment of task.attachments"
-                            class="attachment-item d-flex align-items-center mb-2">
-                            <i class="bi bi-paperclip me-2"></i>
-                            <span class="text-truncate" style="max-width: 150px">{{ attachment.fileName }}</span>
-                            <div class="ms-auto">
-                              <button class="btn btn-link btn-sm p-0 ms-2" (click)="downloadAttachment(attachment.id)">
-                                <i class="bi bi-download"></i>
-                              </button>
-                            </div>
-                          </div>
+                        <div *ngIf="loadingAttachments[task.id!]; else attachmentsLoaded">
+                          <div class="spinner-border spinner-border-sm" role="status"></div>
+                          <span class="ms-2 small text-muted">Loading attachments...</span>
                         </div>
 
-                        <ng-template #noAttachments>
-                          <div class="text-muted small">No attachments</div>
+                        <ng-template #attachmentsLoaded>
+                          <div *ngIf="task.attachments?.length; else noAttachments">
+                            <div *ngFor="let attachment of task.attachments"
+                              class="attachment-item d-flex align-items-center mb-2">
+                              <i class="bi bi-paperclip me-2"></i>
+                              <span class="text-truncate" style="max-width: 150px">
+                                {{ attachment.fileName }}
+                              </span>
+                              <div class="ms-auto">
+                                <button class="btn btn-link btn-sm p-0 ms-2"
+                                  (click)="downloadAttachment(attachment.id)">
+                                  <i class="bi bi-download"></i>
+                                </button>
+                                <!-- Add delete button next to download -->
+                                <button class="btn btn-link btn-sm text-danger p-0 ms-2"
+                                  (click)="deleteAttachment(attachment.id)">
+                                  <i class="bi bi-trash"></i>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+
+                          <ng-template #noAttachments>
+                            <div class="text-muted small">No attachments</div>
+                          </ng-template>
                         </ng-template>
                       </div>
 
@@ -582,6 +554,53 @@
               </div>
             </div>
           </div>
+
+
+          <!-- Middle Column - Team Members -->
+          <div class="col-md-4">
+            <div class="project-card">
+              <div class="status-indicator"></div>
+              <div class="card-content">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                  <h5 class="card-title mb-0"><i class="bi bi-people"></i>Team Members</h5>
+
+                </div>
+
+                <div *ngIf="loadingMembers" class="spinner-container">
+                  <div class="spinner-border" role="status"></div>
+                </div>
+
+                <div *ngIf="memberError" class="alert alert-warning">{{ memberError }}</div>
+
+                <ul class="list-group" *ngIf="!loadingMembers && !memberError">
+                  <li class="list-group-item d-flex align-items-center" *ngFor="let member of teamMembers">
+                    <div class="member-avatar">
+                      <i class="bi bi-person"></i>
+                    </div>
+                    <div>
+                      <strong>{{ member.name }}</strong>
+                      <div class="small text-muted">
+                        {{ member.position }} · {{ member.email }}
+                      </div>
+                      <div class="small mt-1">
+                        <span class="badge bg-light text-dark">
+                          <i class="bi bi-check-circle"></i>
+                          Tasks: {{ member.assignedTaskIds?.length || 0 }}
+                        </span>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="list-group-item text-center text-muted" *ngIf="!teamMembers.length">
+                    <i class="bi bi-exclamation-circle me-2"></i>No team members found
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+
+
+
         </div>
       </div>
     </div>
