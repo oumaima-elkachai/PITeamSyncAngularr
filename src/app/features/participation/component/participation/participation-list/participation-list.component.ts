@@ -7,6 +7,8 @@ import { Participation } from 'src/app/features/participation/models/participati
 import { forkJoin } from 'rxjs';
 import { EventStatistics } from '../../../models/event-statistics.model';
 import * as ApexCharts from 'apexcharts';
+import { ToasterService } from '../../../../../core/services/toaster/toaster.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 declare var bootstrap: any; // For Bootstrap modal
 
 @Component({
@@ -57,7 +59,11 @@ export class ParticipationListComponent implements OnInit, OnDestroy {
     }
   }
 
-  constructor(private participationService: ParticipationService) { }
+  constructor(
+    private participationService: ParticipationService,
+    private toasterService: ToasterService,
+    private snackBar: MatSnackBar
+  ) { }
 
   ngOnInit(): void {
     this.loadParticipations();
@@ -182,17 +188,38 @@ export class ParticipationListComponent implements OnInit, OnDestroy {
 
   updateStatus(id: string, status: ParticipationStatus): void {
     this.loading = true;
-    this.participationService.updateParticipationStatus(id, status)
-      .subscribe({
-        next: () => {
-          this.loadParticipations(); // Reload after update
-        },
-        error: (error) => {
-          console.error('Error updating status:', error);
-          this.error = 'Error updating participation status';
-          this.loading = false;
-        }
-      });
+    
+    if (status === ParticipationStatus.CONFIRMED) {
+      // Use the combined confirmation endpoint for CONFIRMED status
+      this.participationService.confirmParticipation(id)
+        .subscribe({
+          next: (response) => {
+            console.log('Confirmation successful:', response);
+            this.toasterService.success('Participation confirmed and confirmation email sent');
+            this.loadParticipations();
+            this.loading = false;
+          },
+          error: (error) => {
+            console.error('Confirmation failed:', error);
+            this.toasterService.error(error.message || 'Failed to confirm participation');
+            this.loading = false;
+          }
+        });
+    } else {
+      // Use regular status update for other statuses
+      this.participationService.updateParticipationStatus(id, status)
+        .subscribe({
+          next: (response) => {
+            this.toasterService.success(`Status updated to ${status}`);
+            this.loadParticipations();
+            this.loading = false;
+          },
+          error: (error) => {
+            this.toasterService.error(error.message || 'Failed to update status');
+            this.loading = false;
+          }
+        });
+    }
   }
 
   filterByParticipant(participantId: string): void {
@@ -241,87 +268,87 @@ export class ParticipationListComponent implements OnInit, OnDestroy {
     interface ChartOptions {
       series: number[];
       chart: {
-      type: string;
-      height: number;
+        type: string;
+        height: number;
       };
       labels: string[];
       colors: string[];
       plotOptions: {
-      pie: {
-        donut: {
-        size: string;
-        labels: {
-          show: boolean;
-          total: {
-          show: boolean;
-          label: string;
-          formatter: (w: { globals: { seriesTotals: number[] } }) => number;
+        pie: {
+          donut: {
+            size: string;
+            labels: {
+              show: boolean;
+              total: {
+                show: boolean;
+                label: string;
+                formatter: (w: { globals: { seriesTotals: number[] } }) => number;
+              };
+            };
           };
         };
-        };
-      };
       };
       dataLabels: {
-      enabled: boolean;
+        enabled: boolean;
       };
       legend: {
-      position: string;
-      horizontalAlign: string;
+        position: string;
+        horizontalAlign: string;
       };
       responsive: Array<{
-      breakpoint: number;
-      options: {
-        chart: {
-        height: number;
+        breakpoint: number;
+        options: {
+          chart: {
+            height: number;
+          };
         };
-      };
       }>;
     }
 
     const chartOptions: ChartOptions = {
       series: [
-      this.eventStats?.confirmed || 0,
-      this.eventStats?.pending || 0,
-      this.eventStats?.cancelled || 0,
-      this.eventStats?.waitlisted || 0
+        this.eventStats?.confirmed || 0,
+        this.eventStats?.pending || 0,
+        this.eventStats?.cancelled || 0,
+        this.eventStats?.waitlisted || 0
       ],
       chart: {
-      type: 'donut',
-      height: 380
+        type: 'donut',
+        height: 380
       },
       labels: ['Confirmed', 'Pending', 'Cancelled', 'Waitlisted'],
       colors: ['#28a745', '#ffc107', '#dc3545', '#6c757d'],
       plotOptions: {
-      pie: {
-        donut: {
-        size: '70%',
-        labels: {
-          show: true,
-          total: {
-          show: true,
-          label: 'Total',
-          formatter: function(w: { globals: { seriesTotals: number[] } }): number {
-            return w.globals.seriesTotals.reduce((a, b) => a + b, 0);
-          }
+        pie: {
+          donut: {
+            size: '70%',
+            labels: {
+              show: true,
+              total: {
+                show: true,
+                label: 'Total',
+                formatter: function(w: { globals: { seriesTotals: number[] } }): number {
+                  return w.globals.seriesTotals.reduce((a, b) => a + b, 0);
+                }
+              }
+            }
           }
         }
-        }
-      }
       },
       dataLabels: {
-      enabled: true
+        enabled: true
       },
       legend: {
-      position: 'bottom',
-      horizontalAlign: 'center'
+        position: 'bottom',
+        horizontalAlign: 'center'
       },
       responsive: [{
-      breakpoint: 480,
-      options: {
-        chart: {
-        height: 300
+        breakpoint: 480,
+        options: {
+          chart: {
+            height: 300
+          }
         }
-      }
       }]
     };
 
@@ -336,5 +363,26 @@ export class ParticipationListComponent implements OnInit, OnDestroy {
     if (this.chart) {
       this.chart.destroy();
     }
+  }
+
+  onConfirm(participationId: string): void {
+    console.log('Confirming participation:', participationId); // Add logging
+    
+    this.participationService.confirmParticipation(participationId)
+      .subscribe({
+        next: (response) => {
+          console.log('Confirmation successful:', response);
+          this.snackBar.open('Participation confirmed and email sent!', 'Close', {
+            duration: 3000
+          });
+          this.loadParticipations(); // Refresh the list
+        },
+        error: (error) => {
+          console.error('Confirmation error:', error);
+          this.snackBar.open('Error confirming participation: ' + error.message, 'Close', {
+            duration: 3000
+          });
+        }
+      });
   }
 }

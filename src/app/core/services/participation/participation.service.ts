@@ -1,12 +1,17 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { AuditLog } from 'src/app/features/events/models/AuditLog.model';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { Participation } from 'src/app/features/participation/models/participation.model';
+import { ParticipationStatus } from 'src/app/features/participation/models/participation-status.enum';
 import { Event } from 'src/app/features/events/models/event.model';
 import { Participant } from 'src/app/features/participants/models/participant.model';
 import { EventStatistics } from 'src/app/features/participation/models/event-statistics.model';
+import { AuditLog } from 'src/app/features/events/models/AuditLog.model';
+
+interface StatusUpdateRequest {
+  participationS: ParticipationStatus;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -16,16 +21,63 @@ export class ParticipationService {
 
   constructor(private http: HttpClient) {}
 
+  confirmParticipation(id: string): Observable<any> {
+    const url = `${this.API_URL}/confirm/${id}`;
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+
+    console.log('Confirming participation and sending email:', {
+      id,
+      url
+    });
+
+    return this.http.put(url, null, { headers }).pipe(
+      tap(response => {
+        console.log('Confirmation successful:', response);
+      }),
+      catchError(error => {
+        console.error('Confirmation failed:', error);
+        return throwError(() => new Error(error.error?.message || 'Failed to confirm participation'));
+      })
+    );
+  }
+
   // Participation endpoints matching ParticipationController
   addParticipation(participation: Participation): Observable<Participation> {
     return this.http.post<Participation>(this.API_URL, participation)
       .pipe(catchError(this.handleError));
   }
 
-  updateParticipationStatus(id: string, status: string): Observable<Participation> {
-    const params = new HttpParams().set('status', status);
-    return this.http.patch<Participation>(`${this.API_URL}/${id}/status`, {}, { params })
-      .pipe(catchError(this.handleError));
+  updateParticipationStatus(id: string, status: ParticipationStatus): Observable<any> {
+    // Validate status
+    if (!Object.values(ParticipationStatus).includes(status)) {
+      console.error('Invalid status:', status);
+      return throwError(() => new Error('Invalid status value'));
+    }
+
+    const url = `${this.API_URL}/${id}/status`;
+    const headers = new HttpHeaders().set('Content-Type', 'text/plain');
+    
+    // Send status as plain string to match backend endpoint
+    const statusString = status.toString();
+
+    console.log('Sending status update:', {
+      url,
+      status: statusString,
+      method: 'PATCH'
+    });
+
+    return this.http.patch(url, statusString, { headers }).pipe(
+      tap(response => {
+        console.log('Status update successful:', response);
+      }),
+      catchError(error => {
+        console.error('Status update failed:', error);
+        if (error.status === 400) {
+          return throwError(() => new Error(error.error || 'Invalid status'));
+        }
+        return throwError(() => new Error('Failed to update status'));
+      })
+    );
   }
 
   getParticipationsByParticipant(participantId: string): Observable<Participation[]> {

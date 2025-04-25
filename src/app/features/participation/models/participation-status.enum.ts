@@ -1,6 +1,6 @@
 export enum ParticipationStatus {
     PENDING = 'PENDING',
-    CONFIRMED = 'CONFIRMED',
+    CONFIRMED = 'CONFIRMED', 
     CANCELLED = 'CANCELLED',
     WAITLISTED = 'WAITLISTED'
 }

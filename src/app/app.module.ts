@@ -13,8 +13,9 @@ import { EventsModule } from './features/events/events.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { HttpClient } from '@angular/common/http';
-import {ParticipationsModule} from './features/participation/participations.module';
+import { ParticipationsModule } from './features/participation/participations.module';
 import { ParticipantsModule } from './features/participants/participants.module';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -30,7 +31,6 @@ import { ParticipantsModule } from './features/participants/participants.module'
     FormsModule,
     SharedModule,
     ReactiveFormsModule,
-    HttpClientModule,
     RouterModule,
     EventsModule,
     ParticipationsModule,
