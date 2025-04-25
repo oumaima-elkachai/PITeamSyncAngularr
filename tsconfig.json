@@ -27,7 +27,8 @@
       "stream": ["node_modules/stream-browserify"],
       "buffer": ["node_modules/buffer"],
       "process": ["node_modules/process/browser"]
-    }
+    },
+    "allowSyntheticDefaultImports": true
   },
   "include": [
     "src/**/*.ts"

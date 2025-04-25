@@ -5,7 +5,8 @@ import { AuditLog } from 'src/app/features/events/models/AuditLog.model';
 import { catchError, map } from 'rxjs/operators';
 import { Participation } from 'src/app/features/participation/models/participation.model';
 import { Event } from 'src/app/features/events/models/event.model';
-import { Participant } from 'src/app/features/participants/models/participant.model'; // Fixed import path
+import { Participant } from 'src/app/features/participants/models/participant.model';
+import { EventStatistics } from 'src/app/features/participation/models/event-statistics.model';
 
 @Injectable({
   providedIn: 'root'
@@ -83,6 +84,19 @@ export class ParticipationService {
         map(participant => participant.email),
         catchError(this.handleError)
       );
+  }
+
+  // New methods for filtering participations and getting event statistics
+  getParticipationsByEventTitle(title: string): Observable<Participation[]> {
+    return this.http.get<Participation[]>(`${this.API_URL}/filter/event-title/${title}`);
+  }
+
+  getParticipationsByParticipantEmail(email: string): Observable<Participation[]> {
+    return this.http.get<Participation[]>(`${this.API_URL}/filter/participant-email/${email}`);
+  }
+
+  getEventStatistics(eventId: string): Observable<EventStatistics> {
+    return this.http.get<EventStatistics>(`${this.API_URL}/statistics/${eventId}`);
   }
 
   private handleError(error: any): Observable<never> {
