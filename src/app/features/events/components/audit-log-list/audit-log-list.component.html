@@ -36,7 +36,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let log of auditLogs">
+                    <tr *ngFor="let log of paginatedLogs">
                         <td>
                             <span class="badge" [ngClass]="{'badge-soft-success': log.action === 'ADD',
                                                           'badge-soft-warning': log.action === 'UPDATE',
@@ -75,29 +75,30 @@
         </div>
 
         <!-- Empty State -->
-        <div class="text-center p-4" *ngIf="!loading && !error && auditLogs.length === 0">
+        <div class="text-center p-4" *ngIf="!loading && !error && paginatedLogs .length === 0">
             <i class="bi bi-clock-history fs-1 text-muted"></i>
             <p class="mt-2">No audit logs available</p>
         </div>
 
         <!-- Pagination -->
-        <div class="mt-5 d-flex justify-content-center justify-content-md-between align-items-center flex-wrap">
-            <p class="mb-0">Showing <span class="fw-bold">1-{{auditLogs.length}}</span> from <span class="fw-bold">{{auditLogs.length}}</span> logs</p>
-            
-            <nav>
+        <div class="d-flex justify-content-between align-items-center mt-4" *ngIf="!loading && !error && paginatedLogs .length > 0">
+            <div class="text-muted">
+                Showing {{ (currentPage - 1) * pageSize + 1 }} to {{ Math.min(currentPage * pageSize, paginatedLogs .length) }} of {{ paginatedLogs .length }} entries
+            </div>
+            <nav aria-label="Audit log pagination">
                 <ul class="pagination mb-0">
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Previous">
-                            <span aria-hidden="true">«</span>
-                        </a>
+                    <li class="page-item" [class.disabled]="currentPage === 1">
+                        <button class="page-link" (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 1">
+                            <i class="bi bi-chevron-left"></i>
+                        </button>
                     </li>
-                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Next">
-                            <span aria-hidden="true">»</span>
-                        </a>
+                    <li class="page-item" *ngFor="let page of getPageNumbers()" [class.active]="page === currentPage">
+                        <button class="page-link" (click)="onPageChange(page)">{{ page }}</button>
+                    </li>
+                    <li class="page-item" [class.disabled]="currentPage === totalPages">
+                        <button class="page-link" (click)="onPageChange(currentPage + 1)" [disabled]="currentPage === totalPages">
+                            <i class="bi bi-chevron-right"></i>
+                        </button>
                     </li>
                 </ul>
             </nav>
