@@ -14,6 +14,8 @@ import { UpcomingEventsComponent } from './components/upcoming-events/upcoming-e
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuditLogListComponent } from './components/audit-log-list/audit-log-list.component';
 import { ImageModalComponent } from 'src/app/features/events/components/image-modal/image-modal.component';
+import { EventsListFrontComponent } from 'src/app/features/events/components/events-list-front/events-list-front.component';
+
 
 
 const routes: Routes = [
@@ -39,7 +41,8 @@ const routes: Routes = [
     EventsEditComponent,
     UpcomingEventsComponent,
     AuditLogListComponent,
-    ImageModalComponent
+    ImageModalComponent,
+    EventsListFrontComponent
   ],
   imports: [
     CommonModule,

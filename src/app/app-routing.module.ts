@@ -13,7 +13,7 @@ import { ParticipationDetailsComponent } from './features/participation/componen
 import { ParticipantComponent } from './features/participants/components/participant/participant.component';
 import { AuditLogListComponent } from './features/events/components/audit-log-list/audit-log-list.component';
 import { AuditLogDetailsComponent } from './features/events/components/audit-log-details/audit-log-details.component';
-
+import { EventsListFrontComponent } from './features/events/components/events-list-front/events-list-front.component';
 
 const routes: Routes = [
   {
@@ -50,7 +50,7 @@ const routes: Routes = [
     path: 'user',
     component: UserLayoutComponent,
     children: [
-
+      { path: 'events', component: EventsListFrontComponent },
     ]
   },
   { path: '', redirectTo: '/admin', pathMatch: 'full' }

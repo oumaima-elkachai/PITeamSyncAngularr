@@ -81,6 +81,20 @@
         {{ error }}
       </div>
 
+      <!-- Capacity Section -->
+      <div class="form-section">
+        <h4 class="section-title">Capacity</h4>
+        <div class="input-group">
+          <div class="form-floating">
+            <input type="number" class="form-control" id="capacity" formControlName="capacity" 
+                   min="1" [ngClass]="{ 'is-invalid': submitted && f['capacity'].errors }" 
+                   placeholder="Event Capacity">
+            <label for="capacity">Event Capacity (number of participants)</label>
+            <div class="invalid-feedback">{{ getErrorMessage('capacity') }}</div>
+          </div>
+        </div>
+      </div>
+
       <!-- Participants Section -->
       <div class="form-section">
         <h4 class="section-title">Participants</h4>

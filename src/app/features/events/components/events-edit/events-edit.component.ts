@@ -4,6 +4,7 @@ import { EventService } from 'src/app/core/services/events/events.service';
 import { firstValueFrom } from 'rxjs';
 import { Event } from '../../models/event.model';
 import { HttpErrorResponse } from '@angular/common/http';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-events-edit',
@@ -19,11 +20,13 @@ export class EventsEditComponent implements OnInit {
   imagePreviewUrl: string | null = null;
   isLoading = true;
   errorMessage: string | null = null;
+  eventForm!: FormGroup;
 
   constructor(
       private route: ActivatedRoute,
       private eventService: EventService,
-      private router: Router
+      private router: Router,
+      private fb: FormBuilder
   ) {}
 
   ngOnInit(): void {
@@ -38,6 +41,7 @@ export class EventsEditComponent implements OnInit {
     } else {
       this.isLoading = false;
     }
+    this.initForm();
   }
 
   loadEvent(eventId: string): void {
@@ -45,11 +49,19 @@ export class EventsEditComponent implements OnInit {
       next: (data: Event) => {
         this.event = data;
         this.isLoading = false;
+        this.initForm();
       },
       error: (error: HttpErrorResponse) => {
         this.errorMessage = 'Failed to load event.';
         this.isLoading = false;
       }
+    });
+  }
+
+  initForm(): void {
+    this.eventForm = this.fb.group({
+      // Add other form controls as needed
+      capacity: [this.event?.capacity || 1, [Validators.required, Validators.min(1)]]
     });
   }
 
@@ -67,21 +79,24 @@ export class EventsEditComponent implements OnInit {
   }
 
   saveEvent(): void {
-    if (this.event?.idEvent) {
-      this.eventService.updateEvent(
-        this.event.idEvent, 
-        this.event, 
-        this.selectedFile
-      ).subscribe({
-        next: (updatedEvent) => {
-          this.eventUpdated.emit(updatedEvent);
-          this.cancel.emit();
-        },
-        error: (error) => {
-          this.errorMessage = 'Failed to update event';
-          console.error('Error updating event:', error);
-        }
-      });
+    if (this.eventForm.valid) {
+      // Ensure capacity is a number
+      const updatedEvent = {
+        ...this.event,
+        capacity: Number(this.event.capacity)
+      };
+
+      this.eventService.updateEvent(updatedEvent.idEvent!, updatedEvent, this.selectedFile)
+        .subscribe({
+          next: (updatedEvent) => {
+            this.eventUpdated.emit(updatedEvent);
+            this.cancel.emit();
+          },
+          error: (error) => {
+            this.errorMessage = 'Failed to update event';
+            console.error('Error updating event:', error);
+          }
+        });
     }
   }
 

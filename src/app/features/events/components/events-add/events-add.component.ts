@@ -54,7 +54,8 @@ export class EventsAddComponent implements OnInit {
       startTime: ['', [Validators.required, this.timeValidator()]],
       endTime: ['', [Validators.required]],
       participantIds: [[], [Validators.required]],
-      image: [null]
+      image: [null],
+      capacity: ['', [Validators.required, Validators.min(1)]]
     }, { validator: this.dateTimeValidator });
 
     if (this.preselectedDate) {
@@ -229,6 +230,9 @@ export class EventsAddComponent implements OnInit {
       if (control.errors['required']) {
         return `${controlName.charAt(0).toUpperCase() + controlName.slice(1)} is required`;
       }
+      if (control.errors['min'] && controlName === 'capacity') {
+        return 'Capacity must be at least 1';
+      }
       if (control.errors['minlength']) {
         return `${controlName.charAt(0).toUpperCase() + controlName.slice(1)} must be at least ${control.errors['minlength'].requiredLength} characters`;
       }
@@ -279,7 +283,8 @@ export class EventsAddComponent implements OnInit {
         participantIds: this.selectedParticipants
           .map(p => p.id)
           .filter((id): id is string => id !== undefined),
-        imageUrl: 'pending'
+        imageUrl: 'pending',
+        capacity: formValue.capacity
       };
 
       this.eventService.addEvent(event, this.selectedFile).subscribe({

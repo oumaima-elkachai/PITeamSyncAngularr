@@ -79,6 +79,19 @@
         />
       </div>
 
+      <!-- Capacity -->
+      <div class="mb-3">
+        <label for="capacity" class="form-label">Capacity</label>
+        <input 
+          type="number" 
+          class="form-control" 
+          id="capacity" 
+          [(ngModel)]="event.capacity"
+          name="capacity"
+          required
+          min="1">
+      </div>
+
       <!-- Image Upload -->
       <div class="form-group">
         <label for="image">Event Image</label>
