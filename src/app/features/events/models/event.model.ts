@@ -13,4 +13,7 @@ export interface Event {
   participantIds?: string[];
   timeZone?: string;
   capacity?: number;
+  imageUrl: string; 
+
+
 }

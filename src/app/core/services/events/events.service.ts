@@ -36,9 +36,16 @@ export class EventService {
     );
   }
 
-  addEvent(event: Event): Observable<Event> {
-    return this.http.post<Event>(`${this.apiUrl}/add`, event).pipe(
-        catchError(this.handleError)
+  addEvent(event: Event, image?: File | null): Observable<Event> {
+    const formData = new FormData();
+    formData.append('event', new Blob([JSON.stringify(event)], { type: 'application/json' }));
+    
+    if (image) {
+      formData.append('image', image);
+    }
+    
+    return this.http.post<Event>(`${this.apiUrl}/add`, formData).pipe(
+      catchError(this.handleError)
     );
   }
 

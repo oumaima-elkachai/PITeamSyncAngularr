@@ -33,6 +33,16 @@ export class EventsListComponent implements OnInit {
     itemsPerPage = 3; // Set items per page to 3
     totalPages = 0;
 
+    selectedImage: string | null = null;
+
+    imageStyle = {
+        width: '50px',
+        height: '50px',
+        objectFit: 'cover' as 'cover',
+        borderRadius: '4px',
+        cursor: 'pointer'
+    };
+
     constructor(
         private eventService: EventService,
         private http: HttpClient,
@@ -208,6 +218,14 @@ export class EventsListComponent implements OnInit {
             this.sortField = field;
             this.sortDirection = 'asc';
         }
+    }
+
+    openImageModal(imageUrl: string) {
+        this.selectedImage = imageUrl;
+    }
+
+    closeImageModal() {
+        this.selectedImage = null;
     }
 }
 

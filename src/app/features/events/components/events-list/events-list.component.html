@@ -14,22 +14,19 @@
       </button>
     </div>
   </div>
-  <div class="modal-backdrop fade show" *ngIf="showEditModal || showAddModal || showViewModal"></div>
 
-  <!-- Loading State -->
+  <!-- States (Loading, Error, Empty) -->
   <div *ngIf="isLoading" class="loading-state">
-    <div class="spinner-border text-primary" role="typeS">
+    <div class="spinner-border text-primary" role="status">
       <span class="visually-hidden">Loading...</span>
     </div>
   </div>
 
-  <!-- Error State -->
   <div *ngIf="errorMessage && !isLoading" class="alert alert-danger fade show">
     <i class="bi bi-exclamation-triangle-fill"></i>
     {{ errorMessage }}
   </div>
 
-  <!-- Empty State -->
   <div *ngIf="!isLoading && events.length === 0 && !errorMessage" class="empty-state">
     <i class="bi bi-calendar-x fs-1"></i>
     <h3>No Events Found</h3>
@@ -42,6 +39,7 @@
     <table class="table table-hover">
       <thead>
         <tr>
+          <th class="text-center">Event's Image</th>
           <th scope="col" (click)="toggleSort('startDate')" class="sortable">
             Date
             <i class="bi" [ngClass]="{
@@ -60,12 +58,15 @@
           <th scope="col">Capacity</th>
           <th  scope="col">Type</th>
           <th scope="col">Time</th>
-      
           <th scope="col" class="text-end">Actions</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let event of paginatedEvents">
+          <td class="text-center">
+            <img *ngIf="event.imageUrl" [src]="event.imageUrl" [ngStyle]="imageStyle" alt="Event image" (click)="openImageModal(event.imageUrl)" class="clickable-image">
+            <span *ngIf="!event.imageUrl">No image</span>
+          </td>
           <td>
             <span class="fw-bold">{{ event.startDate | date:'MMM d, yyyy' }}</span>
           </td>
@@ -74,7 +75,6 @@
           <td>{{ event.capacity }}</td>
           <td>{{ event.typeS }}</td>
           <td>{{ event.startTime }} - {{ event.endTime }}</td>
-          
           <td class="text-end">
             <div class="btn-group">
               <button class="btn btn-sm btn-outline-secondary" (click)="openView(event.idEvent!)" title="View">
@@ -116,8 +116,9 @@
   </div>
 
   <!-- Modals -->
+  <!-- Edit/Add Modal -->
   <div class="modal" [class.show]="showEditModal || showAddModal" 
-       [style.display]="showEditModal || showAddModal ? 'block' : 'none'" tabindex="-1">
+       [style.display]="showEditModal || showAddModal ? 'block' : 'none'">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
@@ -139,12 +140,9 @@
     </div>
   </div>
 
-  <!-- Modal Backdrop -->
-  <div class="modal-backdrop fade show" *ngIf="showEditModal || showAddModal"></div>
-
   <!-- View Modal -->
   <div class="modal" [class.show]="showViewModal" 
-       [style.display]="showViewModal ? 'block' : 'none'" tabindex="-1">
+       [style.display]="showViewModal ? 'block' : 'none'">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header border-0">
@@ -195,4 +193,16 @@
       </div>
     </div>
   </div>
+
+  <!-- Single Modal Backdrop -->
+  <div class="modal-backdrop fade show" 
+       *ngIf="showEditModal || showAddModal || showViewModal">
+  </div>
+
+  <!-- Image Modal -->
+  <app-image-modal 
+    *ngIf="selectedImage" 
+    [imageUrl]="selectedImage"
+    (closeModal)="closeImageModal()">
+  </app-image-modal>
 </div>

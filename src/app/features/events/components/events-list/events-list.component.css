@@ -315,3 +315,22 @@
 .event-badge.workshop { background: #edfbf3; color: #2ecc71; }
 .event-badge.conference { background: #f4ecf7; color: #9b59b6; }
 .event-badge.training { background: #fef9e7; color: #f1c40f; }
+
+td img {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.clickable-image {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.clickable-image:hover {
+  transform: scale(1.1);
+}

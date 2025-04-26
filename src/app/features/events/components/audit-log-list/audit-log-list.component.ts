@@ -25,22 +25,29 @@ export class AuditLogListComponent implements OnInit {
   constructor(private auditLogService: AuditLogService) {}
 
   ngOnInit(): void {
+    // Remove updatePagination call here as it's called in loadAuditLogs
     this.loadAuditLogs();
-    this.updatePagination();
   }
 
   loadAuditLogs(): void {
     this.loading = true;
+    this.error = null; // Reset error state
+    console.log('Loading audit logs...');
+    
     this.auditLogService.getAllAuditLogs()
       .subscribe({
         next: (logs) => {
+          console.log('Received audit logs:', logs);
           this.auditLogs = logs;
           this.loading = false;
           this.updatePagination();
         },
         error: (err) => {
+          console.error('Error loading audit logs:', err);
           this.error = 'Failed to load audit logs';
           this.loading = false;
+          this.auditLogs = []; // Reset logs on error
+          this.updatePagination();
         }
       });
   }
@@ -62,9 +69,15 @@ export class AuditLogListComponent implements OnInit {
   }
 
   updatePagination() {
+    if (!this.auditLogs.length) {
+      this.totalPages = 0;
+      this.paginatedLogs = [];
+      return;
+    }
+    
     this.totalPages = Math.ceil(this.auditLogs.length / this.pageSize);
     const startIndex = (this.currentPage - 1) * this.pageSize;
-    const endIndex = startIndex + this.pageSize;
+    const endIndex = Math.min(startIndex + this.pageSize, this.auditLogs.length);
     this.paginatedLogs = this.auditLogs.slice(startIndex, endIndex);
   }
 

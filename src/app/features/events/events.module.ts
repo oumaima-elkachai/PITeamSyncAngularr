@@ -13,6 +13,7 @@ import { ToastrModule } from "ngx-toastr";
 import { UpcomingEventsComponent } from './components/upcoming-events/upcoming-events.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuditLogListComponent } from './components/audit-log-list/audit-log-list.component';
+import { ImageModalComponent } from 'src/app/features/events/components/image-modal/image-modal.component';
 
 
 const routes: Routes = [
@@ -37,7 +38,8 @@ const routes: Routes = [
     EventsAddComponent,
     EventsEditComponent,
     UpcomingEventsComponent,
-    AuditLogListComponent
+    AuditLogListComponent,
+    ImageModalComponent
   ],
   imports: [
     CommonModule,

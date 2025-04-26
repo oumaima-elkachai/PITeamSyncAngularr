@@ -9,13 +9,20 @@ import { AuditLog } from 'src/app/features/events/models/AuditLog.model';
 })
 
 export class AuditLogService {
+  // Update base URL to remove v1 since it's not in the API path
   private readonly baseUrl = 'http://localhost:8080/api/audit-logs';
 
   constructor(private http: HttpClient) {}
 
   getAllAuditLogs(): Observable<AuditLog[]> {
+    console.log('Fetching audit logs from:', this.baseUrl);
     return this.http.get<AuditLog[]>(this.baseUrl)
-      .pipe(catchError(this.handleError));
+      .pipe(
+        catchError(error => {
+          console.error('Error fetching audit logs:', error);
+          return this.handleError(error);
+        })
+      );
   }
 
   getByParticipationId(participationId: string): Observable<AuditLog[]> {

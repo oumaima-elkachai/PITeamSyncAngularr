@@ -25,6 +25,11 @@ export class EventsAddComponent implements OnInit {
   filteredParticipants: Participant[] = [];
   selectedParticipants: Participant[] = [];
 
+  selectedFile: File | null = null;
+  imagePreviewUrl: string | null = null;
+
+  error: string | null = null;  // Add this property for error handling
+
   constructor(
     private fb: FormBuilder,
     private participantService: ParticipantService,
@@ -89,7 +94,8 @@ export class EventsAddComponent implements OnInit {
       endDate: [currentDate, [Validators.required, this.dateValidator()]],
       startTime: [currentTime, [Validators.required, this.timeValidator()]],
       endTime: [currentTime, [Validators.required]],
-      participantIds: [[], [Validators.required]]
+      participantIds: [[], [Validators.required]],
+      image: [null] // Add image control
     }, { validator: this.dateTimeValidator });
   }
 
@@ -215,8 +221,26 @@ export class EventsAddComponent implements OnInit {
     return '';
   }
 
+  onFileSelected(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      // Create preview URL
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreviewUrl = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
   onSubmit() {
     this.submitted = true;
+
+    if (!this.selectedFile) {
+      this.error = 'Please select an image for the event';
+      return;
+    }
 
     if (this.eventForm.valid) {
       const formValue = this.eventForm.value;
@@ -230,10 +254,22 @@ export class EventsAddComponent implements OnInit {
         typeS: EventStatus.PLANNED,
         participantIds: this.selectedParticipants
           .map(p => p.id)
-          .filter((id): id is string => id !== undefined)
+          .filter((id): id is string => id !== undefined),
+        imageUrl: 'pending' // Add temporary value, will be replaced by backend
       };
-      this.eventAdded.emit(event);
-      this.eventForm.reset();
+
+      this.eventService.addEvent(event, this.selectedFile).subscribe({
+        next: (createdEvent) => {
+          this.eventAdded.emit(createdEvent);
+          this.eventForm.reset();
+          this.selectedFile = null;
+          this.imagePreviewUrl = null;
+        },
+        error: (error) => {
+          console.error('Error creating event:', error);
+          // Handle error appropriately
+        }
+      });
     }
   }
 
