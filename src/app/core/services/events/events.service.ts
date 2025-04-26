@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { Event } from '../../../features/events/models/event.model';
+import { Participation } from '../../../features/participation/models/participation.model';
+import { ParticipationStatus } from '../../../features/participation/models/participation-status.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -12,11 +14,17 @@ export class EventService {
 
   constructor(private http: HttpClient) {}
 
-  getAllEvents(): Observable<Event[]> {
-    return this.http.get<Event[]>(this.apiUrl, {
+  getAllEvents(): Observable<any> {
+    return this.http.get<any>(this.apiUrl, {
       headers: new HttpHeaders().set('Cache-Control', 'no-cache')
     }).pipe(
-        catchError(this.handleError)
+      map((response: any) => {
+        if (response && Array.isArray(response)) {
+          return response;
+        }
+        throw new Error('Invalid response format');
+      }),
+      catchError(this.handleError)
     );
   }
 
@@ -78,11 +86,11 @@ export class EventService {
 
   addParticipant(eventId: string, participantId: string): Observable<string> {
     return this.http.post(
-        `${this.apiUrl}/${eventId}/participants/${participantId}`,
-        {},
-        { responseType: 'text' }
+      `${this.apiUrl}/${eventId}/participants/${participantId}`,
+      null,  // No body needed
+      { responseType: 'text' }
     ).pipe(
-        catchError(this.handleError)
+      catchError(this.handleError)
     );
   }
 
@@ -95,10 +103,48 @@ export class EventService {
     );
   }
 
+  isEventFull(event: any): boolean {
+    return event.capacity && event.participantIds?.length >= event.capacity;
+  }
+
+  createParticipation(eventId: string): Observable<any> {
+    const participantId = "6804ad54c942d7524f4c8628";
+    console.log(`Attempting to add participant ${participantId} to event ${eventId}`);
+    
+    // Using the endpoint that matches backend controller
+    return this.addParticipant(eventId, participantId).pipe(
+      map(response => ({
+        success: true,
+        userId: participantId,
+        message: response
+      })),
+      catchError(error => {
+        console.error('Participation error:', error);
+        if (error.status === 405) {
+          return throwError(() => new Error(`Invalid endpoint method. Please verify the API endpoint configuration.`));
+        }
+        return this.handleError(error);
+      })
+    );
+  }
+
   private handleError(error: any): Observable<never> {
-    console.error('Error occurred:', error);
-    return throwError(() => new Error(
-        error.message || 'Server error occurred. Please try again later.'
-    ));
+    console.error('Error details:', {
+      status: error.status,
+      statusText: error.statusText,
+      message: error.message,
+      error: error.error
+    });
+    
+    let errorMessage = 'An error occurred';
+    if (error.error instanceof ErrorEvent) {
+      errorMessage = error.error.message;
+    } else if (error.error) {
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.error}`;
+    } else if (error.status) {
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+    }
+    
+    return throwError(() => new Error(errorMessage));
   }
 }

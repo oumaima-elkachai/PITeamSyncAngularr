@@ -186,6 +186,83 @@
   background: #0056b3;
 }
 
+/* Modal Styles */
+.event-view-card {
+  background: white;
+  border-radius: 12px;
+}
+
+.event-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.event-badge {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.event-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.info-item {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.info-item i {
+  font-size: 1.25rem;
+  color: #3498db;
+  padding: 0.5rem;
+  border-radius: 8px;
+  background: #ebf5fb;
+}
+
+.info-item label {
+  font-size: 0.875rem;
+  color: #666;
+  margin-bottom: 0.25rem;
+}
+
+.info-item p {
+  margin: 0;
+  font-weight: 500;
+}
+
+.event-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+.description-section {
+  border-top: 1px solid #eee;
+  padding-top: 1.5rem;
+}
+
+.section-title {
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.description-text {
+  color: #666;
+  line-height: 1.6;
+}
+
 @media (max-width: 768px) {
   .events-container {
     padding: 1rem;

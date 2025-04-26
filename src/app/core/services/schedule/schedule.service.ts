@@ -28,9 +28,9 @@ export class ScheduleService {
   }
 
   private checkEventsDueDate() {
-    this.eventService.getAllEvents().subscribe(events => {
+    this.eventService.getAllEvents().subscribe((events: Event[]) => {
       const now = new Date();
-      events.forEach(event => {
+      events.forEach((event: Event) => {
         if (event.typeS === EventStatus.PLANNED && event.idEvent && !this.checkedEvents.has(event.idEvent)) {
           const endDateTime = new Date(`${event.endDate}T${event.endTime}`);
           // Check if the current time is within 1 second of the end time
@@ -44,7 +44,7 @@ export class ScheduleService {
     });
   }
 
-  private showCompletionConfirmation(event: Event) {
+  private showCompletionConfirmation(event: Event): void {
     const snackBarRef = this.snackBar.open(
       `Event "${event.title}" has ended!`,
       'OK',

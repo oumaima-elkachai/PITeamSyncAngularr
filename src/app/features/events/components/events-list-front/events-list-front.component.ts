@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { EventService } from '../../../../core/services/events/events.service';
-import { Event } from '../../models/event.model';
-import { EventStatus } from '../../models/event-status.enum';
+import { EventStatus } from 'src/app/features/events/models/event-status.enum';
 
 @Component({
   selector: 'app-events-list-front',
@@ -9,11 +8,12 @@ import { EventStatus } from '../../models/event-status.enum';
   styleUrls: ['./events-list-front.component.css']
 })
 export class EventsListFrontComponent implements OnInit {
-  events: Event[] = [];
+  events: any[] = [];
   loading = false;
   error: string | null = null;
-
-  // Make EventStatus enum available to template
+  selectedEvent: any = null;
+  showModal = false;
+  isSubmitting = false;
   EventStatus = EventStatus;
 
   constructor(private eventService: EventService) {}
@@ -49,37 +49,47 @@ export class EventsListFrontComponent implements OnInit {
     }
   }
 
-  isUpcoming(event: Event): boolean {
-    return new Date(event.startDate) > new Date();
+  openEventDetails(event: any): void {
+    this.selectedEvent = event;
+    this.showModal = true;
+    document.body.classList.add('modal-open');
   }
 
-  timeSince(date: string): string {
-    const now = new Date();
-    const eventDate = new Date(date);
-    const seconds = Math.floor((now.getTime() - eventDate.getTime()) / 1000);
+  closeModal(): void {
+    this.selectedEvent = null;
+    this.showModal = false;
+    document.body.classList.remove('modal-open');
+  }
 
-    if (seconds < 0) {
-      return 'Coming soon';
+  participateInEvent(): void {
+    if (!this.selectedEvent) return;
+
+    if (this.eventService.isEventFull(this.selectedEvent)) {
+      window.alert('Sorry, this event is already full!');
+      return;
     }
 
-    const intervals = {
-      year: 31536000,
-      month: 2592000,
-      week: 604800,
-      day: 86400,
-      hour: 3600,
-      minute: 60
-    };
-
-    for (const [unit, secondsInUnit] of Object.entries(intervals)) {
-      const interval = Math.floor(seconds / secondsInUnit);
-      if (interval > 1) {
-        return `${interval} ${unit}s ago`;
-      } else if (interval === 1) {
-        return `1 ${unit} ago`;
-      }
-    }
-
-    return 'Just now';
+    this.isSubmitting = true;
+    
+    this.eventService.createParticipation(this.selectedEvent.idEvent)
+      .subscribe({
+        next: (response) => {
+          window.alert('Successfully registered for the event!');
+          if (this.selectedEvent && !this.selectedEvent.participantIds) {
+            this.selectedEvent.participantIds = [];
+          }
+          if (this.selectedEvent && response.userId) {
+            this.selectedEvent.participantIds.push(response.userId);
+          }
+          this.closeModal();
+        },
+        error: (error) => {
+          console.error('Error creating participation:', error);
+          window.alert('Failed to register for the event. Please try again.');
+        },
+        complete: () => {
+          this.isSubmitting = false;
+        }
+      });
   }
 }
