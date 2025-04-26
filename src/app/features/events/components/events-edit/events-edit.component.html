@@ -79,6 +79,38 @@
         />
       </div>
 
+      <!-- Image Upload -->
+      <div class="form-group">
+        <label for="image">Event Image</label>
+        <input 
+          type="file"
+          id="image"
+          (change)="onFileSelected($event)"
+          accept="image/*"
+          class="form-control">
+      </div>
+
+      <!-- Image Preview -->
+      <div class="image-preview mt-3">
+        <div *ngIf="imagePreviewUrl">
+          <label>New Image Preview:</label>
+          <img [src]="imagePreviewUrl" 
+               alt="New event image preview" 
+               class="preview-image">
+        </div>
+        <div *ngIf="event.imageUrl && !imagePreviewUrl">
+          <label>Current Image:</label>
+          <img [src]="event.imageUrl" 
+               alt="Current event image" 
+               class="preview-image">
+        </div>
+      </div>
+
+      <!-- Error Message -->
+      <div *ngIf="errorMessage" class="alert alert-danger mt-3">
+        {{ errorMessage }}
+      </div>
+
       <!-- Submit Button -->
       <button type="submit" class="btn btn-primary" [disabled]="eventForm.invalid">
         Save Changes

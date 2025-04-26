@@ -1,7 +1,8 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { Event } from '../../models/event.model';
 import { EventStatus } from '../../models/event-status.enum';
+import { EventColors } from '../../models/event-colors';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { ParticipantService } from 'src/app/core/services/participant/participant.service';
 import { Participant } from '../../../participants/models/participant.model';
@@ -13,6 +14,7 @@ import { EventService } from 'src/app/core/services/events/events.service';
   styleUrls: ['./events-add.component.css']
 })
 export class EventsAddComponent implements OnInit {
+  @Input() preselectedDate: Date | null = null;
   @Output() eventAdded = new EventEmitter<Event>();
   @Output() cancel = new EventEmitter<void>();
 
@@ -28,19 +30,51 @@ export class EventsAddComponent implements OnInit {
   selectedFile: File | null = null;
   imagePreviewUrl: string | null = null;
 
-  error: string | null = null;  // Add this property for error handling
+  error: string | null = null;
 
   constructor(
     private fb: FormBuilder,
     private participantService: ParticipantService,
     private eventService: EventService
   ) {
-    this.createForm();
     this.setupSearch();
   }
 
   ngOnInit() {
     this.loadParticipants();
+    this.initializeForm();
+  }
+
+  private initializeForm() {
+    this.eventForm = this.fb.group({
+      title: ['', [Validators.required]],
+      description: ['', [Validators.required]],
+      startDate: ['', [Validators.required, this.dateValidator()]],
+      endDate: ['', [Validators.required, this.dateValidator()]],
+      startTime: ['', [Validators.required, this.timeValidator()]],
+      endTime: ['', [Validators.required]],
+      participantIds: [[], [Validators.required]],
+      image: [null]
+    }, { validator: this.dateTimeValidator });
+
+    if (this.preselectedDate) {
+      const formattedDate = this.formatDate(this.preselectedDate);
+      this.eventForm.patchValue({
+        startDate: formattedDate,
+        endDate: formattedDate,
+        startTime: '',
+        endTime: ''
+      });
+    } else {
+      const currentDate = this.getCurrentDateString();
+      const currentTime = this.getCurrentTimeString();
+      this.eventForm.patchValue({
+        startDate: currentDate,
+        endDate: currentDate,
+        startTime: currentTime,
+        endTime: currentTime
+      });
+    }
   }
 
   private getCurrentDateString(): string {
@@ -50,6 +84,13 @@ export class EventsAddComponent implements OnInit {
   private getCurrentTimeString(): string {
     const now = new Date();
     return `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+  }
+
+  private formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
   private timeValidator() {
@@ -67,7 +108,6 @@ export class EventsAddComponent implements OnInit {
       const startTime = formGroup.get('startTime')?.value;
       const endTime = formGroup.get('endTime')?.value;
       
-      // Check if date is today
       const today = new Date();
       const inputDate = new Date(startDate);
       const isToday = inputDate.toISOString().split('T')[0] === today.toISOString().split('T')[0];
@@ -81,22 +121,6 @@ export class EventsAddComponent implements OnInit {
 
       return null;
     };
-  }
-
-  private createForm() {
-    const currentDate = this.getCurrentDateString();
-    const currentTime = this.getCurrentTimeString();
-
-    this.eventForm = this.fb.group({
-      title: ['', [Validators.required]],
-      description: ['', [Validators.required]],
-      startDate: [currentDate, [Validators.required, this.dateValidator()]],
-      endDate: [currentDate, [Validators.required, this.dateValidator()]],
-      startTime: [currentTime, [Validators.required, this.timeValidator()]],
-      endTime: [currentTime, [Validators.required]],
-      participantIds: [[], [Validators.required]],
-      image: [null] // Add image control
-    }, { validator: this.dateTimeValidator });
   }
 
   private setupSearch() {
@@ -225,7 +249,6 @@ export class EventsAddComponent implements OnInit {
     const file = event.target.files[0];
     if (file) {
       this.selectedFile = file;
-      // Create preview URL
       const reader = new FileReader();
       reader.onload = () => {
         this.imagePreviewUrl = reader.result as string;
@@ -252,10 +275,11 @@ export class EventsAddComponent implements OnInit {
         startTime: formValue.startTime,
         endTime: formValue.endTime,
         typeS: EventStatus.PLANNED,
+        backgroundColor: EventColors.PLANNED,
         participantIds: this.selectedParticipants
           .map(p => p.id)
           .filter((id): id is string => id !== undefined),
-        imageUrl: 'pending' // Add temporary value, will be replaced by backend
+        imageUrl: 'pending'
       };
 
       this.eventService.addEvent(event, this.selectedFile).subscribe({
@@ -267,7 +291,6 @@ export class EventsAddComponent implements OnInit {
         },
         error: (error) => {
           console.error('Error creating event:', error);
-          // Handle error appropriately
         }
       });
     }

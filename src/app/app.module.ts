@@ -15,6 +15,8 @@ import { ToastrModule } from 'ngx-toastr';
 import { HttpClient } from '@angular/common/http';
 import { ParticipationsModule } from './features/participation/participations.module';
 import { ParticipantsModule } from './features/participants/participants.module';
+import { ScheduleService } from './core/services/schedule/schedule.service';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -43,12 +45,15 @@ import { ParticipantsModule } from './features/participants/participants.module'
       progressBar: true,
       closeButton: true, // Added close button
       enableHtml: true // Enable HTML in toast messages
-    })
+    }),
+    MatSnackBarModule
   ],
   exports: [
     // Export the module to make it available for other modules
   ],
-  providers: [  ],
+  providers: [
+    ScheduleService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

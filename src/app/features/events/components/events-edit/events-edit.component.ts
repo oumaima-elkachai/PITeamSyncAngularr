@@ -15,6 +15,8 @@ export class EventsEditComponent implements OnInit {
   @Output() eventUpdated = new EventEmitter<Event>();
   @Output() cancel = new EventEmitter<void>();
 
+  selectedFile: File | null = null;
+  imagePreviewUrl: string | null = null;
   isLoading = true;
   errorMessage: string | null = null;
 
@@ -51,16 +53,35 @@ export class EventsEditComponent implements OnInit {
     });
   }
 
+  onFileSelected(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      // Create preview URL
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreviewUrl = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
   saveEvent(): void {
     if (this.event?.idEvent) {
-      firstValueFrom(this.eventService.updateEvent(this.event.idEvent, this.event))
-          .then((updatedEvent: Event) => {
-            this.eventUpdated.emit(updatedEvent);
-            this.cancel.emit(); // Close the modal after successful update
-          })
-          .catch((error: HttpErrorResponse) => {
-            this.errorMessage = 'Failed to save changes.';
-          });
+      this.eventService.updateEvent(
+        this.event.idEvent, 
+        this.event, 
+        this.selectedFile
+      ).subscribe({
+        next: (updatedEvent) => {
+          this.eventUpdated.emit(updatedEvent);
+          this.cancel.emit();
+        },
+        error: (error) => {
+          this.errorMessage = 'Failed to update event';
+          console.error('Error updating event:', error);
+        }
+      });
     }
   }
 

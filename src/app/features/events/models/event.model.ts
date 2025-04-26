@@ -14,6 +14,5 @@ export interface Event {
   timeZone?: string;
   capacity?: number;
   imageUrl: string; 
-
-
+  backgroundColor?: string;
 }

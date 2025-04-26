@@ -7,6 +7,9 @@ import { EventService } from '../../../../core/services/events/events.service';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
+import { getEventColor } from '../../utils/event-color.util';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ScheduleService } from '../../../../core/services/schedule/schedule.service';
 
 @Component({
   selector: 'app-events-calendar',
@@ -37,12 +40,17 @@ export class EventsCalendarComponent implements OnInit {
     postponed: '#FFA726',
     default: '#2196F3'
   };
-
+  @Input() enableDateSelection = true;
   @Output() eventClicked = new EventEmitter<Event>();
   @Output() dateClicked = new EventEmitter<Date>();
+  @Output() addEventRequested = new EventEmitter<Date>();
 
   loading = false;
   error: string | null = null;
+  showAddEventModal = false;
+  selectedDate: Date | null = null;
+
+  private currentViewDates: { start: Date, end: Date } | null = null;
 
   calendarOptions: CalendarOptions = {
     plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
@@ -54,22 +62,59 @@ export class EventsCalendarComponent implements OnInit {
     },
     events: [],
     datesSet: (dateInfo) => {
+      this.currentViewDates = {
+        start: dateInfo.start,
+        end: dateInfo.end
+      };
       this.fetchEvents(dateInfo.start, dateInfo.end);
     },
     eventClick: this.handleEventClick.bind(this),
     dateClick: this.handleDateClick.bind(this),
     eventDidMount: (info) => {
       this.setEventColor(info);
-    }
+    },
+    eventContent: (arg: any) => {
+      const event = arg.event;
+      const color = getEventColor(event.extendedProps.typeS);
+      
+      return {
+        html: `
+          <div class="fc-content" style="background-color: ${color}; border-color: ${color}">
+            <div class="fc-title">${event.title}</div>
+          </div>
+        `
+      };
+    },
+    selectable: true // Enable date selection
   };
 
-  constructor(private eventService: EventService) {}
+  constructor(
+    private eventService: EventService,
+    private snackBar: MatSnackBar,
+    private scheduleService: ScheduleService
+  ) {}
 
   ngOnInit(): void {
     const today = new Date();
     const end = new Date();
     end.setDate(today.getDate() + this.numberOfDays);
     this.fetchEvents(today, end);
+
+    // Subscribe to refresh events
+    this.scheduleService.refreshCalendar$.subscribe(() => {
+      this.refreshCalendar();
+    });
+  }
+
+  private refreshCalendar(): void {
+    if (this.currentViewDates) {
+      this.fetchEvents(this.currentViewDates.start, this.currentViewDates.end);
+    } else {
+      const today = new Date();
+      const end = new Date();
+      end.setDate(today.getDate() + this.numberOfDays);
+      this.fetchEvents(today, end);
+    }
   }
 
   private fetchEvents(start: Date, end: Date): void {
@@ -78,7 +123,6 @@ export class EventsCalendarComponent implements OnInit {
 
     this.eventService.getEventsInRange(start, end).subscribe({
       next: (events) => {
-      
         this.calendarOptions.events = this.formatEvents(events);
         console.log('Formatted events:', this.calendarOptions.events);
         this.loading = false;
@@ -97,20 +141,25 @@ export class EventsCalendarComponent implements OnInit {
   }
 
   private formatEvents(events: Event[]): any[] {
-    return events.map(event => ({
-      id: event.idEvent,
-      title: event.title,
-      start: new Date(`${event.startDate}T${event.startTime}`),
-      end: new Date(`${event.endDate}T${event.endTime}`),
-      description: event.description,
-      status: event.typeS,
-      extendedProps: {
+    return events.map(event => {
+      const formattedEvent = {
+        id: event.idEvent,
+        title: event.title,
+        start: new Date(`${event.startDate}T${event.startTime}`),
+        end: new Date(`${event.endDate}T${event.endTime}`),
         description: event.description,
         status: event.typeS,
-        participants: event.participantIds
-      },
-      allDay: this.isAllDayEvent(event)
-    }));
+        extendedProps: {
+          description: event.description,
+          status: event.typeS,
+          participants: event.participantIds,
+          typeS: event.typeS
+        },
+        allDay: this.isAllDayEvent(event)
+      };
+
+      return formattedEvent; // Remove the completion check since it's handled by ScheduleService
+    });
   }
 
   private isAllDayEvent(event: Event): boolean {
@@ -126,6 +175,25 @@ export class EventsCalendarComponent implements OnInit {
   }
 
   private handleDateClick(clickInfo: DateClickArg): void {
-    this.dateClicked.emit(clickInfo.date);
+    if (!this.enableDateSelection) return;
+    
+    // Get the clicked date and format it to yyyy-mm-dd
+    const year = clickInfo.date.getFullYear();
+    const month = String(clickInfo.date.getMonth() + 1).padStart(2, '0');
+    const day = String(clickInfo.date.getDate()).padStart(2, '0');
+    const formattedDate = `${year}-${month}-${day}`;
+    
+    // Create a new Date object at midnight for the selected date
+    const clickedDate = new Date(formattedDate + 'T00:00:00');
+    
+    this.selectedDate = clickedDate;
+    this.showAddEventModal = true;
+    this.addEventRequested.emit(clickedDate);
+    this.dateClicked.emit(clickedDate);
+  }
+
+  closeAddEventModal(): void {
+    this.showAddEventModal = false;
+    this.selectedDate = null;
   }
 }

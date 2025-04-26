@@ -49,9 +49,18 @@ export class EventService {
     );
   }
 
-  updateEvent(id: string, event: Event): Observable<Event> {
-    return this.http.put<Event>(`${this.apiUrl}/${id}`, event).pipe(
-        catchError(this.handleError)
+  updateEvent(id: string, event: Event, image?: File | null): Observable<Event> {
+    const formData = new FormData();
+    formData.append('event', new Blob([JSON.stringify(event)], { 
+      type: 'application/json' 
+    }));
+    
+    if (image) {
+      formData.append('image', image);
+    }
+  
+    return this.http.put<Event>(`${this.apiUrl}/${id}`, formData).pipe(
+      catchError(this.handleError)
     );
   }
 

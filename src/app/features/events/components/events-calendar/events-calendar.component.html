@@ -8,4 +8,27 @@
   </div>
 
   <full-calendar [options]="calendarOptions"></full-calendar>
+
+  <!-- Add Event Modal -->
+  <div class="modal" [class.show]="showAddEventModal" [style.display]="showAddEventModal ? 'block' : 'none'">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add New Event</h5>
+          <button type="button" class="btn-close" (click)="closeAddEventModal()"></button>
+        </div>
+        <div class="modal-body">
+          <app-events-add 
+            *ngIf="showAddEventModal && selectedDate"
+            [preselectedDate]="selectedDate"
+            (cancel)="closeAddEventModal()"
+            (eventAdded)="closeAddEventModal()">
+          </app-events-add>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Backdrop -->
+  <div class="modal-backdrop fade show" *ngIf="showAddEventModal"></div>
 </div>

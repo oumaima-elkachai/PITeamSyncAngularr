@@ -66,3 +66,18 @@
     border-left: 3px solid;
     padding-left: 15px;
 }
+
+::ng-deep .fc-event {
+  border: none !important;
+  background: transparent !important;
+}
+
+::ng-deep .fc-content {
+  padding: 2px 5px;
+  border-radius: 3px;
+}
+
+::ng-deep .fc-title {
+  color: black;
+  font-weight: 500;
+}
