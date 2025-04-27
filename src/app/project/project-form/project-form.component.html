@@ -26,62 +26,95 @@
             <div class="status-indicator"></div>
             <div class="card-content">
               <form [formGroup]="projectForm" (ngSubmit)="onSubmit()" class="elegant-form">
-                <!-- Title -->
-                <div class="form-group">
-                  <label class="input-label">Project Title</label>
-                  <input type="text" formControlName="title" class="modern-input" 
-                        [class.invalid]="projectForm.get('title')?.invalid && projectForm.get('title')?.touched">
-                  <div class="error-message" *ngIf="projectForm.get('title')?.invalid && projectForm.get('title')?.touched">
-                    <i class="bi bi-exclamation-triangle"></i> Title required
+                <!-- Title & Department -->
+                <div class="row">
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <label class="input-label">Project Title</label>
+                      <div class="input-with-icon">
+                        <i class="bi bi-pencil-square input-icon"></i>
+                        <input type="text" formControlName="title" class="modern-input"
+                          placeholder="Enter project title"
+                          [class.invalid]="projectForm.get('title')?.invalid && projectForm.get('title')?.touched">
+                      </div>
+                      <div class="error-message"
+                        *ngIf="projectForm.get('title')?.invalid && projectForm.get('title')?.touched">
+                        <i class="bi bi-exclamation-triangle"></i> Title is required
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="input-label">Department</label>
+                      <div class="select-wrapper">
+                        <select formControlName="department" class="modern-select" required>
+                          <option value="" disabled>Select Department</option>
+                          <option *ngFor="let dept of departments" [value]="dept">{{dept | titlecase}}</option>
+                        </select>
+                        <div class="select-chevron">
+                          <i class="bi bi-chevron-down"></i>
+                        </div>
+                      </div>
+                      <div class="error-message"
+                        *ngIf="projectForm.get('department')?.invalid && projectForm.get('department')?.touched">
+                        <i class="bi bi-exclamation-triangle"></i> Department is required
+                      </div>
+                    </div>
                   </div>
                 </div>
 
                 <!-- Description -->
                 <div class="form-group">
                   <label class="input-label">Description</label>
-                  <textarea formControlName="description" class="modern-input textarea" rows="3"
-                        [class.invalid]="projectForm.get('description')?.invalid && projectForm.get('description')?.touched"></textarea>
-                  <div class="error-message" *ngIf="projectForm.get('description')?.invalid && projectForm.get('description')?.touched">
-                    <i class="bi bi-exclamation-triangle"></i> Description required
+                  <div class="input-with-icon">
+                    <i class="bi bi-text-paragraph input-icon"></i>
+                    <textarea formControlName="description" class="modern-input textarea" rows="4"
+                      placeholder="Describe the project goals and objectives"
+                      [class.invalid]="projectForm.get('description')?.invalid && projectForm.get('description')?.touched"></textarea>
+                  </div>
+                  <div class="error-message"
+                    *ngIf="projectForm.get('description')?.invalid && projectForm.get('description')?.touched">
+                    <i class="bi bi-exclamation-triangle"></i> Description is required
                   </div>
                 </div>
 
+                <!-- Details Row -->
                 <div class="row">
-                  <div class="col-md-6">
-                    <!-- Due Date -->
+                  <div class="col-md-4">
                     <div class="form-group">
                       <label class="input-label">Due Date</label>
                       <div class="input-with-icon">
                         <i class="bi bi-calendar input-icon"></i>
                         <input type="date" formControlName="dueDate" class="modern-input"
-                              [class.invalid]="projectForm.get('dueDate')?.invalid && projectForm.get('dueDate')?.touched">
+                          [class.invalid]="projectForm.get('dueDate')?.invalid && projectForm.get('dueDate')?.touched">
                       </div>
-                      <div class="error-message" *ngIf="projectForm.get('dueDate')?.invalid && projectForm.get('dueDate')?.touched">
-                        <i class="bi bi-exclamation-triangle"></i> Date required
+                      <div class="error-message"
+                        *ngIf="projectForm.get('dueDate')?.invalid && projectForm.get('dueDate')?.touched">
+                        <i class="bi bi-exclamation-triangle"></i> Valid date required
                       </div>
                     </div>
                   </div>
 
-                  <div class="col-md-6">
-                    <!-- Status -->
+                  <div class="col-md-4">
                     <div class="form-group">
                       <label class="input-label">Status</label>
                       <div class="select-wrapper">
                         <select formControlName="status" class="modern-select">
-                          <option *ngFor="let status of statusOptions" [value]="status">{{status}}</option>
+                          <option *ngFor="let status of statusOptions" [value]="status">{{status | titlecase}}</option>
                         </select>
                         <div class="select-chevron">
                           <i class="bi bi-chevron-down"></i>
                         </div>
                       </div>
                     </div>
+                  </div>
 
-                    <!-- Project Type -->
+                  <div class="col-md-4">
                     <div class="form-group">
                       <label class="input-label">Project Type</label>
                       <div class="select-wrapper">
                         <select formControlName="type" class="modern-select">
-                          <option *ngFor="let type of typeOptions" [value]="type">{{type}}</option>
+                          <option *ngFor="let type of typeOptions" [value]="type">{{type | titlecase}}</option>
                         </select>
                         <div class="select-chevron">
                           <i class="bi bi-chevron-down"></i>
@@ -91,14 +124,18 @@
                   </div>
                 </div>
 
+                <!-- Form Actions -->
                 <div class="form-actions">
                   <button type="button" class="btn-outline-secondary" (click)="router.navigate(['/projects'])">
+                    <i class="bi bi-x-lg me-2"></i>
                     Cancel
                   </button>
+                   
                   <button type="submit" class="btn-primary" [disabled]="projectForm.invalid">
-                    <i class="bi bi-plus-lg me-2"></i>
-                    Create Project
+                    <i class="bi bi-check2-circle me-2"></i>Create Project
                   </button>
+
+
                 </div>
               </form>
             </div>
@@ -110,270 +147,3 @@
 </div>
 
 <app-admin-footer></app-admin-footer>
-
-<!-- Bootstrap Icons -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-
-<!-- Google Font -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-<style>
-/* ===== GLOBAL STYLING ===== */
-body {
-  background-color: #f5f7fa;
-  color: #333;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-}
-
-.container {
-  max-width: 1200px;
-  padding: 0 20px;
-}
-
-/* ===== MAIN CONTENT AREA ===== */
-.main-content {
-  margin-left: 280px;
-  min-height: 100vh;
-  background: linear-gradient(180deg, #f0f4ff 0%, #f5f7fa 100%);
-  transition: all 0.3s;
-}
-
-.content-wrapper {
-  padding: 0;
-}
-
-/* ===== HEADER SECTION ===== */
-.dashboard-header {
-  background: #fff;
-  padding: 40px 0 30px;
-  margin-bottom: 40px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-  position: relative;
-}
-
-.dashboard-header:after {
-  content: '';
-  position: absolute;
-  bottom: -5px;
-  left: 0;
-  right: 0;
-  height: 5px;
-  background: linear-gradient(90deg, #4a6cf7, #6e8cff, #9ab5ff);
-}
-
-.bg-primary-soft {
-  background-color: rgba(74, 108, 247, 0.1);
-  color: #4a6cf7;
-  font-weight: 500;
-  font-size: 0.85rem;
-  padding: 6px 12px;
-}
-
-.dashboard-title {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: #2c3e50;
-  margin: 8px 0;
-  letter-spacing: -0.5px;
-}
-
-.dashboard-subtitle {
-  color: #64748b;
-  font-size: 1.1rem;
-  margin-bottom: 0;
-}
-
-/* ===== FORM CONTAINER ===== */
-.form-container {
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-.project-card {
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
-  position: relative;
-  transition: all 0.3s ease;
-  margin-bottom: 40px;
-}
-
-.status-indicator {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 6px;
-  height: 100%;
-  background: linear-gradient(to bottom, #4a6cf7 0%, #818cf8 100%);
-}
-
-.card-content {
-  padding: 30px 30px 30px 36px;
-}
-
-/* ===== FORM ELEMENTS ===== */
-.elegant-form .form-group {
-  margin-bottom: 24px;
-}
-
-.input-label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: 500;
-  color: #1e293b;
-  font-size: 0.95rem;
-}
-
-.modern-input, .modern-select {
-  width: 100%;
-  padding: 12px 16px;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  background-color: #f8fafc;
-  font-family: inherit;
-  font-size: 0.95rem;
-  color: #1e293b;
-  transition: all 0.2s;
-}
-
-.modern-input:focus, .modern-select:focus {
-  outline: none;
-  border-color: #4a6cf7;
-  box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.1);
-  background-color: #fff;
-}
-
-.invalid {
-  border-color: #ef4444 !important;
-  background-color: #fff5f5 !important;
-}
-
-.error-message {
-  font-size: 0.85rem;
-  color: #ef4444;
-  margin-top: 6px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.textarea {
-  resize: vertical;
-  min-height: 80px;
-}
-
-.select-wrapper {
-  position: relative;
-}
-
-.select-chevron {
-  position: absolute;
-  right: 16px;
-  top: 50%;
-  transform: translateY(-50%);
-  pointer-events: none;
-  color: #64748b;
-}
-
-.select-chevron i {
-  font-size: 14px;
-}
-
-.input-with-icon {
-  position: relative;
-}
-
-.input-icon {
-  position: absolute;
-  left: 16px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #64748b;
-}
-
-.input-with-icon .modern-input {
-  padding-left: 44px;
-}
-
-/* ===== FORM ACTIONS ===== */
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 16px;
-  padding-top: 16px;
-  margin-top: 16px;
-  border-top: 1px solid #f1f5f9;
-}
-
-.btn-primary {
-  background: linear-gradient(45deg, #4a6cf7, #6d8bff);
-  color: white;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  display: inline-flex;
-  align-items: center;
-}
-
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(74, 108, 247, 0.25);
-}
-
-.btn-primary:disabled {
-  background: #cbd5e1;
-  transform: none;
-  box-shadow: none;
-  cursor: not-allowed;
-}
-
-.btn-outline-secondary {
-  background: transparent;
-  color: #64748b;
-  border: 1px solid #e2e8f0;
-  padding: 12px 20px;
-  border-radius: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.btn-outline-secondary:hover {
-  background: #f1f5f9;
-}
-
-/* Responsive adjustments */
-@media (max-width: 991px) {
-  .main-content {
-    margin-left: 0;
-  }
-  
-  .dashboard-header {
-    padding: 30px 0 20px;
-  }
-  
-  .dashboard-title {
-    font-size: 2rem;
-  }
-}
-
-@media (max-width: 767px) {
-  .card-content {
-    padding: 25px 20px 25px 26px;
-  }
-  
-  .form-actions {
-    flex-direction: column-reverse;
-  }
-  
-  .form-actions button {
-    width: 100%;
-  }
-}
-</style>

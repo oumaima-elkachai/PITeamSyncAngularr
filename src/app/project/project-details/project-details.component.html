@@ -369,6 +369,7 @@
           <button class="btn-primary" [routerLink]="['/projects', project.id, 'new-task']">
             <i class="bi bi-plus-lg"></i> Add Task
           </button>
+           
         </div>
 
         <div class="row g-4">
@@ -417,143 +418,148 @@
           </div>
 
           <!-- Right Column - Tasks -->
-          <div class="col-md-4">
-            <div class="project-card">
-              <div class="status-indicator"></div>
-              <div class="card-content">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                  <h5 class="card-title mb-0"><i class="bi bi-list-check"></i>Tasks</h5>
-                  <a [routerLink]="['/projects', project.id, 'new-task']" class="btn-outline-secondary btn-sm">
-                    <i class="bi bi-plus-lg"></i> Add Task
-                  </a>
+          <!-- Right Column - Tasks -->
+<div class="col-md-4">
+  <div class="project-card">
+    <div class="status-indicator"></div>
+    <div class="card-content">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h5 class="card-title mb-0"><i class="bi bi-list-check"></i>Recent Tasks</h5>
+        <a [routerLink]="['/projects', project.id, 'new-task']" class="btn-outline-secondary btn-sm">
+          <i class="bi bi-plus-lg"></i> Add Task
+        </a>
+      </div>
+
+      <div *ngIf="loadingTasks" class="spinner-container">
+        <div class="spinner-border" role="status"></div>
+      </div>
+
+      <div *ngIf="taskError" class="alert alert-warning">{{ taskError }}</div>
+
+      <div *ngIf="!loadingTasks && !taskError">
+        <div class="task-list">
+          <!-- Show only the 2 most recent tasks -->
+          <div class="task-card mb-3 p-3" *ngFor="let task of tasks.slice(0, 2)">
+            <div class="task-status-indicator" [ngClass]="{
+                            'task-status-todo': task.status === 'TODO',
+                            'task-status-in-progress': task.status === 'IN_PROGRESS',
+                            'task-status-done': task.status === 'DONE'
+                        }">
+            </div>
+            <div class="d-flex justify-content-between align-items-start mb-2" style="padding-left: 8px;">
+              <div>
+                <h6 class="mb-1">{{ task.title }}</h6>
+                <small class="text-muted">
+                  <i class="bi bi-calendar3"></i> Due: {{ task.deadline | date }}
+                </small>
+              </div>
+              <div class="d-flex align-items-center">
+                <span class="badge me-2" [ngClass]="{
+                                'bg-secondary': task.status === 'TODO',
+                                'bg-primary': task.status === 'IN_PROGRESS',
+                                'bg-success': task.status === 'DONE'
+                            }">
+                  {{ task.status }}
+                </span>
+                <button class="btn-outline-secondary btn-sm"
+                  [routerLink]="['/projects', project.id, 'tasks', task.id, 'edit']">
+                  <i class="bi bi-pencil"></i>
+                </button>
+              </div>
+            </div>
+            <div class="progress" style="height: 4px; margin-left: 8px;">
+              <div class="progress-bar" [style.width.%]="task.status === 'DONE' ? 100 : 
+                                        task.status === 'IN_PROGRESS' ? 50 : 10"
+                [ngClass]="{
+                                'bg-secondary': task.status === 'TODO',
+                                'bg-primary': task.status === 'IN_PROGRESS',
+                                'bg-success': task.status === 'DONE'
+                            }">
+              </div>
+            </div>
+
+            <div *ngIf="task.extensionStatus === 'PENDING'"
+              class="extension-request-alert alert alert-warning mt-2">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <i class="bi bi-clock-history me-2"></i>
+                  Extension requested until {{ task.requestedExtensionDate | date }}
                 </div>
-
-                <div *ngIf="loadingTasks" class="spinner-container">
-                  <div class="spinner-border" role="status"></div>
-                </div>
-
-                <div *ngIf="taskError" class="alert alert-warning">{{ taskError }}</div>
-
-                <div *ngIf="!loadingTasks && !taskError">
-                  <div class="task-list">
-                    <div class="task-card mb-3 p-3" *ngFor="let task of tasks">
-                      <div class="task-status-indicator" [ngClass]="{
-                                                    'task-status-todo': task.status === 'TODO',
-                                                    'task-status-in-progress': task.status === 'IN_PROGRESS',
-                                                    'task-status-done': task.status === 'DONE'
-                                                }">
-                      </div>
-                      <div class="d-flex justify-content-between align-items-start mb-2" style="padding-left: 8px;">
-                        <div>
-                          <h6 class="mb-1">{{ task.title }}</h6>
-                          <small class="text-muted">
-                            <i class="bi bi-calendar3"></i> Due: {{ task.deadline | date }}
-                          </small>
-                        </div>
-                        <div class="d-flex align-items-center">
-                          <span class="badge me-2" [ngClass]="{
-                                                        'bg-secondary': task.status === 'TODO',
-                                                        'bg-primary': task.status === 'IN_PROGRESS',
-                                                        'bg-success': task.status === 'DONE'
-                                                    }">
-                            {{ task.status }}
-                          </span>
-                          <button class="btn-outline-secondary btn-sm"
-                            [routerLink]="['/projects', project.id, 'tasks', task.id, 'edit']">
-                            <i class="bi bi-pencil"></i>
-                          </button>
-                        </div>
-                      </div>
-                      <div class="progress" style="height: 4px; margin-left: 8px;">
-                        <div class="progress-bar" [style.width.%]="task.status === 'DONE' ? 100 : 
-                                                                       task.status === 'IN_PROGRESS' ? 50 : 10"
-                          [ngClass]="{
-                                                        'bg-secondary': task.status === 'TODO',
-                                                        'bg-primary': task.status === 'IN_PROGRESS',
-                                                        'bg-success': task.status === 'DONE'
-                                                    }">
-                        </div>
-                      </div>
-
-
-                      <div *ngIf="task.extensionStatus === 'PENDING'"
-                        class="extension-request-alert alert alert-warning mt-2">
-                        <div class="d-flex justify-content-between align-items-center">
-                          <div>
-                            <i class="bi bi-clock-history me-2"></i>
-                            Extension requested until {{ task.requestedExtensionDate | date }}
-                          </div>
-                          <div>
-                            <button class="btn btn-sm btn-success me-2" (click)="approveExtension(task.id!)">
-                              <i class="bi bi-check-lg"></i> Approve
-                            </button>
-                            <button class="btn btn-sm btn-danger" (click)="rejectExtension(task.id!)">
-                              <i class="bi bi-x-lg"></i> Reject
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-
-                      <!-- Add attachments section -->
-                      <!-- project-details.component.html -->
-                      <!-- In the task card section -->
-                      <div class="attachments-section mt-2">
-                        <h6 class="text-muted">Attachments:</h6>
-                        <div *ngIf="loadingAttachments[task.id!]; else attachmentsLoaded">
-                          <div class="spinner-border spinner-border-sm" role="status"></div>
-                          <span class="ms-2 small text-muted">Loading attachments...</span>
-                        </div>
-
-                        <ng-template #attachmentsLoaded>
-                          <div *ngIf="task.attachments?.length; else noAttachments">
-                            <div *ngFor="let attachment of task.attachments"
-                              class="attachment-item d-flex align-items-center mb-2">
-                              <i class="bi bi-paperclip me-2"></i>
-                              <span class="text-truncate" style="max-width: 150px">
-                                {{ attachment.fileName }}
-                              </span>
-                              <div class="ms-auto">
-                                <button class="btn btn-link btn-sm p-0 ms-2"
-                                  (click)="downloadAttachment(attachment.id)">
-                                  <i class="bi bi-download"></i>
-                                </button>
-                                <!-- Add delete button next to download -->
-                                <button class="btn btn-link btn-sm text-danger p-0 ms-2"
-                                  (click)="deleteAttachment(attachment.id)">
-                                  <i class="bi bi-trash"></i>
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-
-                          <ng-template #noAttachments>
-                            <div class="text-muted small">No attachments</div>
-                          </ng-template>
-                        </ng-template>
-                      </div>
-
-                      <!-- Add links section -->
-                      <div class="links-section mt-2">
-                        <h6 class="text-muted">Links:</h6>
-                        <div *ngFor="let link of task.links" class="link-item">
-                          <a [href]="link.url" target="_blank" class="text-decoration-none">
-                            <i class="bi bi-link-45deg me-2"></i>
-                            {{ link.description || link.url }}
-                          </a>
-                        </div>
-                      </div>
-
-
-                    </div>
-                    <div class="text-center text-muted p-4" *ngIf="!tasks.length">
-                      <i class="bi bi-clipboard2 fs-4 d-block mb-2"></i>
-                      No tasks created yet
-                    </div>
-                  </div>
+                <div>
+                  <button class="btn btn-sm btn-success me-2" (click)="approveExtension(task.id!)">
+                    <i class="bi bi-check-lg"></i> Approve
+                  </button>
+                  <button class="btn btn-sm btn-danger" (click)="rejectExtension(task.id!)">
+                    <i class="bi bi-x-lg"></i> Reject
+                  </button>
                 </div>
               </div>
             </div>
+
+            <!-- Attachments section -->
+            <div class="attachments-section mt-2">
+              <h6 class="text-muted">Attachments:</h6>
+              <div *ngIf="loadingAttachments[task.id!]; else attachmentsLoaded">
+                <div class="spinner-border spinner-border-sm" role="status"></div>
+                <span class="ms-2 small text-muted">Loading attachments...</span>
+              </div>
+
+              <ng-template #attachmentsLoaded>
+                <div *ngIf="task.attachments?.length; else noAttachments">
+                  <div *ngFor="let attachment of task.attachments"
+                    class="attachment-item d-flex align-items-center mb-2">
+                    <i class="bi bi-paperclip me-2"></i>
+                    <span class="text-truncate" style="max-width: 150px">
+                      {{ attachment.fileName }}
+                    </span>
+                    <div class="ms-auto">
+                      <button class="btn btn-link btn-sm p-0 ms-2"
+                        (click)="downloadAttachment(attachment.id)">
+                        <i class="bi bi-download"></i>
+                      </button>
+                      <button class="btn btn-link btn-sm text-danger p-0 ms-2"
+                        (click)="deleteAttachment(attachment.id)">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <ng-template #noAttachments>
+                  <div class="text-muted small">No attachments</div>
+                </ng-template>
+              </ng-template>
+            </div>
+
+            <!-- Links section -->
+            <div class="links-section mt-2">
+              <h6 class="text-muted">Links:</h6>
+              <div *ngFor="let link of task.links" class="link-item">
+                <a [href]="link.url" target="_blank" class="text-decoration-none">
+                  <i class="bi bi-link-45deg me-2"></i>
+                  {{ link.description || link.url }}
+                </a>
+              </div>
+            </div>
           </div>
+
+          <!-- Message when there are more than 2 tasks -->
+          <div *ngIf="tasks.length > 2" class="text-center mt-3 mb-2">
+            <a [routerLink]="['/projects', project.id, 'tasks']" class="btn btn-link text-primary">
+              <i class="bi bi-arrow-right-circle"></i> View all {{ tasks.length }} tasks
+            </a>
+          </div>
+
+          <!-- Message when there are no tasks -->
+          <div class="text-center text-muted p-4" *ngIf="!tasks.length">
+            <i class="bi bi-clipboard2 fs-4 d-block mb-2"></i>
+            No tasks created yet
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 
           <!-- Middle Column - Team Members -->

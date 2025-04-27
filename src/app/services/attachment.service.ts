@@ -18,8 +18,7 @@ export class AttachmentService {
     );
   }
 
-  // attachment.service.ts
-  downloadAttachment(attachmentId: string): Observable<{ blob: Blob, fileName: string }> {
+   downloadAttachment(attachmentId: string): Observable<{ blob: Blob, fileName: string }> {
     return this.http.get(`${this.baseUrl}/download/${attachmentId}`, {
       responseType: 'blob',
       observe: 'response'
@@ -46,8 +45,7 @@ export class AttachmentService {
     return this.http.post<Attachment>(`${this.baseUrl}/upload`, formData);
   }
 
-  // attachment.service.ts
-  deleteAttachment(attachmentId: string): Observable<void> {
+    deleteAttachment(attachmentId: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${attachmentId}`);
   }
 

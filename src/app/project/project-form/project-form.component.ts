@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ProjectService } from 'src/app/services/project.service';
 import { Router } from '@angular/router';
+import { ProjectDepartment } from 'src/app/models/project.model';
 
 @Component({
   selector: 'app-project-form',
@@ -12,6 +13,8 @@ export class ProjectFormComponent implements OnInit {
   projectForm: FormGroup;
   statusOptions = ['Active', 'On Hold', 'Completed'];
   typeOptions = ['Engineering', 'Design', 'Marketing', 'Research'];
+  departments = Object.values(ProjectDepartment);
+
 
   constructor(
     private fb: FormBuilder,
@@ -21,9 +24,10 @@ export class ProjectFormComponent implements OnInit {
     this.projectForm = this.fb.group({
       title: ['', Validators.required],
       description: ['', Validators.required],
-      owner: ['John Doe', Validators.required], // Default owner
+      owner: ['Oracle', Validators.required], // Default owner
       dueDate: ['', Validators.required],
       status: ['Active', Validators.required],
+      department: ['', Validators.required],
       type: ['Engineering', Validators.required]
     });
   }
@@ -40,7 +44,7 @@ export class ProjectFormComponent implements OnInit {
 
       this.projectService.createProject(projectData).subscribe({
         next: (createdProject) => {
-          this.router.navigate(['/projects', createdProject.id]);
+          this.router.navigate(['/projectsadmin']);
         },
         error: (err) => console.error('Error creating project:', err)
       });

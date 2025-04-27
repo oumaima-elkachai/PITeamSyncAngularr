@@ -148,6 +148,30 @@
 
 <style>
 /* ===== GLOBAL STYLING ===== */
+
+.project-card {
+  position: relative;
+  min-height: 380px; /* Set minimum card height */
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-bottom: 70px; /* Make space for footer */
+}
+
+.project-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 25px;
+  background: linear-gradient(to top, white 80%, transparent);
+  border-top: 1px solid #f1f5f9;
+}
+
+
 body {
   background-color: #f5f7fa;
   color: #333;

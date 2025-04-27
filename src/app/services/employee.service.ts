@@ -11,6 +11,9 @@ export class EmployeeService {
 
   constructor(private http: HttpClient) { }
 
+   
+
+
   getEmployeeAssignedTasks(employeeId: string): Observable<Task[]> {
     return this.http.get<Task[]>(`${this.baseUrl}/${employeeId}/tasks`);
   }
@@ -45,4 +48,17 @@ export class EmployeeService {
   getEmployeesByProject(projectId: string): Observable<Employee[]> {
     return this.http.get<Employee[]>(`${this.baseUrl}/project/${projectId}`);
   }
+
+  getByDepartment(department: string): Observable<Employee[]> {
+    return this.http.get<Employee[]>(`${this.baseUrl}/department/${department}`);
+  }
+
+  getBySkills(skills: string[]): Observable<Employee[]> {
+    // Convert skills array to HTTP params (e.g., ?skills=FRONTEND&skills=TESTING)
+    let params = new HttpParams();
+    skills.forEach(skill => params = params.append('skills', skill));
+    
+    return this.http.get<Employee[]>(`${this.baseUrl}/filter`, { params });
+  }
+
 }

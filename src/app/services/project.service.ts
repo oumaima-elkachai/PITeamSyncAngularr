@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Observable, of, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Project } from '../models/project.model';
+import { Project, ProjectDepartment } from '../models/project.model';
 
 @Injectable({ providedIn: 'root' })
 export class ProjectService {
@@ -36,6 +36,11 @@ export class ProjectService {
     // This assumes you have a local cache of projects
     return this.projects.find(p => p.id === id);
   }
+
+  getDepartments(): Observable<string[]> {
+    return of(Object.values(ProjectDepartment));
+}
+
   
   
 }

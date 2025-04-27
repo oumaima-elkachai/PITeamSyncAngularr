@@ -12,8 +12,9 @@ export class MyTasksComponent implements OnInit {
   tasks: Task[] = [];
   filteredTasks: Task[] = [];
   isLoading = true;
+  
   // Update the statusFilter declaration
-  statusFilter: TaskStatus | 'ALL' = 'ALL' as TaskStatus | 'ALL'; currentEmployeeId = '67fd82fe2d7dc679a06c1aca'; // Replace with real ID later
+  statusFilter: TaskStatus | 'ALL' = 'ALL' as TaskStatus | 'ALL'; currentEmployeeId = '680b9de4dace5fa9cc248d33'; // Replace with real ID later
 
   constructor(
     private employeeService: EmployeeService,

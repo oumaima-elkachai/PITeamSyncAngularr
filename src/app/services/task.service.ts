@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { forkJoin, map, Observable } from 'rxjs';
+import { forkJoin, map, Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Task } from '../models/task.model';
+import { Task, TaskSkill } from '../models/task.model';
 import { Attachment } from '../models/attachment.model';
 
 @Injectable({ providedIn: 'root' })
@@ -58,46 +58,50 @@ export class TaskService {
     );
   }
 
-// task.service.ts
-requestExtension(taskId: string, newDeadline: Date): Observable<Task> {
-  // Format date manually to ensure ISO string
-  const isoDate = `${newDeadline.getFullYear()}-${(newDeadline.getMonth() + 1).toString().padStart(2, '0')}-${newDeadline.getDate().toString().padStart(2, '0')}`;
-  
-  const params = new HttpParams().set('newDeadline', isoDate);
+  // task.service.ts
+  requestExtension(taskId: string, newDeadline: Date): Observable<Task> {
+    // Format date manually to ensure ISO string
+    const isoDate = `${newDeadline.getFullYear()}-${(newDeadline.getMonth() + 1).toString().padStart(2, '0')}-${newDeadline.getDate().toString().padStart(2, '0')}`;
 
-  return this.http.post<Task>(
-    `${this.baseUrl}/${taskId}/request-extension`,
-    {},
-    { params }
-  );
-}
+    const params = new HttpParams().set('newDeadline', isoDate);
 
-addLink(taskId: string, linkRequest: any): Observable<Task> {
-  return this.http.post<Task>(
-    `${this.baseUrl}/${taskId}/links`,
-    linkRequest
-  );
-}
+    return this.http.post<Task>(
+      `${this.baseUrl}/${taskId}/request-extension`,
+      {},
+      { params }
+    );
+  }
 
-removeLink(taskId: string, index: number): Observable<Task> {
-  return this.http.delete<Task>(
-    `${this.baseUrl}/${taskId}/links/${index}`
-  );
-}
+  addLink(taskId: string, linkRequest: any): Observable<Task> {
+    return this.http.post<Task>(
+      `${this.baseUrl}/${taskId}/links`,
+      linkRequest
+    );
+  }
 
-// task.service.ts
-approveExtension(taskId: string): Observable<Task> {
-  return this.http.patch<Task>(`${this.baseUrl}/${taskId}/approve-extension`, {});
-}
+  removeLink(taskId: string, index: number): Observable<Task> {
+    return this.http.delete<Task>(
+      `${this.baseUrl}/${taskId}/links/${index}`
+    );
+  }
 
-rejectExtension(taskId: string): Observable<Task> {
-  return this.http.patch<Task>(`${this.baseUrl}/${taskId}/reject-extension`, {});
-}
+  // task.service.ts
+  approveExtension(taskId: string): Observable<Task> {
+    return this.http.patch<Task>(`${this.baseUrl}/${taskId}/approve-extension`, {});
+  }
 
-downloadAttachment(attachmentId: string): Observable<Blob> {
-  return this.http.get(`${this.baseUrl}/attachments/${attachmentId}/download`, {
-    responseType: 'blob'
-  });
+  rejectExtension(taskId: string): Observable<Task> {
+    return this.http.patch<Task>(`${this.baseUrl}/${taskId}/reject-extension`, {});
+  }
+
+  downloadAttachment(attachmentId: string): Observable<Blob> {
+    return this.http.get(`${this.baseUrl}/attachments/${attachmentId}/download`, {
+      responseType: 'blob'
+    });
+  }
+
+  getSkills(): Observable<string[]> {
+    return of(Object.values(TaskSkill));
 }
 
 

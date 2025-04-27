@@ -14,8 +14,15 @@ import { MyTasksComponent } from './taskfront/my-tasks/my-tasks.component';
 import { MyProjectDetailsComponent } from './taskfront/my-project-details/my-project-details.component';
 import { MyTaskDetailsComponent } from './taskfront/my-task-details/my-task-details.component';
 import { UpcomingDeadlinesComponent } from './employee/upcoming-deadlines/upcoming-deadlines.component';
+import { TaskListComponent } from './Task_Page/task-list/task-list.component';
+import { TaskListingComponent } from './task/task-listing/task-listing.component';
 
 const routes: Routes = [
+
+  {
+    path: 'projects/:id/tasks',
+    component: TaskListingComponent
+  },
 
   { path: 'My-tasks/:id', component: MyTaskDetailsComponent }
   ,

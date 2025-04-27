@@ -34,6 +34,8 @@ import { MyProjectDetailsComponent } from './taskfront/my-project-details/my-pro
 import { MyTaskDetailsComponent } from './taskfront/my-task-details/my-task-details.component';
 import { FileSizePipe } from './shared/pipes/filesize.pipe';
 import { UpcomingDeadlinesComponent } from './employee/upcoming-deadlines/upcoming-deadlines.component';
+import { TaskListingComponent } from './task/task-listing/task-listing.component';
+import { AiService } from './services/ai.service';
 
 
 @NgModule({
@@ -64,7 +66,8 @@ import { UpcomingDeadlinesComponent } from './employee/upcoming-deadlines/upcomi
     MyProjectDetailsComponent,
     MyTaskDetailsComponent,
     FileSizePipe,
-    UpcomingDeadlinesComponent
+    UpcomingDeadlinesComponent,
+    TaskListingComponent
   ],
   imports: [
     BrowserModule,
@@ -74,7 +77,7 @@ import { UpcomingDeadlinesComponent } from './employee/upcoming-deadlines/upcomi
     AppRoutingModule
   ],
   providers: [ProjectService,
-    TaskService,
+    TaskService,AiService,
     EmployeeService],
   bootstrap: [AppComponent]
 })

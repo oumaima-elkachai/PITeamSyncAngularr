@@ -1,3 +1,5 @@
+import { TaskSkill } from "./task.model";
+
 export interface Employee {
     id?: string;
     name: string;
@@ -6,4 +8,6 @@ export interface Employee {
     department: string;
     assignedTaskIds?: string[];
     projectIds?: string[];
+    skills?: TaskSkill[];
+
   }

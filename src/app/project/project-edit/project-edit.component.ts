@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProjectService } from '../../services/project.service';
-import { Project } from '../../models/project.model';
+import { Project, ProjectDepartment } from '../../models/project.model';
 
 @Component({
   selector: 'app-project-edit',
@@ -18,6 +18,9 @@ export class ProjectEditComponent implements OnInit {
   statusOptions = ['Active', 'On Hold', 'Completed'];
   typeOptions = ['Engineering', 'Design', 'Marketing', 'Research'];
 
+  departments = Object.values(ProjectDepartment);
+
+
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
@@ -30,7 +33,8 @@ export class ProjectEditComponent implements OnInit {
       owner: ['John Doe', Validators.required],
       dueDate: ['', Validators.required],
       status: ['Active', Validators.required],
-      type: ['Engineering', Validators.required]
+      type: ['Engineering', Validators.required],
+      department:  [ProjectDepartment.ENGINEERING, Validators.required]
     });
   }
 
@@ -69,7 +73,7 @@ export class ProjectEditComponent implements OnInit {
       };
 
       this.projectService.updateProject(this.projectId, updatedProject).subscribe({
-        next: () => this.router.navigate(['/projects', this.projectId]),
+        next: () => this.router.navigate(['/projectsadmin', this.projectId]),
         error: (err) => console.error('Error updating project:', err)
       });
     }

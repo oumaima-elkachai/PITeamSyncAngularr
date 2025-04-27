@@ -1,3 +1,4 @@
+// task-list.component.ts
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TaskService } from '../../services/task.service';
@@ -8,10 +9,11 @@ import { Employee } from '../../models/employee.model';
 import { Attachment } from '../../models/attachment.model';
 
 @Component({
-  selector: 'app-task-list',
-  templateUrl: './task-list.component.html'
+  selector: 'app-task-listing',
+  templateUrl: './task-listing.component.html',
+  styleUrls: ['./task-listing.component.css']
 })
-export class TaskListComponent implements OnInit {
+export class TaskListingComponent implements OnInit {
   projectId!: string;
   tasks: Task[] = [];
   employees: Employee[] = [];
@@ -62,22 +64,28 @@ export class TaskListComponent implements OnInit {
     });
   }
 
-  loadAttachments(taskId: string): void {
-    this.loadingAttachments[taskId] = true;
-    this.attachmentService.getTaskAttachments(taskId).subscribe({
-      next: (attachments) => {
-        const task = this.tasks.find(t => t.id === taskId);
-        if (task) task.attachments = attachments;
-        this.loadingAttachments[taskId] = false;
-      },
-      error: () => this.loadingAttachments[taskId] = false
-    });
-  }
 
-  getProgress(): number {
-    if (!this.tasks.length) return 0;
-    const completed = this.tasks.filter(t => t.status === 'DONE').length;
-    return Math.round((completed / this.tasks.length) * 100);
+
+  get filteredTasks(): Task[] {
+    let filtered = this.tasks;
+
+    // Status filter
+    if (this.statusFilter !== 'ALL') {
+      filtered = filtered.filter(task => task.status === this.statusFilter);
+    }
+
+    // Assignee filter
+    if (this.assigneeFilter !== 'ALL') {
+      filtered = filtered.filter(task => task.employeeId === this.assigneeFilter);
+    }
+
+    // Sorting
+    return filtered.sort((a, b) => {
+      if (this.sortBy === 'deadline') {
+        return new Date(a.deadline).getTime() - new Date(b.deadline).getTime();
+      }
+      return (a.title > b.title) ? 1 : -1;
+    });
   }
 
   getEmployeeName(employeeId: string): string {
@@ -85,7 +93,9 @@ export class TaskListComponent implements OnInit {
     return employee ? employee.name : 'Unassigned';
   }
 
-  // All task actions
+  // Add all task action methods from ProjectDetailsComponent here
+  // (approveExtension, rejectExtension, downloadAttachment, etc.)
+
   approveExtension(taskId: string) {
     this.taskService.approveExtension(taskId).subscribe({
       next: (updatedTask) => this.updateTaskInList(updatedTask),
@@ -99,6 +109,7 @@ export class TaskListComponent implements OnInit {
       error: (err) => this.handleError('Rejection failed', err)
     });
   }
+
 
   downloadAttachment(attachmentId: string) {
     this.attachmentService.downloadAttachment(attachmentId).subscribe({
@@ -117,10 +128,39 @@ export class TaskListComponent implements OnInit {
     });
   }
 
+
+  loadAttachments(taskId: string): void {
+    this.loadingAttachments[taskId] = true;
+    this.attachmentService.getTaskAttachments(taskId).subscribe({
+      next: (attachments) => {
+        const task = this.tasks.find(t => t.id === taskId);
+        if (task) task.attachments = attachments;
+        this.loadingAttachments[taskId] = false;
+      },
+      error: () => this.loadingAttachments[taskId] = false
+    });
+  }
+
+
+
+  private updateTaskInList(updatedTask: Task) {
+    const index = this.tasks.findIndex(t => t.id === updatedTask.id);
+    if (index > -1) {
+      this.tasks[index] = updatedTask;
+    }
+  }
+
+  private handleError(message: string, error: any) {
+    console.error(message, error);
+    alert(message);
+  }
+
+  // project-details.component.ts
   deleteAttachment(attachmentId: string) {
     if (confirm('Are you sure you want to delete this attachment?')) {
       this.attachmentService.deleteAttachment(attachmentId).subscribe({
         next: () => {
+          // Remove from local state
           this.tasks = this.tasks.map(task => ({
             ...task,
             attachments: task.attachments?.filter(a => a.id !== attachmentId)
@@ -134,17 +174,18 @@ export class TaskListComponent implements OnInit {
     }
   }
 
-  private updateTaskInList(updatedTask: Task) {
-    const index = this.tasks.findIndex(t => t.id === updatedTask.id);
-    if (index > -1) this.tasks[index] = updatedTask;
+  deleteTask(taskId: string) {
+    if (confirm('Are you sure you want to delete this task?')) {
+      this.taskService.deleteTask(taskId).subscribe({
+        next: () => {
+          this.tasks = this.tasks.filter(task => task.id !== taskId);
+        },
+        error: (err) => {
+          console.error('Delete failed:', err);
+          alert('Failed to delete task');
+        }
+      });
+    }
   }
 
-  private handleError(message: string, error: any) {
-    console.error(message, error);
-    alert(message);
-  }
-
-  navigateToTask(taskId: string): void {
-    this.router.navigate(['/projects', this.projectId, 'tasks', taskId]);
-  }
 }

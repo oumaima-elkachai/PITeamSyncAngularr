@@ -271,4 +271,21 @@ body {
     width: 100%;
     justify-content: center;
   }
+
+  .modern-select[multiple] {
+    min-height: 120px;
+    padding: 8px;
+  }
+  
+  .modern-select[multiple] option {
+    padding: 8px;
+    border-radius: 4px;
+    margin: 2px 0;
+  }
+  
+  .modern-select[multiple] option:hover {
+    background-color: #f1f5f9;
+  }
+
+  
 }
