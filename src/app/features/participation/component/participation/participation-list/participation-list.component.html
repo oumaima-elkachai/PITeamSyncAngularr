@@ -151,33 +151,15 @@
     <!-- Statistics View -->
     <div *ngIf="currentView === 'stats'" class="card">
         <div class="card-body">
-            <!-- Chart will be rendered here -->
-            <div id="participationChart" style="min-height: 365px;"></div>
-            
-            <!-- Statistics Summary -->
-            <div class="row mt-4">
-                <div class="col-md-3">
-                    <div class="stat-card">
-                        <h6>Total Participants</h6>
-                        <h3>{{eventStats?.totalParticipants || 0}}</h3>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="stat-card">
-                        <h6>Confirmed</h6>
-                        <h3 class="text-success">{{eventStats?.confirmed || 0}}</h3>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="stat-card">
-                        <h6>Pending</h6>
-                        <h3 class="text-warning">{{eventStats?.pending || 0}}</h3>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="stat-card">
-                        <h6>Cancelled</h6>
-                        <h3 class="text-danger">{{eventStats?.cancelled || 0}}</h3>
+            <div class="row justify-content-center">
+                <!-- Centered Pie Chart -->
+                <div class="col-md-8 text-center">
+                    <div class="card-body">
+                        <div class="card-content">
+                            <div>
+                                <div #eventTypePieChart style="min-height: 400px;"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

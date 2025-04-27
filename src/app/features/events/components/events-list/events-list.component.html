@@ -92,7 +92,7 @@
           <td>{{ event.title | highlight:searchQuery }}</td>
           <td [innerHTML]="event.description | highlight:searchQuery"></td>
           <td>{{ event.capacity }}</td>
-          <td>{{ event.typeS | highlight:searchQuery }}</td>
+          <td>{{ event.eventType || 'N/A' | highlight:searchQuery }}</td>
           <td>{{ event.startTime }} - {{ event.endTime }}</td>
           <td class="text-end">
             <div class="btn-group">

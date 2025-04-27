@@ -46,7 +46,16 @@ export class EventService {
 
   addEvent(event: Event, image?: File | null): Observable<Event> {
     const formData = new FormData();
-    formData.append('event', new Blob([JSON.stringify(event)], { type: 'application/json' }));
+    
+    // Ensure type is included in the event object
+    const eventWithType = {
+      ...event,
+      type: event.eventType // Make sure type is set from eventType if not already set
+    };
+    
+    formData.append('event', new Blob([JSON.stringify(eventWithType)], { 
+      type: 'application/json' 
+    }));
     
     if (image) {
       formData.append('image', image);

@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/fo
 import { Event } from '../../models/event.model';
 import { EventStatus } from '../../models/event-status.enum';
 import { EventColors } from '../../models/event-colors';
+import { TypeEvent } from '../../models/event-type.enum';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { ParticipantService } from 'src/app/core/services/participant/participant.service';
 import { Participant } from '../../../participants/models/participant.model';
@@ -32,6 +33,8 @@ export class EventsAddComponent implements OnInit {
 
   error: string | null = null;
 
+  eventTypes = Object.values(TypeEvent);
+
   constructor(
     private fb: FormBuilder,
     private participantService: ParticipantService,
@@ -55,7 +58,8 @@ export class EventsAddComponent implements OnInit {
       endTime: ['', [Validators.required]],
       participantIds: [[], [Validators.required]],
       image: [null],
-      capacity: ['', [Validators.required, Validators.min(1)]]
+      capacity: ['', [Validators.required, Validators.min(1)]],
+      eventType: ['', Validators.required]
     }, { validator: this.dateTimeValidator });
 
     if (this.preselectedDate) {
@@ -284,7 +288,8 @@ export class EventsAddComponent implements OnInit {
           .map(p => p.id)
           .filter((id): id is string => id !== undefined),
         imageUrl: 'pending',
-        capacity: formValue.capacity
+        capacity: formValue.capacity,
+        eventType: formValue.eventType
       };
 
       this.eventService.addEvent(event, this.selectedFile).subscribe({

@@ -5,6 +5,7 @@ import { firstValueFrom } from 'rxjs';
 import { Event } from '../../models/event.model';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { TypeEvent } from '../../models/event-type.enum';
 
 @Component({
   selector: 'app-events-edit',
@@ -21,6 +22,7 @@ export class EventsEditComponent implements OnInit {
   isLoading = true;
   errorMessage: string | null = null;
   eventForm!: FormGroup;
+  eventTypes = Object.values(TypeEvent);
 
   constructor(
       private route: ActivatedRoute,
@@ -60,9 +62,19 @@ export class EventsEditComponent implements OnInit {
 
   initForm(): void {
     this.eventForm = this.fb.group({
-      // Add other form controls as needed
-      capacity: [this.event?.capacity || 1, [Validators.required, Validators.min(1)]]
+      title: [this.event?.title || '', Validators.required],
+      description: [this.event?.description || '', Validators.required],
+      startDate: [this.event?.startDate || '', Validators.required],
+      endDate: [this.event?.endDate || '', Validators.required],
+      startTime: [this.event?.startTime || '', Validators.required],
+      endTime: [this.event?.endTime || '', Validators.required],
+      capacity: [this.event?.capacity || 1, [Validators.required, Validators.min(1)]],
+      eventType: [this.event?.eventType || '', Validators.required]
     });
+  }
+
+  get eventTypeControl() {
+    return this.eventForm.get('eventType');
   }
 
   onFileSelected(event: any): void {

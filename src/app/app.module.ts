@@ -17,6 +17,7 @@ import { ParticipationsModule } from './features/participation/participations.mo
 import { ParticipantsModule } from './features/participants/participants.module';
 import { ScheduleService } from './core/services/schedule/schedule.service';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { NgApexchartsModule } from 'ng-apexcharts';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
       closeButton: true, // Added close button
       enableHtml: true // Enable HTML in toast messages
     }),
-    MatSnackBarModule
+    MatSnackBarModule,
+    NgApexchartsModule
   ],
   exports: [
     // Export the module to make it available for other modules

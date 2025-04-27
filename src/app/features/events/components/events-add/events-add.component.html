@@ -22,6 +22,26 @@
         </div>
       </div>
 
+      <!-- Event Type Section -->
+      <div class="form-group">
+        <label for="eventType" class="form-label">Event Type</label>
+        <select 
+          id="eventType" 
+          class="form-control" 
+          formControlName="eventType">
+          <option value="">Select an event type</option>
+          <option *ngFor="let type of eventTypes" [value]="type">
+            {{type}}
+          </option>
+        </select>
+        <div *ngIf="eventForm.get('eventType')?.touched && eventForm.get('eventType')?.invalid" 
+             class="alert alert-danger mt-2">
+          <div *ngIf="eventForm.get('eventType')?.errors?.['required']">
+            Event type is required
+          </div>
+        </div>
+      </div>
+
       <!-- Date and Time Section -->
       <div class="form-section">
         <h4 class="section-title">Date & Time</h4>

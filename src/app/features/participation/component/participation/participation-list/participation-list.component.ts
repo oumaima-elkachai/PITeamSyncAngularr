@@ -1,26 +1,62 @@
-import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy, AfterViewInit } from '@angular/core';
 import { ParticipationService } from '../../../../../core/services/participation/participation.service';
 import { ParticipationStatus } from '../../../models/participation-status.enum';
 import { Event } from 'src/app/features/events/models/event.model';
-import{Participant} from 'src/app/features/participants/models/participant.model';
+import { Participant } from 'src/app/features/participants/models/participant.model';
 import { Participation } from 'src/app/features/participation/models/participation.model';
-import { forkJoin } from 'rxjs';
+import { forkJoin, of } from 'rxjs';
 import { EventStatistics } from '../../../models/event-statistics.model';
-import * as ApexCharts from 'apexcharts';
+import ApexCharts from 'apexcharts';
 import { ToasterService } from '../../../../../core/services/toaster/toaster.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import {
+  ApexNonAxisChartSeries,
+  ApexResponsive,
+  ApexChart
+} from "ng-apexcharts";
+
+export type ChartOptions = {
+  series: ApexNonAxisChartSeries;
+  chart: ApexChart;
+  responsive: ApexResponsive[];
+  labels: any;
+};
+
 declare var bootstrap: any; // For Bootstrap modal
+
+interface EventTypeStats {
+  [key: string]: number;
+}
 
 @Component({
   selector: 'app-participation-list',
   templateUrl: './participation-list.component.html',
   styleUrls: ['./participation-list.component.css']
 })
-export class ParticipationListComponent implements OnInit, OnDestroy {
+export class ParticipationListComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('chartContainer') chartContainer!: ElementRef;
-  private chart: any;
-  
-  currentView: 'list' | 'stats' = 'list';  // Add this line
+  @ViewChild("eventTypePieChart") chartElement!: ElementRef;
+
+  private pieChart: ApexCharts | null = null;
+  private barChart: ApexCharts | null = null;
+  private _currentView: 'list' | 'stats' = 'list';
+
+  // Add getter/setter for currentView
+  get currentView(): 'list' | 'stats' {
+    return this._currentView;
+  }
+
+  set currentView(value: 'list' | 'stats') {
+    this._currentView = value;
+    if (value === 'stats') {
+      // Initialize charts when switching to stats view
+      setTimeout(() => this.initCharts(), 0);
+    } else {
+      // Cleanup charts when switching away
+      this.destroyCharts();
+    }
+  }
+
   participations: Participation[] = [];
   loading = false;
   error: string | null = null;
@@ -33,17 +69,15 @@ export class ParticipationListComponent implements OnInit, OnDestroy {
   pageSize = 5;
   currentPage = 1;
   totalItems = 0;
-  
+
   // Getter for paginated and sorted participations
   get paginatedParticipations(): Participation[] {
-    // First sort by status (pending first)
     const sorted = [...this.participations].sort((a, b) => {
       if (a.participationS === ParticipationStatus.PENDING) return -1;
       if (b.participationS === ParticipationStatus.PENDING) return 1;
       return 0;
     });
 
-    // Then paginate
     const startIndex = (this.currentPage - 1) * this.pageSize;
     this.totalItems = sorted.length;
     return sorted.slice(startIndex, startIndex + this.pageSize);
@@ -70,19 +104,107 @@ export class ParticipationListComponent implements OnInit, OnDestroy {
     this.statisticsModal = new bootstrap.Modal(document.getElementById('statisticsModal'));
   }
 
+  ngAfterViewInit() {
+    this.initCharts();
+  }
+
+  private calculateEventTypeStats(): EventTypeStats {
+    const stats: EventTypeStats = {};
+    
+    this.participations.forEach(participation => {
+      // Get event type from the event or use a default category
+      const eventType = participation.eventType || 'Uncategorized';
+      stats[eventType] = (stats[eventType] || 0) + 1;
+    });
+
+    return stats;
+  }
+
+  private initCharts(): void {
+    if (!this.chartElement?.nativeElement) return;
+
+    // Calculate statistics
+    const stats = this.calculateEventTypeStats();
+    const total = Object.values(stats).reduce((a, b) => a + b, 0);
+
+    // Convert to series and labels
+    const series = [];
+    const labels = [];
+    
+    for (const [type, count] of Object.entries(stats)) {
+      series.push(Math.round((count / total) * 100));
+      labels.push(type);
+    }
+
+    // Cleanup existing chart if any
+    if (this.pieChart) {
+      this.pieChart.destroy();
+    }
+
+    const pieOptions = {
+      series: series,
+      chart: {
+        height: 228,
+        type: "pie",
+      },
+      labels: labels,
+      colors: ['#924AEF', '#5ECFFF', '#E328AF', '#FF9325', '#FF4A55', '#DFEDF2'],
+      tooltip: {
+        y: {
+          formatter: (val: number) => `${val}%`
+        }
+      },
+      legend: {
+        position: 'bottom',
+        horizontalAlign: 'center'
+      },
+      responsive: [{
+        breakpoint: 480,
+        options: {
+          chart: {
+            width: 200
+          },
+          legend: {
+            position: 'bottom'
+          }
+        }
+      }]
+    };
+
+    this.pieChart = new ApexCharts(
+      this.chartElement.nativeElement,
+      pieOptions
+    );
+    this.pieChart.render();
+  }
+
+  private destroyCharts(): void {
+    if (this.pieChart) {
+      this.pieChart.destroy();
+      this.pieChart = null;
+    }
+  }
+
   loadParticipations(): void {
     this.loading = true;
-    
-    this.participationService.getAllParticipations()  // Changed from getParticipationsByEvent
+    this.error = null;
+
+    this.participationService.getAllParticipations()
       .subscribe({
         next: (participations) => {
           const detailsRequests = participations.map(participation => {
             return forkJoin({
-              participation: Promise.resolve(participation),
+              participation: of(participation),
               eventTitle: this.participationService.getEventTitle(participation.eventId),
               participantEmail: this.participationService.getParticipantEmail(participation.participantId)
             });
           });
+
+          if (detailsRequests.length === 0) {
+            this.participations = [];
+            this.loading = false;
+            return;
+          }
 
           forkJoin(detailsRequests).subscribe({
             next: (results) => {
@@ -92,6 +214,7 @@ export class ParticipationListComponent implements OnInit, OnDestroy {
                 participantEmail: result.participantEmail
               }));
               this.loading = false;
+              this.onParticipationsUpdate();
             },
             error: (error) => {
               console.error('Error loading details:', error);
@@ -117,7 +240,6 @@ export class ParticipationListComponent implements OnInit, OnDestroy {
     this.participationService.getParticipationsByEventTitle(title)
       .subscribe({
         next: (participations) => {
-          // Reuse existing detail loading logic
           this.loadParticipationDetails(participations);
         },
         error: (error) => {
@@ -152,7 +274,6 @@ export class ParticipationListComponent implements OnInit, OnDestroy {
         next: (stats) => {
           this.eventStats = stats;
           this.statisticsModal.show();
-          // Initialize chart after modal is shown
           setTimeout(() => this.initializeChart(), 300);
         },
         error: (error) => {
@@ -178,6 +299,7 @@ export class ParticipationListComponent implements OnInit, OnDestroy {
           participantEmail: result.participantEmail
         }));
         this.loading = false;
+        this.onParticipationsUpdate();
       },
       error: (error) => {
         this.error = 'Error loading participation details';
@@ -187,39 +309,22 @@ export class ParticipationListComponent implements OnInit, OnDestroy {
   }
 
   updateStatus(id: string, status: ParticipationStatus): void {
-    this.loading = true;
+    console.log(`Attempting to update participation ${id} to status ${status}`);
     
-    if (status === ParticipationStatus.CONFIRMED) {
-      // Use the combined confirmation endpoint for CONFIRMED status
-      this.participationService.confirmParticipation(id)
-        .subscribe({
-          next: (response) => {
-            console.log('Confirmation successful:', response);
-            this.toasterService.success('Participation confirmed and confirmation email sent');
-            this.loadParticipations();
-            this.loading = false;
-          },
-          error: (error) => {
-            console.error('Confirmation failed:', error);
-            this.toasterService.error(error.message || 'Failed to confirm participation');
-            this.loading = false;
-          }
-        });
-    } else {
-      // Use regular status update for other statuses
-      this.participationService.updateParticipationStatus(id, status)
-        .subscribe({
-          next: (response) => {
-            this.toasterService.success(`Status updated to ${status}`);
-            this.loadParticipations();
-            this.loading = false;
-          },
-          error: (error) => {
-            this.toasterService.error(error.message || 'Failed to update status');
-            this.loading = false;
-          }
-        });
-    }
+    this.participationService.updateStatus(id, status).subscribe({
+      next: (response) => {
+        console.log('Update successful:', response);
+        // Refresh the list after successful update
+        this.loadParticipations();
+        
+        // Show success message
+        this.toasterService.success('Participation status updated successfully');
+      },
+      error: (error) => {
+        console.error('Update failed:', error);
+        this.toasterService.error(error.message || 'Failed to update participation status');
+      }
+    });
   }
 
   filterByParticipant(participantId: string): void {
@@ -230,11 +335,12 @@ export class ParticipationListComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.participationService.getParticipationsByParticipant(participantId)
       .subscribe({
-        next: (data: Participation[]) => { // Specify type for data
+        next: (data: Participation[]) => {
           this.participations = data;
           this.loading = false;
+          this.onParticipationsUpdate();
         },
-        error: (error: any) => { // Specify type for error
+        error: (error: any) => {
           this.error = 'Error filtering by participant';
           this.loading = false;
         }
@@ -252,6 +358,7 @@ export class ParticipationListComponent implements OnInit, OnDestroy {
         next: (data) => {
           this.participations = data;
           this.loading = false;
+          this.onParticipationsUpdate();
         },
         error: (error) => {
           this.error = 'Error filtering by event';
@@ -261,8 +368,8 @@ export class ParticipationListComponent implements OnInit, OnDestroy {
   }
 
   private initializeChart(): void {
-    if (this.chart) {
-      this.chart.destroy();
+    if (this.barChart) {
+      this.barChart.destroy();
     }
 
     interface ChartOptions {
@@ -352,22 +459,28 @@ export class ParticipationListComponent implements OnInit, OnDestroy {
       }]
     };
 
-    // Create chart with delay to ensure container is ready
     setTimeout(() => {
-      this.chart = new ApexCharts(document.querySelector("#participationChart"), chartOptions);
-      this.chart.render();
+      this.barChart = new ApexCharts(document.querySelector("#participationChart"), chartOptions);
+      this.barChart.render();
     }, 0);
   }
 
+  onParticipationsUpdate() {
+    if (this.currentView === 'stats') {
+      setTimeout(() => this.initCharts(), 0);
+    }
+  }
+
   ngOnDestroy() {
-    if (this.chart) {
-      this.chart.destroy();
+    this.destroyCharts();
+    if (this.barChart) {
+      this.barChart.destroy();
     }
   }
 
   onConfirm(participationId: string): void {
-    console.log('Confirming participation:', participationId); // Add logging
-    
+    console.log('Confirming participation:', participationId);
+
     this.participationService.confirmParticipation(participationId)
       .subscribe({
         next: (response) => {
@@ -375,7 +488,7 @@ export class ParticipationListComponent implements OnInit, OnDestroy {
           this.snackBar.open('Participation confirmed and email sent!', 'Close', {
             duration: 3000
           });
-          this.loadParticipations(); // Refresh the list
+          this.loadParticipations();
         },
         error: (error) => {
           console.error('Confirmation error:', error);

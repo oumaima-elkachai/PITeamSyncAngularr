@@ -92,6 +92,26 @@
           min="1">
       </div>
 
+      <!-- Event Type -->
+      <div class="form-group">
+        <label for="eventType" class="form-label">Event Type</label>
+        <select 
+          id="eventType" 
+          class="form-control" 
+          formControlName="eventType">
+          <option value="">Select an event type</option>
+          <option *ngFor="let type of eventTypes" [value]="type">
+            {{type}}
+          </option>
+        </select>
+        <div *ngIf="eventTypeControl?.touched && eventTypeControl?.invalid" 
+             class="alert alert-danger mt-2">
+          <div *ngIf="eventTypeControl?.errors?.['required']">
+            Event type is required
+          </div>
+        </div>
+      </div>
+
       <!-- Image Upload -->
       <div class="form-group">
         <label for="image">Event Image</label>
