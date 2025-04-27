@@ -7,7 +7,7 @@ import { Participant } from '../../../features/participants/models/participant.m
   providedIn: 'root'
 })
 export class ParticipantService {
-  private apiUrl = 'http://localhost:8080/api/participants';
+  private apiUrl = 'http://localhost:8084/api/participants';
 
   constructor(private http: HttpClient) { }
 

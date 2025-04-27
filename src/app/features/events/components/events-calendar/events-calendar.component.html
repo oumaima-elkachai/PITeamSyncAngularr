@@ -29,6 +29,28 @@
     </div>
   </div>
 
+  <!-- Event Details Modal -->
+  <div class="modal" [class.show]="showEventDetailsModal" [style.display]="showEventDetailsModal ? 'block' : 'none'">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Event Details</h5>
+          <button type="button" class="btn-close" (click)="closeEventDetailsModal()"></button>
+        </div>
+        <div class="modal-body" *ngIf="selectedEvent">
+          <h4>{{selectedEvent.title}}</h4>
+          <p><strong>Start:</strong> {{selectedEvent.start | date:'medium'}}</p>
+          <p><strong>End:</strong> {{selectedEvent.end | date:'medium'}}</p>
+          <p *ngIf="selectedEvent.description"><strong>Description:</strong> {{selectedEvent.description}}</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeEventDetailsModal()">Close</button>
+          <button type="button" class="btn btn-primary" (click)="participateInEvent()">Want to participate?</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Modal Backdrop -->
-  <div class="modal-backdrop fade show" *ngIf="showAddEventModal"></div>
+  <div class="modal-backdrop fade show" *ngIf="showAddEventModal || showEventDetailsModal"></div>
 </div>

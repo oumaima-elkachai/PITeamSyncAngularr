@@ -10,7 +10,7 @@ import { AuditLog } from 'src/app/features/events/models/AuditLog.model';
 
 export class AuditLogService {
   // Update base URL to remove v1 since it's not in the API path
-  private readonly baseUrl = 'http://localhost:8080/api/audit-logs';
+  private readonly baseUrl = 'http://localhost:8084/api/audit-logs';
 
   constructor(private http: HttpClient) {}
 

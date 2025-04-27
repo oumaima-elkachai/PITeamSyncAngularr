@@ -10,7 +10,7 @@ import { ParticipationStatus } from '../../../features/participation/models/part
   providedIn: 'root'
 })
 export class EventService {
-  private apiUrl = 'http://localhost:8080/api/events';
+  private apiUrl = 'http://localhost:8084/api/events';
 
   constructor(private http: HttpClient) {}
 

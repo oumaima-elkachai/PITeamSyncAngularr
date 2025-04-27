@@ -13,9 +13,9 @@ import { AuditLog } from 'src/app/features/events/models/AuditLog.model';
   providedIn: 'root'
 })
 export class ParticipationService {
-  private readonly API_URL = 'http://localhost:8080/api/participations';
-  private readonly eventsUrl = 'http://localhost:8080/api/events';
-  private readonly participantsUrl = 'http://localhost:8080/api/participants';
+  private readonly API_URL = 'http://localhost:8084/api/participations';
+  private readonly eventsUrl = 'http://localhost:8084/api/events';
+  private readonly participantsUrl = 'http://localhost:8084/api/participants';
 
   constructor(private http: HttpClient) {}
 

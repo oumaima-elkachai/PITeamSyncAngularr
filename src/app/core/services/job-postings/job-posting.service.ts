@@ -7,7 +7,7 @@ import { JobPosting } from 'src/app/features/job-posting/models/job-posting.mode
   providedIn: 'root'
 })
 export class JobPostingService {
-  private apiUrl = 'http://localhost:8080/api/jobs'; // URL Backend Spring Boot
+  private apiUrl = 'http://localhost:8084/api/jobs'; // URL Backend Spring Boot
 
   constructor(private http: HttpClient) {}
 

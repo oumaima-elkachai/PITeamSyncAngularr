@@ -58,6 +58,7 @@ export class ParticipationListComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   participations: Participation[] = [];
+  allParticipations: Participation[] = [];
   loading = false;
   error: string | null = null;
   ParticipationStatus = ParticipationStatus;
@@ -71,6 +72,8 @@ export class ParticipationListComponent implements OnInit, OnDestroy, AfterViewI
   totalItems = 0;
 
   sortDirection: 'asc' | 'desc' = 'desc';  // Default to newest first
+
+  searchTerm: string = '';
 
   // Getter for paginated and sorted participations
   get paginatedParticipations(): Participation[] {
@@ -213,6 +216,7 @@ export class ParticipationListComponent implements OnInit, OnDestroy, AfterViewI
 
           if (detailsRequests.length === 0) {
             this.participations = [];
+            this.allParticipations = [];
             this.loading = false;
             return;
           }
@@ -224,6 +228,7 @@ export class ParticipationListComponent implements OnInit, OnDestroy, AfterViewI
                 eventTitle: result.eventTitle,
                 participantEmail: result.participantEmail
               }));
+              this.allParticipations = [...this.participations];
               this.loading = false;
               this.onParticipationsUpdate();
             },
@@ -276,6 +281,23 @@ export class ParticipationListComponent implements OnInit, OnDestroy, AfterViewI
           this.loading = false;
         }
       });
+  }
+
+  searchCriteria(searchValue: string) {
+    const value = searchValue.toLowerCase();
+    this.participations = this.allParticipations.filter(participation => 
+        participation.eventTitle?.toLowerCase().includes(value) || 
+        participation.participantEmail?.toLowerCase().includes(value)
+    );
+    this.updatePagination();
+  }
+
+  onSearchChange(value: string) {
+    this.participations = this.allParticipations.filter(item => 
+        item.eventTitle?.toLowerCase().includes(value.toLowerCase()) ||
+        item.participantEmail?.toLowerCase().includes(value.toLowerCase())
+    );
+    this.updatePagination();
   }
 
   showStatistics(participation: Participation): void {
@@ -480,6 +502,11 @@ export class ParticipationListComponent implements OnInit, OnDestroy, AfterViewI
     if (this.currentView === 'stats') {
       setTimeout(() => this.initCharts(), 0);
     }
+  }
+
+  updatePagination(): void {
+    this.totalItems = this.participations.length;
+    this.currentPage = 1;
   }
 
   ngOnDestroy() {

@@ -1,0 +1,108 @@
+.search-container {
+    max-width: 600px;
+    margin: 0 auto 1.5rem;
+    padding: 0 15px;
+}
+
+.search-box {
+    position: relative;
+    width: 100%;
+    background: #F5F5F5;
+    border-radius: 30px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+
+    .search-icon {
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #666;
+        font-size: 16px;
+        z-index: 1;
+    }
+
+    .search-input {
+        width: 100%;
+        height: 46px;
+        padding: 0 20px 0 50px;
+        border: none;
+        border-radius: 30px;
+        background: transparent;
+        color: #333;
+        font-size: 15px;
+
+        &:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.25);
+        }
+
+        &::placeholder {
+            color: #999;
+        }
+    }
+}
+
+.rounded-search-wrapper {
+    position: relative;
+    width: 100%;
+    
+    .search-icon {
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6c757d;
+        font-size: 1rem;
+    }
+    
+    .rounded-search-input {
+        width: 100%;
+        height: 50px;
+        padding: 0 20px 0 50px;
+        border: 2px solid #e9ecef;
+        border-radius: 25px;
+        background-color: #fff;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        
+        &:focus {
+            outline: none;
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+        
+        &::placeholder {
+            color: #adb5bd;
+        }
+    }
+}
+
+.modern-search {
+    display: flex;
+    align-items: center;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 8px 16px;
+    
+    i {
+        color: #6c757d;
+        margin-right: 10px;
+    }
+    
+    .search-input {
+        border: none;
+        background: transparent;
+        width: 100%;
+        padding: 4px;
+        font-size: 14px;
+        
+        &:focus {
+            outline: none;
+        }
+        
+        &::placeholder {
+            color: #adb5bd;
+        }
+    }
+}

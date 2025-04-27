@@ -49,6 +49,8 @@ export class EventsCalendarComponent implements OnInit {
   error: string | null = null;
   showAddEventModal = false;
   selectedDate: Date | null = null;
+  showEventDetailsModal = false;
+  selectedEvent: any = null;
 
   private currentViewDates: { start: Date, end: Date } | null = null;
 
@@ -172,6 +174,8 @@ export class EventsCalendarComponent implements OnInit {
     if (originalEvent) {
       this.eventClicked.emit(originalEvent);
     }
+    this.selectedEvent = clickInfo.event;
+    this.showEventDetailsModal = true;
   }
 
   private handleDateClick(clickInfo: DateClickArg): void {
@@ -195,5 +199,17 @@ export class EventsCalendarComponent implements OnInit {
   closeAddEventModal(): void {
     this.showAddEventModal = false;
     this.selectedDate = null;
+  }
+
+  closeEventDetailsModal(): void {
+    this.showEventDetailsModal = false;
+    this.selectedEvent = null;
+  }
+
+  participateInEvent(): void {
+    // TODO: Implement participation logic here
+    console.log('User wants to participate in event:', this.selectedEvent);
+    // You can call your service method here to handle participation
+    this.closeEventDetailsModal();
   }
 }
