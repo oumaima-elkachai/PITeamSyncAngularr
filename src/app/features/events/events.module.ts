@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { SharedModule } from '../../shared/shared.module';
 import { EventsDashboardComponent } from './components/events-dashboard/events-dashboard.component';
 import { EventsListComponent } from './components/events-list/events-list.component';
 import { EventsCalendarComponent } from './components/events-calendar/events-calendar.component';
@@ -46,6 +47,7 @@ const routes: Routes = [
   ],
   imports: [
     CommonModule,
+    SharedModule,
     FormsModule,
     ReactiveFormsModule,
     RouterModule.forChild(routes),

@@ -5,6 +5,17 @@
       <h2 class="section-title">Events Calendar</h2>
       <p class="text-muted">Manage and view your upcoming events</p>
     </div>
+    <div class="modern-search-bar">
+      <div class="search-input-wrapper">
+        <i class="bi bi-search search-icon"></i>
+        <input 
+          type="text" 
+          class="search-input" 
+          placeholder="Search events..."
+          [(ngModel)]="searchQuery"
+          (input)="onSearch()">
+      </div>
+    </div>
     <div class="header-actions">
       <button class="btn btn-icon" (click)="refreshEvents()" title="Refresh">
         <i class="bi bi-arrow-clockwise"></i>
@@ -47,17 +58,25 @@
               'bi-arrow-down': sortField === 'startDate' && sortDirection === 'desc'
             }"></i>
           </th>
-          <th scope="col" (click)="toggleSort('title')" class="sortable">
+          <th scope="col">
             Title
-            <i class="bi" [ngClass]="{
-              'bi-arrow-up': sortField === 'title' && sortDirection === 'asc',
-              'bi-arrow-down': sortField === 'title' && sortDirection === 'desc'
-            }"></i>
           </th>
           <th scope="col">Description</th>
-          <th scope="col">Capacity</th>
-          <th  scope="col">Type</th>
-          <th scope="col">Time</th>
+          <th scope="col" (click)="toggleSort('capacity')" class="sortable">
+            Capacity
+            <i class="bi" [ngClass]="{
+              'bi-arrow-up': sortField === 'capacity' && sortDirection === 'asc',
+              'bi-arrow-down': sortField === 'capacity' && sortDirection === 'desc'
+            }"></i>
+          </th>
+          <th scope="col">Type</th>
+          <th scope="col" (click)="toggleSort('startTime')" class="sortable">
+            Time
+            <i class="bi" [ngClass]="{
+              'bi-arrow-up': sortField === 'startTime' && sortDirection === 'asc',
+              'bi-arrow-down': sortField === 'startTime' && sortDirection === 'desc'
+            }"></i>
+          </th>
           <th scope="col" class="text-end">Actions</th>
         </tr>
       </thead>
@@ -70,10 +89,10 @@
           <td>
             <span class="fw-bold">{{ event.startDate | date:'MMM d, yyyy' }}</span>
           </td>
-          <td>{{ event.title }}</td>
-          <td>{{ event.description }}</td>
+          <td>{{ event.title | highlight:searchQuery }}</td>
+          <td [innerHTML]="event.description | highlight:searchQuery"></td>
           <td>{{ event.capacity }}</td>
-          <td>{{ event.typeS }}</td>
+          <td>{{ event.typeS | highlight:searchQuery }}</td>
           <td>{{ event.startTime }} - {{ event.endTime }}</td>
           <td class="text-end">
             <div class="btn-group">

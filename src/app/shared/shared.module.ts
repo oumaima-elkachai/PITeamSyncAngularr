@@ -1,4 +1,3 @@
-
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AdminHeaderComponent } from './components/admin/admin-header/admin-header.component';
@@ -9,6 +8,7 @@ import { UserFooterComponent } from './components/user/user-footer/user-footer.c
 import { UserHomeComponent } from './components/user/user-home/user-home.component';
 import { AdminHomeComponent } from './components/admin/admin-home/admin-home.component';
 import { RouterModule } from '@angular/router';
+import { HighlightPipe } from './pipes/highlight.pipe';
 
 @NgModule({
     declarations: [
@@ -19,6 +19,7 @@ import { RouterModule } from '@angular/router';
       UserFooterComponent,
       UserHomeComponent,
       AdminHomeComponent,
+      HighlightPipe
     ],
     imports: [
       CommonModule,
@@ -31,7 +32,8 @@ import { RouterModule } from '@angular/router';
       UserHeaderComponent,
       UserFooterComponent,
       UserHomeComponent,
-      AdminHomeComponent
+      AdminHomeComponent,
+      HighlightPipe
     ]
   })
   export class SharedModule { }

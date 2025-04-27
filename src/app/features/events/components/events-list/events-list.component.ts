@@ -4,7 +4,7 @@ import { Event } from 'src/app/features/events/models/event.model';
 import { HttpErrorResponse } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http';
 import {Router} from "@angular/router";
-
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
     selector: 'app-events-list',
@@ -43,6 +43,9 @@ export class EventsListComponent implements OnInit {
         cursor: 'pointer'
     };
 
+    searchQuery: string = '';
+    filteredEvents: Event[] = [];
+
     constructor(
         private eventService: EventService,
         private http: HttpClient,
@@ -51,6 +54,7 @@ export class EventsListComponent implements OnInit {
 
     ngOnInit(): void {
         this.loadEvents();
+        this.filteredEvents = this.events;
     }
 
     loadEvents(): void {
@@ -58,6 +62,7 @@ export class EventsListComponent implements OnInit {
         this.eventService.getAllEvents().subscribe({
             next: (data: any) => {
                 this.events = Array.isArray(data) ? data : [];
+                this.filteredEvents = this.events;
                 this.calculateTotalPages();
                 this.isLoading = false;
             },
@@ -70,7 +75,7 @@ export class EventsListComponent implements OnInit {
     }
 
     calculateTotalPages(): void {
-        this.totalPages = Math.ceil(this.events.length / this.itemsPerPage);
+        this.totalPages = Math.ceil(this.filteredEvents.length / this.itemsPerPage);
         // If we're on a page that no longer exists, go to the last page
         if (this.currentPage > this.totalPages) {
             this.currentPage = this.totalPages || 1;
@@ -82,6 +87,7 @@ export class EventsListComponent implements OnInit {
             this.eventService.deleteEvent(id).subscribe({
                 next: () => {
                     this.events = this.events.filter(event => event.idEvent !== id);
+                    this.filteredEvents = this.events;
                     this.refreshEvents(); // Refresh the list after deletion
                 },
                 error: (error) => {
@@ -128,6 +134,7 @@ export class EventsListComponent implements OnInit {
         if (index !== -1) {
             this.events[index] = updatedEvent;
             this.events = [...this.events]; 
+            this.filteredEvents = this.events;
         }
         this.closeModals();
     }
@@ -136,6 +143,7 @@ export class EventsListComponent implements OnInit {
         this.eventService.addEvent(newEvent).subscribe({
             next: (createdEvent) => {
                 this.events = [...this.events, createdEvent];
+                this.filteredEvents = this.events;
                 this.calculateTotalPages();
                 this.currentPage = this.totalPages;
                 this.closeModals();
@@ -178,13 +186,32 @@ export class EventsListComponent implements OnInit {
     get paginatedEvents(): Event[] {
         const startIndex = (this.currentPage - 1) * this.itemsPerPage;
         const endIndex = startIndex + this.itemsPerPage;
-        return this.events
+        
+        return this.filteredEvents
             .sort((a, b) => {
-                // First sort by date
-                const dateComparison = new Date(a.startDate).getTime() - new Date(b.startDate).getTime();
-                if (dateComparison !== 0) return dateComparison;
-                // Then sort by time if dates are equal
-                return (a.startTime || '').localeCompare(b.startTime || '');
+                let comparison = 0;
+                
+                switch (this.sortField) {
+                    case 'startDate':
+                        comparison = new Date(a.startDate).getTime() - new Date(b.startDate).getTime();
+                        break;
+                    case 'capacity':
+                        // Convert to numbers and handle null/undefined values
+                        const capacityA = Number(a.capacity) || 0;
+                        const capacityB = Number(b.capacity) || 0;
+                        comparison = capacityA - capacityB;
+                        break;
+                    case 'startTime':
+                        comparison = (a.startTime || '').localeCompare(b.startTime || '');
+                        break;
+                    case 'title':
+                        comparison = (a.title || '').localeCompare(b.title || '');
+                        break;
+                    default:
+                        return 0;
+                }
+                
+                return this.sortDirection === 'asc' ? comparison : -comparison;
             })
             .slice(startIndex, endIndex);
     }
@@ -226,6 +253,18 @@ export class EventsListComponent implements OnInit {
 
     closeImageModal() {
         this.selectedImage = null;
+    }
+
+    onSearch(): void {
+        if (!this.searchQuery.trim()) {
+            this.filteredEvents = this.events;
+        } else {
+            this.filteredEvents = this.events.filter(event => 
+                event.title.toLowerCase().includes(this.searchQuery.toLowerCase())
+            );
+        }
+        this.currentPage = 1;
+        this.calculateTotalPages();
     }
 }
 
