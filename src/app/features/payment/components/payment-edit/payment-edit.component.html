@@ -3,32 +3,32 @@
     <div class="inner-contents">
       <div class="page-header d-flex align-items-center justify-content-between mr-bottom-30">
         <div class="left-part">
-          <h2 class="text-dark">Modifier un Paiement</h2>
-          <p class="text-gray mb-0">Modifiez les informations du paiement ci-dessous.</p>
+          <h2 class="text-dark">Edit a Payment</h2>
+          <p class="text-gray mb-0">Update the payment information below.</p>
         </div>
       </div>
 
       <div class="card border-0 p-5">
         <div class="card-header bg-transparent border-0 p-0 d-flex align-items-center justify-content-between gap-3">
-          <h6 class="mb-0">Détails du Paiement</h6>
+          <h6 class="mb-0">Payment Details</h6>
         </div>
 
         <div class="card-body p-0 pt-4">
           <form [formGroup]="paymentForm" (ngSubmit)="onSubmit()">
-            <!-- Méthode de Paiement -->
+            <!-- Payment Method -->
             <div class="form-group">
-              <label>Méthode de Paiement</label>
+              <label>Payment Method</label>
               <select formControlName="paymentMethod" class="form-control" required>
-                <option value="">-- Sélectionner méthode de paiement --</option>
+                <option value="">-- Select Payment Method --</option>
                 <option *ngFor="let method of paymentMethods" [value]="method" [selected]="payment?.paymentMethod === method">{{ method }}</option>
               </select>
             </div>
 
-            <!-- Statut -->
+            <!-- Status -->
             <div class="form-group">
-              <label>Statut du Paiement</label>
+              <label>Payment Status</label>
               <select formControlName="status" class="form-control" required>
-                <option value="">-- Sélectionner statut de paiement --</option>
+                <option value="">-- Select Payment Status --</option>
                 <option *ngFor="let status of paymentStatuses" [value]="status" [selected]="payment?.status === status">{{ status }}</option>
               </select>
             </div>
@@ -39,27 +39,25 @@
               <textarea formControlName="description" class="form-control" rows="3">{{ payment?.description }}</textarea>
             </div>
 
-            <!-- Paiement Récurrent -->
+            <!-- Recurring Payment -->
             <div class="form-check mb-3">
-                <input type="checkbox" formControlName="isRecurring" class="form-check-input" id="recurringCheck" [checked]="payment?.isRecurring">
-                <label class="form-check-label" for="recurringCheck">Paiement récurrent</label>
+              <input type="checkbox" formControlName="isRecurring" class="form-check-input" id="recurringCheck" [checked]="payment?.isRecurring">
+              <label class="form-check-label" for="recurringCheck">Recurring Payment</label>
             </div>
 
-
-            <!-- Fréquence si Récurrent -->
+            <!-- Frequency if Recurring -->
             <div class="form-group" *ngIf="paymentForm.get('isRecurring')?.value">
-              <label>Fréquence de Récurrence</label>
+              <label>Recurrence Frequency</label>
               <select formControlName="recurrenceFrequency" class="form-control">
-                <option value="">-- Sélectionner Fréquence de Récurrence --</option>
+                <option value="">-- Select Recurrence Frequency --</option>
                 <option *ngFor="let freq of recurrenceFrequencies" [value]="freq" [selected]="payment?.recurrenceFrequency === freq">{{ freq }}</option>
               </select>
             </div>
 
-
-            <!-- Bouton -->
+            <!-- Button -->
             <div class="button_group mt-3">
               <button class="btn btn-primary" type="submit" [disabled]="loading || paymentForm.invalid">
-                {{ loading ? 'Enregistrement...' : 'Modifier le Paiement' }}
+                {{ loading ? 'Saving...' : 'Update Payment' }}
               </button>
             </div>
           </form>
@@ -72,5 +70,3 @@
     </div>
   </div>
 </main>
-
-

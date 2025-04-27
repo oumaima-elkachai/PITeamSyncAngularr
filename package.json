@@ -24,9 +24,11 @@
     "@fullcalendar/daygrid": "^6.1.8",
     "@fullcalendar/interaction": "^6.1.8",
     "angular-calendar": "^0.28.22",
+    "apexcharts": "^4.6.0",
     "chart.js": "^4.4.9",
     "date-fns": "^4.1.0",
     "html2pdf.js": "^0.10.3",
+    "ng-apexcharts": "^1.7.5",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.13.0"

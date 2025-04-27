@@ -5,4 +5,6 @@ export interface ProjectBudget {
  projet: Projet;
  allocatedFunds: number;
  usedFunds: number;
+ predictionResult: string ;
+ errorMessage: string ;
 }

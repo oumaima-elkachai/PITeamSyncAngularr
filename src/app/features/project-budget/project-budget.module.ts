@@ -8,12 +8,18 @@ import { ProjectBudgetsAddComponent } from 'src/app/features/project-budget/comp
 import { ProjectBudgetEditComponent } from 'src/app/features/project-budget/components/project-budget-edit/project-budget-edit.component';
 import { ProjectBudgetsListComponent } from 'src/app/features/project-budget/components/project-budget-list/project-budget-list.component';
 import { ProjectBudgetDeleteComponent } from './components/project-budget-delete/project-budget-delete.component';
+import { ProjectBudgetAnalyticsComponent } from './components/project-budget-analytics/project-budget-analytics.component';
+import { NgApexchartsModule } from 'ng-apexcharts';
+import { BudgetPredictionComponent } from './components/budget-prediction/budget-prediction.component';
+
 
 @NgModule({
   declarations: [
     ProjectBudgetsListComponent,
     ProjectBudgetsAddComponent,
     ProjectBudgetEditComponent,
+    ProjectBudgetAnalyticsComponent,
+    BudgetPredictionComponent,
     
   ],
   imports: [
@@ -21,7 +27,9 @@ import { ProjectBudgetDeleteComponent } from './components/project-budget-delete
     FormsModule,
     SharedModule,
     ReactiveFormsModule,
-    RouterModule
+    RouterModule,
+    NgApexchartsModule
+   
   ],
   exports: [
    ProjectBudgetsAddComponent,

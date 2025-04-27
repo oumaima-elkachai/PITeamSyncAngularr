@@ -86,7 +86,7 @@ export class CalendarComponent implements OnInit {
         if (payment.payrollId) {
           this.payrollService.getPayrollById(payment.payrollId).subscribe(payroll => {
             this.calendarEvents.push({
-              title: `Salaire: ${payroll.salary} TND\nBonus: ${payroll.bonus} TND`,
+              title: `Salary: ${payroll.salary} TND\nBonus: ${payroll.bonus} TND`,
               start: new Date(payment.paymentDate),
               id: payment.id
             });
@@ -125,7 +125,7 @@ export class CalendarComponent implements OnInit {
           }
         } else {
           this.result = null;
-          alert("Aucun paiement trouvé pour cette date.");
+          alert("No payment found for this date.");
         }
       });
 
@@ -138,7 +138,7 @@ export class CalendarComponent implements OnInit {
           });
         } else {
           this.result = null;
-          alert("Aucun paiement trouvé pour cette date.");
+          alert("No payment found for this date.");
         }
       });
 
@@ -170,7 +170,7 @@ export class CalendarComponent implements OnInit {
         } else {
           this.result = null;
           this.predictedStatus = -1;
-          alert("Aucun paiement trouvé pour cette date.");
+          alert("No payment found for this date.");
         }
       });
     }

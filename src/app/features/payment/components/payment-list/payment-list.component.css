@@ -26,3 +26,16 @@
  background-color: #ffe7cc;
  color: #fd7e14;
 }
+/* Réduit la largeur des colonnes en limitant les paddings */
+#paymentsTable td,
+#paymentsTable th {
+  padding: 0.3rem 0.5rem;
+  white-space: nowrap; /* Évite le retour à la ligne */
+  font-size: 0.95rem;   /* Réduit légèrement la taille du texte */
+}
+
+/* Réduit l’icône d'action */
+#paymentsTable .dropdown .fs-24 {
+  font-size: 1rem !important;
+}
+

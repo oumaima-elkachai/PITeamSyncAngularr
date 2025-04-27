@@ -63,8 +63,16 @@
                     <li class="menu-item"><a routerLink="/admin/payments"> Payment</a></li>
                     <li class="menu-item"><a routerLink="/admin/payrolls"> Payroll </a></li>
                     <li class="menu-item"><a routerLink="/admin/project-budget"> Project Budget</a></li>
-                    <li class="menu-item"><a href="statistics-payroll.html"> Statistics</a></li>
-                    <li class="menu-item"><a href="documents-payroll.html"> Documents</a></li>
+                        <!-- Statistics avec sous-menu -->
+                    <li class="menu-item menu-item-has-children">
+                        <a href="#">Statistics</a>
+                        <ul class="sub-menu">
+                        <li class="menu-item"><a routerLink="/admin/paymentCharts">Payment Chart</a></li>
+                        <li class="menu-item"><a routerLink="/admin/projectBudgetAnalytics">Project Chart</a></li>
+                        </ul>
+                        <span class="submenu-opener"><i class="bi bi-chevron-right"></i></span>
+                    </li>
+                                    <li class="menu-item"><a href="documents-payroll.html"> Documents</a></li>
                     </ul>
                     <span class='submenu-opener'><i class='bi bi-chevron-right'></i></span>
                 </li>

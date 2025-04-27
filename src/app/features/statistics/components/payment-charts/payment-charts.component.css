@@ -12,3 +12,68 @@ canvas {
  max-width: 100%;
  height: auto;
 }
+
+.anomaly-section {
+ margin-top: 30px;
+}
+
+.anomaly-badge {
+ text-align: center;
+ margin-bottom: 20px;
+}
+
+.badge-title {
+ display: inline-block;
+ background: linear-gradient(to right, #facc15, #fbbf24);
+ color: #1f2937;
+ padding: 10px 24px;
+ font-weight: bold;
+ border-radius: 50px;
+ font-size: 18px;
+ box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+ text-align: center;
+}
+
+
+.anomaly-card {
+ border: 1px solid #dee2e6;
+ border-left: 5px solid #dc3545;
+ background-color: #fff;
+ padding: 15px;
+ margin: 10px auto;
+ border-radius: 8px;
+ max-width: 600px;
+ box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.anomaly-header h5 {
+ margin: 0 0 5px;
+}
+
+.anomaly-body small {
+ color: #6c757d;
+}
+
+.anomaly-body p {
+ margin-top: 10px;
+ font-size: 15px;
+}
+
+.graphs-container {
+ display: flex;
+ flex-wrap: wrap;
+ justify-content: space-around;
+ gap: 20px;
+ margin-top: 30px;
+}
+
+.graph-box {
+ background: white;
+ border-radius: 12px;
+ padding: 20px;
+ box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+ flex: 1;
+ min-width: 300px;
+}
+
+

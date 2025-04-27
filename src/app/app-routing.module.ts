@@ -17,7 +17,7 @@ import { CalendarComponent } from './features/payment/components/calendar/calend
 import { AnomalyListComponent } from './features/anomaly-list/components/anomaly-list/anomaly-list.component';
 import { PaymentChartsComponent } from './features/statistics/components/payment-charts/payment-charts.component';
 import { CalendartestComponent } from './features/payment/components/calendartest/calendartest.component';
-
+import { ProjectBudgetAnalyticsComponent } from './features/project-budget/components/project-budget-analytics/project-budget-analytics.component';
 
 
 /*const routes: Routes = [
@@ -56,6 +56,7 @@ const routes: Routes = [
       { path: 'payments/details/:id', component: PaymentDetailComponent },
       { path: 'anomaly', component: AnomalyListComponent },
       { path: 'paymentCharts', component: PaymentChartsComponent },
+      { path: 'projectBudgetAnalytics', component: ProjectBudgetAnalyticsComponent },
       
 
    

@@ -4,36 +4,67 @@
     <div class="inner-contents">
       <div class="page-header d-flex align-items-center justify-content-between mr-bottom-30">
         <div class="left-part">
-          <h2 class="text-dark">Liste des Budgets de Projets</h2>
-          <p class="text-gray mb-0">Voici la liste des budgets des projets enregistrés.</p>
+          <h2 class="text-dark">Project Budget List</h2>
+          <p class="text-gray mb-0">Here is the list of registered project budgets.</p>
         </div>
         <div class="right-part">
-          <form class="search-form w-auto">
-            <input type="text" name="search" class="bg-white form-control" placeholder="Rechercher">
-            <button type="submit" class="btn"><img src="assets/img/svg/search.svg" alt=""></button>
+          <form class="search-form d-flex">
+            <input type="text" class="form-control" placeholder="Search by project name" [(ngModel)]="searchTerm" name="search">
+            <button type="submit" class="btn ms-2"></button>
           </form>
+            <!-- Add Budget Button -->
+          <button class="btn btn-primary" [routerLink]="['/admin/project-budget/add']">
+            <i class="bi bi-plus-lg me-1"></i> Add Budget
+          </button>
         </div>
       </div>
-
-      <!-- Table des budgets de projets -->
-      <div class="card border-0 p-5">
-        <div class="card-header bg-transparent border-0 p-0 d-flex align-items-center justify-content-between gap-3">
-          <h6 class="mb-0">Détails des Budgets de Projets</h6>
-        </div>
-
         <div class="card-body p-0 pt-4">
+          <!-- Filter Buttons -->
+          <div class="mb-4 d-flex gap-2">
+            <button class="btn btn-outline-primary" (click)="onFilterChange('all')" [class.active]="filter === 'all'">All</button>
+            <button class="btn btn-outline-success" (click)="onFilterChange('low')" [class.active]="filter === 'low'">Usage < 50%</button>
+            <button class="btn btn-outline-danger" (click)="onFilterChange('high')" [class.active]="filter === 'high'">Usage > 50%</button>
+          </div>
+
           <table class="table table-striped">
             <thead>
               <tr>
-                <th>Nom du Projet</th>
-                <th>Montant Alloué</th>
-                <th>Fonds Utilisés</th>
+                <th (click)="sortBy('name')" style="cursor:pointer">
+                  Project Name
+                  <i class="bi" [ngClass]="{
+                    'bi-caret-up-fill': sortColumn === 'name' && sortDirection === 'asc',
+                    'bi-caret-down-fill': sortColumn === 'name' && sortDirection === 'desc'
+                  }"></i>
+                </th>
+                <th (click)="sortBy('allocatedFunds')" style="cursor:pointer">
+                  Allocated Funds
+                  <i class="bi" [ngClass]="{
+                    'bi-caret-up-fill': sortColumn === 'allocatedFunds' && sortDirection === 'asc',
+                    'bi-caret-down-fill': sortColumn === 'allocatedFunds' && sortDirection === 'desc'
+                  }"></i>
+                </th>
+                <th (click)="sortBy('usedFunds')" style="cursor:pointer">
+                  Used Funds
+                  <i class="bi" [ngClass]="{
+                    'bi-caret-up-fill': sortColumn === 'usedFunds' && sortDirection === 'asc',
+                    'bi-caret-down-fill': sortColumn === 'usedFunds' && sortDirection === 'desc'
+                  }"></i>
+                </th>
+                <th (click)="sortBy('usage')" style="cursor:pointer">
+                  Usage (%)
+                  <i class="bi" [ngClass]="{
+                    'bi-caret-up-fill': sortColumn === 'usage' && sortDirection === 'asc',
+                    'bi-caret-down-fill': sortColumn === 'usage' && sortDirection === 'desc'
+                  }"></i>
+                </th>
                 <th>Actions</th>
               </tr>
             </thead>
+            
             <tbody>
-              <tr *ngFor="let projectBudget of budgets">
-                <td>{{ projectBudget.projet.name}}</td>
+              <tr *ngFor="let projectBudget of paginatedBudgets">
+
+                <td>{{ projectBudget.projet.name }}</td>
                 <td>
                   <span class="text-purple fw-bold">
                     {{ projectBudget.allocatedFunds | currency:'EUR' }}
@@ -41,7 +72,14 @@
                 </td>
                 <td>
                   <span class="text-purple fw-bold">
-                    {{ projectBudget.usedFunds  | currency:'EUR' }}
+                    {{ projectBudget.usedFunds | currency:'EUR' }}
+                  </span>
+                </td>
+                <td>
+                  <span 
+                    class="badge text-white px-3 py-1 fw-bold" 
+                    [ngClass]="getBadgeClass(getUsagePercentage(projectBudget))">
+                    {{ getUsagePercentage(projectBudget) }}%
                   </span>
                 </td>
                 <td>
@@ -50,25 +88,44 @@
                       <i class="bi bi-three-dots-vertical"></i>
                     </a>
                     <div class="dropdown-menu p-0">
-                <!-- Bouton de suppression -->
-                <button class="dropdown-item" 
-                (click)="onDelete(projectBudget.id ? projectBudget.id : '')" *ngIf="projectBudget.id">Supprimer</button>
-                <!-- Bouton de Edit -->
-                <button class="dropdown-item" 
-                (click)="onEdit(projectBudget)" *ngIf="projectBudget.id">Modifier</button>
+                      <button class="dropdown-item" 
+                        (click)="onDelete(projectBudget.id ? projectBudget.id : '')" 
+                        *ngIf="projectBudget.id">Delete</button>
+                      <button class="dropdown-item" 
+                        (click)="onEdit(projectBudget)" 
+                        *ngIf="projectBudget.id">Edit</button>
                     </div>
                   </div>
-
                 </td>
               </tr>
-              
+              <!-- No Data Found -->
               <tr *ngIf="budgets.length === 0">
-                <td colspan="4" class="text-center text-muted">Aucun budget trouvé pour ce projet.</td>
+                <td colspan="5" class="text-center text-muted">No budget found for this project.</td>
               </tr>
             </tbody>
           </table>
+            <!-- Pagination Controls -->
+            <div class="mt-4 d-flex justify-content-center">
+              <nav>
+                <ul class="pagination">
+                  <li class="page-item" [class.disabled]="currentPage === 1">
+                    <a class="page-link" (click)="changePage(currentPage - 1)">Previous</a>
+                  </li>
+
+                  <li class="page-item" *ngFor="let page of [].constructor(totalPages); let i = index"
+                      [class.active]="currentPage === i + 1">
+                    <a class="page-link" (click)="changePage(i + 1)">{{ i + 1 }}</a>
+                  </li>
+
+                  <li class="page-item" [class.disabled]="currentPage === totalPages">
+                    <a class="page-link" (click)="changePage(currentPage + 1)">Next</a>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+
         </div>
       </div>
+
     </div>
-  </div>
 </main>

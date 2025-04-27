@@ -43,8 +43,8 @@ export class ProjectBudgetsAddComponent implements OnInit {
         this.projets = data;
       },
       (error) => {
-        console.error('Erreur lors de la récupération des projets', error);
-        alert("Erreur de chargement des projets.");
+        console.error('Error fetching projects', error);
+        alert("Error loading projects.");
       }
     );
   }
@@ -55,7 +55,7 @@ export class ProjectBudgetsAddComponent implements OnInit {
         this.projetsAvecBudget = budgets.map((b: any) => b.projet.id);
       },
       (error) => {
-        console.error('Erreur récupération des budgets', error);
+        console.error('Error fetching budgets', error);
       }
     );
   }
@@ -64,35 +64,38 @@ export class ProjectBudgetsAddComponent implements OnInit {
     this.erreurProjet = '';
     if (this.budgetForm.valid) {
       const projetId = this.budgetForm.value.projetId;
-
-      // ✅ Vérification : si ce projet a déjà un budget
+  
+      // Check: if this project already has a budget
       if (this.projetsAvecBudget.includes(projetId)) {
-        this.erreurProjet = 'Ce projet a déjà un budget associé.';
+        this.erreurProjet = 'This project already has an associated budget.';
         return;
       }
-
+  
       const selectedProjet = this.projets.find(p => p.id === projetId);
       if (!selectedProjet) {
-        this.erreurProjet = 'Projet introuvable.';
+        this.erreurProjet = 'Project not found.';
         return;
       }
-
+  
       const payload = {
         projet: selectedProjet,
         allocatedFunds: this.budgetForm.value.allocatedFunds,
-        usedFunds: this.budgetForm.value.usedFunds
+        usedFunds: this.budgetForm.value.usedFunds,
+        predictionResult: '', // Add default value
+        errorMessage: ''      // Add default value
       };
-
+  
       this.budgetService.createProjectBudget(payload).subscribe(() => {
-        alert('Budget ajouté avec succès !');
+        alert('Budget successfully added!');
         
-        // ✅ Recharge la page entière (hard reload)
+        // Reload the page (hard reload)
         window.location.reload();
-
+  
       }, error => {
-        console.error('Erreur lors de la création du budget', error);
-        alert('Erreur lors de la création du budget.');
+        console.error('Error creating budget', error);
+        alert('Error creating budget.');
       });
     }
   }
+  
 }

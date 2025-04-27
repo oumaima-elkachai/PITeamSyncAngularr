@@ -1,33 +1,32 @@
 <section class="bg-light" style="padding-top: 15vh;">
   <main class="main-wrapper container mt-5" style="max-width: 900px;">
 
-    <!-- Affichage du calendrier -->
+    <!-- Calendar Display -->
     <div class="calendar mt-5">
       <full-calendar [options]="calendarOptions"></full-calendar>
-   
     </div>
 
-    <!-- Affichage du Statut Prédit -->
+    <!-- Predicted Status Display -->
     <div *ngIf="selectedOption === 'prediction' && result === 'prediction'" class="mt-4">
-      <h3>Résultat de la prédiction</h3>
-      <p><strong>Statut :</strong>
+      <h3>Prediction Result</h3>
+      <p><strong>Status:</strong>
         <span [ngClass]="predictedStatus === 1 ? 'text-success' : 'text-danger'">
-          {{ predictedStatus === 1 ? 'Payé' : 'En retard' }}
+          {{ predictedStatus === 1 ? 'Paid' : 'Late' }}
         </span>
       </p>
     </div>
 
-    <!-- Affichage du Résultat -->
+    <!-- Payroll Slip Display -->
     <div *ngIf="result === 'payroll'" id="fiche-paie" class="mt-5">
       <div class="bg-white rounded-4 shadow p-5 mx-auto" style="max-width: 900px;">
         <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
           <div>
-            <h2 class="fw-bold mb-1">Fiche de Paie</h2>
-            <small class="text-muted">Référence : {{ selectedPayment.referenceNumber }}</small>
+            <h2 class="fw-bold mb-1">Payroll Slip</h2>
+            <small class="text-muted">Reference: {{ selectedPayment.referenceNumber }}</small>
           </div>
           <div class="d-flex align-items-center">
-            <span class="badge bg-primary text-white me-3" style="font-size: 1rem;">Statut : {{ selectedPayment.status }}</span>
-            <button class="download-btn" title="Télécharger la fiche de paie" (click)="downloadPDF()">
+            <span class="badge bg-primary text-white me-3" style="font-size: 1rem;">Status: {{ selectedPayment.status }}</span>
+            <button class="download-btn" title="Download the payroll slip" (click)="downloadPDF()">
               <i class="fa-solid fa-download fs-5 text-primary"></i>
             </button>
           </div>
@@ -35,29 +34,29 @@
 
         <div class="row mb-4">
           <div class="col-md-6">
-            <h6 class="text-uppercase text-muted mb-2">Informations Employé</h6>
-            <p><strong>Nom :</strong> {{ selectedE.name }}</p>
-            <p><strong>ID :</strong> {{ selectedPayment.employeeId }}</p>
-            <p><strong>Email :</strong> {{ selectedE.email }}</p>
-            <p><strong>Département :</strong> {{ selectedE.department }}</p>
+            <h6 class="text-uppercase text-muted mb-2">Employee Information</h6>
+            <p><strong>Name:</strong> {{ selectedE.name }}</p>
+            <p><strong>ID:</strong> {{ selectedPayment.employeeId }}</p>
+            <p><strong>Email:</strong> {{ selectedE.email }}</p>
+            <p><strong>Department:</strong> {{ selectedE.department }}</p>
           </div>
           <div class="col-md-6">
-            <h6 class="text-uppercase text-muted mb-2">Détails du Paiement</h6>
-            <p><strong>Date :</strong> {{ selectedPayment.paymentDate | date:'longDate' }}</p>
-            <p><strong>Méthode :</strong> {{ selectedPayment.paymentMethod }}</p>
-            <p><strong>Fréquence :</strong> {{ selectedPayment.recurrenceFrequency }}</p>
-            <p><strong>Montant :</strong> {{ selectedPayment.amount | currency:'TND' }}</p>
+            <h6 class="text-uppercase text-muted mb-2">Payment Details</h6>
+            <p><strong>Date:</strong> {{ selectedPayment.paymentDate | date:'longDate' }}</p>
+            <p><strong>Method:</strong> {{ selectedPayment.paymentMethod }}</p>
+            <p><strong>Frequency:</strong> {{ selectedPayment.recurrenceFrequency }}</p>
+            <p><strong>Amount:</strong> {{ selectedPayment.amount | currency:'TND' }}</p>
           </div>
         </div>
 
         <div class="mb-4">
-          <h6 class="text-uppercase text-muted mb-2">Résumé Salaire</h6>
+          <h6 class="text-uppercase text-muted mb-2">Salary Summary</h6>
           <div class="row">
             <div class="col-md-6">
-              <p><strong>Salaire de base :</strong> {{ payrollE.salary | currency:'TND' }}</p>
+              <p><strong>Base Salary:</strong> {{ payrollE.salary | currency:'TND' }}</p>
             </div>
             <div class="col-md-6">
-              <p><strong>Bonus :</strong> {{ payrollE.bonus | currency:'TND' }}</p>
+              <p><strong>Bonus:</strong> {{ payrollE.bonus | currency:'TND' }}</p>
             </div>
           </div>
         </div>
@@ -69,17 +68,17 @@
       </div>
     </div>
 
-    <!-- Détails du Salaire -->
+    <!-- Salary Details -->
     <div *ngIf="selectedOption === 'details' && result" class="mt-4">
-      <h3>Détails Salaire</h3>
-      <p><strong>Salaire de base :</strong> {{ result.salary | currency:'TND' }}</p>
-      <p><strong>Bonus :</strong> {{ result.bonus | currency:'TND' }}</p>
+      <h3>Salary Details</h3>
+      <p><strong>Base Salary:</strong> {{ result.salary | currency:'TND' }}</p>
+      <p><strong>Bonus:</strong> {{ result.bonus | currency:'TND' }}</p>
     </div>
 
-    <!-- Statut du Paiement -->
+    <!-- Payment Status -->
     <div *ngIf="selectedOption === 'status' && result" class="mt-4">
-      <h3>Statut de Paiement</h3>
-      <p><strong>Statut :</strong> {{ result.status }}</p>
+      <h3>Payment Status</h3>
+      <p><strong>Status:</strong> {{ result.status }}</p>
     </div>
   </main>
 </section>

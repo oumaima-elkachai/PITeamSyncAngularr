@@ -9,7 +9,6 @@ enum PaymentMethod {
   PAYPAL = 'PAYPAL',
   CASH = 'CASH',
   CHECK = 'CHECK',
-  STRIPE = 'STRIPE',
   VIREMENT = 'VIREMENT',
   BANK = 'BANK'
 }
@@ -66,7 +65,7 @@ export class PaymentAddComponent implements OnInit {
       employeeId: ['', Validators.required],
       paymentMethod: ['', Validators.required],
       status: ['', Validators.required],
-      payDate: ['', Validators.required],
+      paymentDate: ['', Validators.required],
       description: [''],
       isRecurring: [false],
       recurrenceFrequency: ['']
@@ -76,7 +75,7 @@ export class PaymentAddComponent implements OnInit {
   fetchEmployees(): void {
     this.employeeService.getAllEmployees().subscribe({
       next: (data) => this.employees = data,
-      error: () => this.errorMessage = "Erreur de chargement des employés"
+      error: () => this.errorMessage = "Error loading employees."
     });
   }
 
@@ -99,23 +98,22 @@ export class PaymentAddComponent implements OnInit {
         });
         
         if (sameMonthPayment) {
-          this.errorMessage = "Cet employé a déjà un paiement enregistré pour ce mois.";
+          this.errorMessage = "This employee already has a payment recorded for this month.";
           this.loading = false;
         } else {
-          this.ajouterPaiement();
+          this.addPayment();
         }
         
       },
       error: (err) => {
         console.error(err);
-        this.errorMessage = "Erreur lors de la vérification du paiement.";
+        this.errorMessage = "Error checking existing payment.";
         this.loading = false;
       }
     });
   }
   
-  
-  ajouterPaiement(): void {
+  addPayment(): void {
     this.loading = true;
     const paymentData = { ...this.paymentForm.value };
   
@@ -125,15 +123,14 @@ export class PaymentAddComponent implements OnInit {
   
     this.paymentService.createPayment(paymentData).subscribe({
       next: () => {
-        this.successMessage = 'Paiement ajouté avec succès !';
-        setTimeout(() => location.reload(), 1000); // recharge la page après 1s
+        this.successMessage = 'Payment added successfully!';
+        setTimeout(() => location.reload(), 1000);
       },
       error: (err) => {
         console.error(err);
-        this.errorMessage = "Erreur lors de l'ajout du paiement.";
+        this.errorMessage = "Error adding payment.";
       },
       complete: () => this.loading = false
     });
   }
-  
 }

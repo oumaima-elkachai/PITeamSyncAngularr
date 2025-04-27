@@ -11,9 +11,9 @@ import { Projet } from '../../models/projet.model';
   styleUrls: ['./project-budget-edit.component.css']
 })
 export class ProjectBudgetEditComponent implements OnInit {
-  budgetForm!: FormGroup; // Ajout de '!' pour indiquer que cette variable sera initialisée plus tard
-  projets: Projet[] = []; // Déclaration du tableau avec un type explicite
-  budgetId!: string; // Ajout de '!' pour indiquer que cette variable sera initialisée plus tard
+  budgetForm!: FormGroup; // Declaring the budget form
+  projets: Projet[] = []; // List of projects
+  budgetId!: string; // Budget ID passed from the route
 
   constructor(
     private formBuilder: FormBuilder,
@@ -24,25 +24,27 @@ export class ProjectBudgetEditComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.budgetId = this.route.snapshot.paramMap.get('id')!;
-    this.initializeForm(); // Initialiser le formulaire d'abord
-    this.loadProjets();
-    this.loadBudget();
+    this.budgetId = this.route.snapshot.paramMap.get('id')!; // Retrieve budget ID from route
+    this.initializeForm(); // Initialize form
+    this.loadProjets(); // Load all projects
+    this.loadBudget(); // Load the specific budget by ID
   }
 
   loadProjets(): void {
+    // Fetch projects and handle errors
     this.projetService.getAllProjets().subscribe(
       (projets) => {
         this.projets = projets;
       },
       (error) => {
-        console.error('Erreur lors du chargement des projets', error);
-        // Afficher un message d'erreur si nécessaire
+        console.error('Error loading projects', error);
+        alert('Failed to load projects. Please try again later.');
       }
     );
   }
 
   loadBudget(): void {
+    // Fetch the budget by ID and populate the form
     this.budgetService.getProjectBudgetById(this.budgetId).subscribe(
       (budget) => {
         if (budget && budget.projet) {
@@ -52,42 +54,44 @@ export class ProjectBudgetEditComponent implements OnInit {
             usedFunds: budget.usedFunds
           });
         } else {
-          console.error('Le budget ne contient pas de projet valide');
-          // Afficher un message d'erreur si le projet est manquant
+          console.error('The budget does not contain a valid project');
+          alert('The budget does not have a valid project.');
         }
       },
       (error) => {
-        console.error('Erreur lors de la récupération du budget', error);
-        // Afficher un message d'erreur utilisateur ici
+        console.error('Error fetching the project budget', error);
+        alert('Failed to fetch the budget. Please try again later.');
       }
     );
   }
 
   initializeForm(): void {
+    // Initialize the form with necessary validators
     this.budgetForm = this.formBuilder.group({
-      projetId: ['', Validators.required],
-      allocatedFunds: ['', [Validators.required, Validators.min(0)]],
-      usedFunds: ['', [Validators.required, Validators.min(0)]]
+      projetId: ['', Validators.required], // Project ID
+      allocatedFunds: ['', [Validators.required, Validators.min(0)]], // Allocated funds with min value check
+      usedFunds: ['', [Validators.required, Validators.min(0)]] // Used funds with min value check
     });
   }
 
   onSubmit(): void {
     if (this.budgetForm.invalid) {
-      return;
+      return; // If the form is invalid, do nothing
     }
+    
     const updatedBudget = this.budgetForm.value;
+    // Update the project budget with the form data
     this.budgetService.updateProjectBudget(this.budgetId, updatedBudget).subscribe(
       () => {
-        console.log('Budget de projet mis à jour avec succès');
-        alert('Budget de projet mis à jour avec succès');
-        // Redirection vers la liste des budgets
+        console.log('Project budget updated successfully');
+        alert('Project budget updated successfully');
+        // Redirect to the project budget list page
         this.router.navigate(['admin/project-budget']);
       },
       (error) => {
-        console.error('Erreur lors de la mise à jour du budget de projet', error);
-        alert('Erreur lors de la mise à jour du budget');
+        console.error('Error updating the project budget', error);
+        alert('Failed to update the project budget. Please try again later.');
       }
     );
   }
-  
 }
