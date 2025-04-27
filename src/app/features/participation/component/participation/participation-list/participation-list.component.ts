@@ -70,12 +70,19 @@ export class ParticipationListComponent implements OnInit, OnDestroy, AfterViewI
   currentPage = 1;
   totalItems = 0;
 
+  sortDirection: 'asc' | 'desc' = 'desc';  // Default to newest first
+
   // Getter for paginated and sorted participations
   get paginatedParticipations(): Participation[] {
     const sorted = [...this.participations].sort((a, b) => {
-      if (a.participationS === ParticipationStatus.PENDING) return -1;
-      if (b.participationS === ParticipationStatus.PENDING) return 1;
-      return 0;
+      // First sort by pending status
+      if (a.participationS === ParticipationStatus.PENDING && b.participationS !== ParticipationStatus.PENDING) return -1;
+      if (b.participationS === ParticipationStatus.PENDING && a.participationS !== ParticipationStatus.PENDING) return 1;
+      
+      // Then sort by date
+      const dateA = new Date(a.participationDate).getTime();
+      const dateB = new Date(b.participationDate).getTime();
+      return this.sortDirection === 'asc' ? dateA - dateB : dateB - dateA;
     });
 
     const startIndex = (this.currentPage - 1) * this.pageSize;
@@ -91,6 +98,10 @@ export class ParticipationListComponent implements OnInit, OnDestroy, AfterViewI
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
     }
+  }
+
+  toggleSort(): void {
+    this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
   }
 
   constructor(

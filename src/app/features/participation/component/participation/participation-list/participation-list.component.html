@@ -51,7 +51,13 @@
                             <th><input type="checkbox" class="form-check-input" id="selectAll"></th>
                             <th>Participant</th>
                             <th>Event</th>
-                            <th>Date</th>
+                            <th style="cursor: pointer;" (click)="toggleSort()">
+                                Date
+                                <i class="bi" [ngClass]="{
+                                    'bi-arrow-down': sortDirection === 'desc',
+                                    'bi-arrow-up': sortDirection === 'asc'
+                                }"></i>
+                            </th>
                             <th>Status</th>
                             <th>Actions</th>
                             <th></th>
