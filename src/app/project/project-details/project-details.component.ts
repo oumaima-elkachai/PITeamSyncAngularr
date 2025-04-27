@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ProjectService } from '../../services/project.service';
 import { TaskService } from '../../services/task.service';
 import { Project } from '../../models/project.model';
-import { Task } from '../../models/task.model';
+import { Task, TaskStatus } from '../../models/task.model';
 import { Employee } from 'src/app/models/employee.model';
 import { EmployeeService } from 'src/app/services/employee.service';
 import { Attachment } from '../../models/attachment.model';
@@ -109,9 +109,24 @@ export class ProjectDetailsComponent implements OnInit {
 
   getProgress(): number {
     if (!this.tasks.length) return 0;
-    const completed = this.tasks.filter(t => t.status === 'DONE').length;
-    return Math.round((completed / this.tasks.length) * 100);
+    
+    let progress = 0;
+    
+    this.tasks.forEach(task => {
+      if (task.status === 'DONE') {
+        progress += 1;
+      } else if (task.status === 'IN_PROGRESS') {
+        progress += 0.5; 
+      }
+     });
+  
+    return Math.round((progress / this.tasks.length) * 100);
   }
+  
+  
+  
+  
+  
 
   onUpdateProject(updatedProject: Project): void {
     this.projectService.updateProject(updatedProject.id!, updatedProject).subscribe({

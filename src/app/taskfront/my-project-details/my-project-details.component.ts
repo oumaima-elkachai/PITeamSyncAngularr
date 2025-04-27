@@ -14,7 +14,7 @@ export class MyProjectDetailsComponent implements OnInit {
   project!: Project;
   tasks: Task[] = [];
   isLoading = true;
-  currentEmployeeId = '680b9de4dace5fa9cc248d33'; // Hardcoded for now
+  currentEmployeeId = '680b9de4dace5fa9cc248d2e'; // Hardcoded for now
 
   constructor(
     private route: ActivatedRoute,

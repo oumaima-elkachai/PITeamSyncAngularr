@@ -457,18 +457,15 @@
                                 <div class="mb-3">
                                     <h6 class="text-muted">Required Skills:</h6>
                                     <ng-container *ngIf="task.requiredSkills?.length; else noSkills">
-                                      <span
-                                        *ngFor="let skill of task.requiredSkills"
-                                        class="badge bg-secondary me-1"
-                                      >
-                                        {{ skill }}
-                                      </span>
+                                        <span *ngFor="let skill of task.requiredSkills" class="badge bg-secondary me-1">
+                                            {{ skill }}
+                                        </span>
                                     </ng-container>
                                     <ng-template #noSkills>
-                                      <small class="text-muted">No skills specified</small>
+                                        <small class="text-muted">No skills specified</small>
                                     </ng-template>
-                                  </div>
-                                  
+                                </div>
+
                                 <!-- Task Details -->
                                 <div class="mb-3">
                                     <small class="text-muted d-block mb-2">
@@ -523,16 +520,19 @@
                                             <div *ngFor="let attachment of task.attachments"
                                                 class="d-flex align-items-center mb-1">
                                                 <i class="bi bi-paperclip me-2"></i>
-                                                <a href="#" (click)="downloadAttachment(attachment.id)"
-                                                    class="text-truncate small">
+                                                <span class="text-truncate" style="max-width: 150px">
                                                     {{ attachment.fileName }}
-                                                </a>
-                                                <div class="ms-auto">
-                                                    <button class="btn btn-link btn-sm text-danger p-0"
-                                                        (click)="deleteAttachment(attachment.id)">
-                                                        <i class="bi bi-trash"></i>
+                                                  </span>
+                                                  <div class="ms-auto">
+                                                    <button class="btn btn-link btn-sm p-0 ms-2"
+                                                      (click)="downloadAttachment(attachment.id)">
+                                                      <i class="bi bi-download"></i>
                                                     </button>
-                                                </div>
+                                                    <button class="btn btn-link btn-sm text-danger p-0 ms-2"
+                                                      (click)="deleteAttachment(attachment.id)">
+                                                      <i class="bi bi-trash"></i>
+                                                    </button>
+                                                  </div>
                                             </div>
                                         </div>
                                         <ng-template #noAttachments>
@@ -544,12 +544,12 @@
                                 <div class="links-section mt-2">
                                     <h6 class="text-muted">Links:</h6>
                                     <div *ngFor="let link of task.links" class="link-item">
-                                      <a [href]="link.url" target="_blank" class="text-decoration-none">
-                                        <i class="bi bi-link-45deg me-2"></i>
-                                        {{ link.description || link.url }}
-                                      </a>
+                                        <a [href]="link.url" target="_blank" class="text-decoration-none">
+                                            <i class="bi bi-link-45deg me-2"></i>
+                                            {{ link.description || link.url }}
+                                        </a>
                                     </div>
-                                  </div>
+                                </div>
 
 
                                 <!-- Actions -->

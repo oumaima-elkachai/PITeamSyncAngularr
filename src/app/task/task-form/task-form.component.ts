@@ -91,9 +91,7 @@ export class TaskFormComponent implements OnInit {
       };
 
       this.taskService.createTask(taskData).subscribe({
-        next: (createdTask) => {
-          this.router.navigate(['/projects', this.projectId]);
-        },
+        next: () => this.router.navigate(['/projectsadmin', this.projectId]),
         error: (err) => {
           console.error('Error creating task:', err);
           this.isLoading = false;
