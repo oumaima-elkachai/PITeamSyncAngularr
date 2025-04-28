@@ -15,6 +15,7 @@
     candidateLinkedIn: string;
     candidateGithub: string;
     score: number;
+    quizScore?: number; // Added for quiz score
 
   }
   

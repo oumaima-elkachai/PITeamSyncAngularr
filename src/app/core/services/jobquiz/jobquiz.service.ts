@@ -1,28 +1,28 @@
+// src/app/core/services/jobquiz/jobquiz.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient ,HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class JobQuizService {
-
-  private baseUrl = 'http://localhost:5000';
+  private apiUrl = 'http://localhost:8080/api/applications';  // URL de votre API Spring Boot
 
   constructor(private http: HttpClient) {}
 
-  // Génération des questions d'entretien
-  generateQuestions(jobDescription: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}/generate-questions`, {
-      job_description: jobDescription
-    });
-  }
+  // Méthode pour générer le quiz
+ // job-quiz.service.ts
+generateQuiz(jobId: string, jobDescription: string): Observable<any> {
+  const payload = {
+    jobId: jobId,
+    jobDescription: jobDescription
+  };
 
-  // Évaluation de la réponse du candidat
-  evaluateAnswer(question: string, answer: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}/evaluate-answer`, {
-      question,
-      answer
-    });
-  }
+  return this.http.post<any>(`http://localhost:8080/generate-quiz/${jobId}`, payload, {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  });
+}
+
 }

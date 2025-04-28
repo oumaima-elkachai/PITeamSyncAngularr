@@ -1,24 +1,89 @@
-<main class="main">
-    <section class="section-box">
-        <div class="box-head-single">
-            <div class="container">
-                <h3></h3>
-                <ul class="breadcrumbs">
-                    <li><a href="#"></a></li>
-                    <li>APPLY your Job MR </li>
-                </ul>
-            </div>
-        </div>
-    </section>
-
-    <div class="job-quiz">
-        <h2>Questions d'entretien générées par IA</h2>
-        <p><strong>Description du poste :</strong> {{ jobDescription }}</p>
-      
-        <div *ngFor="let question of questions; let i = index">
-            <p><strong>Question {{ i + 1 }}:</strong> {{ question }}</p>
-            <textarea [(ngModel)]="answers[i]" placeholder="Écrivez votre réponse ici..."></textarea>
+<!-- job-quiz.component.html -->
+<main class="main-wrapper">
+    <div class="container-fluid">
+      <div class="inner-contents">
+        <div class="page-header d-flex align-items-center justify-content-between mb-4">
+          <div class="left-part">
+            <h2 class="text-dark fw-semibold">Statistiques des Postes</h2>
+            <p class="text-muted mb-0">Les postes ayant reçu le plus de candidatures</p>
           </div>
-          
+        </div>
+
+<!-- job-quiz.component.html -->
+<div class="container mt-5">
+    <div *ngIf="errorMessage" class="alert alert-danger text-center">
+      {{ errorMessage }}
+    </div>
+  
+    <div *ngIf="!errorMessage && quiz.length > 0">
+      <h2 class="text-center mb-4">📝 Quiz généré</h2>
+  
+      <form (ngSubmit)="submitQuiz()">
+  
+        <div *ngFor="let question of quiz; let i = index" class="card mb-4 shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">{{ i + 1 }}. {{ question.question }}</h5>
+  
+            <div class="list-group">
+              <label *ngFor="let option of question.options" class="list-group-item list-group-item-action">
+                <input 
+                  type="radio"
+                  [name]="'question' + i"
+                  [value]="option"
+                  (change)="selectAnswer(i, option)"
+                  [checked]="userAnswers[i] === option"
+                  class="form-check-input me-2"
+                />
+                {{ option }}
+              </label>
+            </div>
+          </div>
+        </div>
+  
+        <div class="text-center">
+          <button type="submit" class="btn btn-success btn-lg px-5">Envoyer mes réponses</button>
+        </div>
+  
+      </form>
+  
+      <div *ngIf="score !== null" class="alert alert-info text-center mt-4">
+        <h4>🎯 Votre score est : {{ score }} / {{ quiz.length }}</h4>
       </div>
-      
+    </div>
+  </div>
+  
+
+  
+  
+
+<div>
+   
+  </div>
+   </div>
+   </div>
+</main>
+
+<style>
+.card-title {
+  font-weight: 600;
+}
+
+.btn-success {
+  border-radius: 50px;
+}
+
+input[type="radio"] {
+  cursor: pointer;
+}
+
+.list-group-item:hover {
+  background-color: #f8f9fa;
+}
+
+.alert-info {
+  font-size: 1.2rem;
+}
+
+
+
+</style>

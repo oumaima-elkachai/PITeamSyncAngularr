@@ -35,7 +35,7 @@ const routes: Routes = [
       { path: 'job-postings', component: JobPostingsUserComponent },
       { path: 'job-postings/details/:id', component: JobDetailsUserComponent },
       { path: 'apply-job/:jobId/:candidateId', component: ApplyJobComponent },
-      { path: 'quiz', component: JobQuizComponent },
+      { path: 'job-quiz/:id', component: JobQuizComponent },
       { path: '', redirectTo: 'job-postings', pathMatch: 'full' }
     ]
   },

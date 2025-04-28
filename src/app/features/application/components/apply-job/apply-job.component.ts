@@ -49,6 +49,15 @@ export class ApplyJobComponent implements OnInit {
       this.application.jobId = params.get('jobId') || '';
       this.application.candidateId = params.get('candidateId') || '';
 
+ // Charger score si existe dans localStorage
+ const storedScore = localStorage.getItem('quizScore');
+ if (storedScore) {
+   this.application.quizScore = parseInt(storedScore, 10);
+   localStorage.removeItem('quizScore'); // Nettoyer après lecture
+ }
+
+
+
       if (this.application.jobId) {
         this.jobService.getJobById(this.application.jobId).subscribe({
           next: (job) => {
@@ -111,6 +120,16 @@ export class ApplyJobComponent implements OnInit {
     this.selectedFile = file;
     this.isError = false;
   }
+
+
+  openQuiz(): void {
+    const jobId = this.application.jobId;
+    if (jobId) {
+      this.router.navigate(['/user/job-quiz', jobId], { state: { fromApplyJob: true } });
+    }
+  }
+  
+
 
   submitApplication(): void {
     if (!this.selectedFile) {

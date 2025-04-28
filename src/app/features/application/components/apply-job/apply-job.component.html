@@ -39,6 +39,9 @@
           
           <label><strong>Experience (years):</strong></label>
           <input type="number" class="form-control form-input" [(ngModel)]="application.experience" name="experience" placeholder="e.g. 5 years" />
+          <p><strong>scoreQuiz:</strong> {{ application.quizScore }}</p>
+       
+
         </div>
   
         <div class="form-section">
@@ -65,6 +68,10 @@
         <div *ngIf="isSuccess" class="success-message">
           <i class="bi bi-check-circle-fill"></i> <p>Your application has been submitted successfully!</p>
         </div>
+
+        <div *ngIf="application.score">
+          <p>Your Quiz Score: <strong>{{ application.score }}</strong></p>
+        </div>
   
         <button type="submit" class="btn btn-primary" [disabled]="isSubmitting || !selectedFile">
           <i class="bi bi-upload me-2"></i> {{ isSubmitting ? 'Submitting...' : 'Submit Application' }}
@@ -79,7 +86,9 @@
   </div>
   
   
-  
+  <button type="button" class="btn btn-success" (click)="openQuiz()">
+    <i class="bi bi-patch-question"></i> Take the Quiz
+  </button>
   <!-- Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   
