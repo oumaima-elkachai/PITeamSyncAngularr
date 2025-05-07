@@ -1,0 +1,173 @@
+<!-- FORM START -->
+<div class="edit-profile-page d-flex align-items-start justify-content-center" style="padding-top: 120px; min-height: 100vh;">
+  <div class="edit-profile-card shadow animate-card">
+    <h2 class="text-center fw-bold mb-4">Edit Your Profile</h2>
+    <form [formGroup]="editForm" (ngSubmit)="onSubmit()" class="row g-3">
+
+      <!-- Name -->
+      <div class="col-md-6">
+        <label class="form-label">Name:</label>
+        <input type="text" class="form-control form-control-custom" formControlName="name" placeholder="Your name..." />
+        <div *ngIf="editForm.controls['name'].touched && editForm.controls['name'].invalid" class="text-danger small mt-1">
+          <p *ngIf="editForm.controls['name'].errors?.['required']">Name is required</p>
+          <p *ngIf="editForm.controls['name'].errors?.['pattern']">Only letters allowed</p>
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="col-md-6">
+        <label class="form-label">Email:</label>
+        <input type="email" class="form-control form-control-custom" formControlName="email" placeholder="Your email..." />
+        <div *ngIf="editForm.controls['email'].touched && editForm.controls['email'].invalid" class="text-danger small mt-1">
+          <p *ngIf="editForm.controls['email'].errors?.['required']">Email is required</p>
+          <p *ngIf="editForm.controls['email'].errors?.['email']">Invalid email</p>
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="col-md-6">
+        <label class="form-label">Password:</label>
+        <input type="password" class="form-control form-control-custom" formControlName="password" placeholder="New password..." />
+        <div *ngIf="editForm.controls['password'].touched && editForm.controls['password'].invalid" class="text-danger small mt-1">
+          <p *ngIf="editForm.controls['password'].errors?.['required']">Password is required</p>
+          <p *ngIf="editForm.controls['password'].errors?.['minlength']">Minimum 6 characters</p>
+        </div>
+      </div>
+
+      <!-- Telephone -->
+      <div class="col-md-6">
+        <label class="form-label">Telephone:</label>
+        <input type="text" class="form-control form-control-custom" formControlName="telephone" placeholder="8 digits..." />
+        <div *ngIf="editForm.controls['telephone'].touched && editForm.controls['telephone'].invalid" class="text-danger small mt-1">
+          <p>Telephone must be 8 digits</p>
+        </div>
+      </div>
+
+      <!-- Photo Upload -->
+      <div class="col-md-6">
+        <label class="form-label">Select Photo:</label>
+        <input type="file" id="photo" name="photo" accept="image/*" class="form-control form-control-custom" (change)="onFileSelected($event)">
+      </div>
+
+      <!-- Role -->
+      <div class="col-md-6">
+        <label class="form-label">Role:</label>
+        <select class="form-select form-control-custom" formControlName="role">
+          <option [value]="RolesUser.EMPLOYEE">Employee</option>
+          <option [value]="RolesUser.CANDIDATE">Candidate</option>
+        </select>
+      </div>
+
+      <!-- Candidate-specific fields -->
+      <div *ngIf="editForm.controls['role'].value === 'CANDIDATE'" class="col-12">
+        <div class="row g-3">
+          <div class="col-md-4">
+            <label class="form-label">LinkedIn:</label>
+            <input type="text" class="form-control form-control-custom" formControlName="linkedIn" placeholder="LinkedIn URL..." />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">GitHub:</label>
+            <input type="text" class="form-control form-control-custom" formControlName="github" placeholder="GitHub URL..." />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Portfolio:</label>
+            <input type="text" class="form-control form-control-custom" formControlName="portfolio" placeholder="Portfolio URL..." />
+          </div>
+        </div>
+      </div>
+
+      <!-- Employee-specific fields -->
+      <div *ngIf="editForm.controls['role'].value === 'EMPLOYEE'" class="col-12">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Job Title:</label>
+            <input type="text" class="form-control form-control-custom" formControlName="job" placeholder="Your job title..." />
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Hire Date:</label>
+            <input type="date" class="form-control form-control-custom" formControlName="hireDate" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="col-12">
+        <button type="submit" class="btn btn-primary w-100 mt-4 rounded-pill btn-custom">
+          Save Changes
+        </button>
+      </div>
+
+    </form>
+    <br>
+    <br>
+    <br>
+  </div>
+</div>
+<!-- FORM END -->
+
+<!-- Style to match -->
+<style>
+.edit-profile-page {
+  background: #ffffff;
+}
+
+.edit-profile-card {
+  background: #fff;
+  padding: 3rem;
+  border-radius: 1.5rem;
+  max-width: 950px; /* Wider */
+  width: 100%;
+  border: none;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  transition: all 0.4s ease;
+}
+
+.edit-profile-card:hover {
+  transform: translateY(-5px) scale(1.01);
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+}
+
+.form-control-custom {
+  border-radius: 12px;
+  padding: 12px 16px;
+  border: 1px solid #ccc;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-control-custom:focus {
+  border-color: #5dade2;
+  box-shadow: 0 0 8px rgba(93, 173, 226, 0.5);
+}
+
+.btn-custom {
+  padding: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.btn-custom:hover {
+  background-color: #3498db;
+  transform: translateY(-3px);
+}
+
+.animate-card {
+  opacity: 0;
+  transform: translateY(40px);
+  animation: fadeInUp 1s forwards;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .edit-profile-card {
+    padding: 2rem;
+    max-width: 90%;
+  }
+}
+</style>

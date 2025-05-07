@@ -1,0 +1,47 @@
+<div class="container mt-4">
+    <div class="card">
+      <div class="card-header">
+        <h3>Upcoming Deadlines (Next {{daysAhead}} Days)</h3>
+        <select [(ngModel)]="daysAhead" (change)="loadDeadlines()">
+          <option value="3">3 Days</option>
+          <option value="7">7 Days</option>
+          <option value="14">14 Days</option>
+        </select>
+      </div>
+  
+      <div class="card-body">
+        <ng-container *ngIf="!isLoading; else loading">
+          <div *ngFor="let task of tasks" class="deadline-item">
+            <div class="priority-indicator" [ngClass]="'priority-' + task.priority.toLowerCase()"></div>
+            
+            <div class="task-info">
+              <h5>{{task.title}}</h5>
+              <div class="meta">
+                <span class="project">
+                  {{getProjectName(task.projectId)}}
+                </span>
+                <span class="deadline">
+                  {{task.deadline | date}} 
+                  ({{getDaysLeft(task.deadline )}} days left)
+                </span>
+              </div>
+            </div>
+  
+            <div class="status-badge" [ngClass]="task.status.toLowerCase()">
+              {{task.status}}
+            </div>
+          </div>
+  
+          <div *ngIf="tasks.length === 0" class="no-tasks">
+            No upcoming deadlines! 🎉
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+  
+  <ng-template #loading>
+    <div class="text-center p-4">
+      <div class="spinner-border"></div>
+    </div>
+  </ng-template>

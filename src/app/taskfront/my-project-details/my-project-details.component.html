@@ -1,0 +1,586 @@
+<app-user-header></app-user-header>
+
+<!-- Main content area with proper container -->
+<div class="project-dashboard">
+    <!-- Beautiful header section with refined typography -->
+    <div class="dashboard-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <div class="header-content">
+                        <a routerLink="/mytasks" class="back-button">
+                            <i class="bi bi-arrow-left"></i> Back to Tasks
+                        </a>
+                        <span class="badge bg-primary-soft rounded-pill mb-2 mt-3">Project Details</span>
+                        <h1 class="dashboard-title">{{ project?.title }}</h1>
+                        <p class="dashboard-subtitle">View details and manage your project tasks</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Project content area with proper container -->
+    <div class="dashboard-content">
+        <div class="container">
+            <!-- Loading State -->
+            <div *ngIf="isLoading" class="loading-container">
+                <div class="loading-animation">
+                    <div class="spinner"></div>
+                </div>
+                <p class="loading-text">Loading project details...</p>
+            </div>
+
+            <!-- Content -->
+            <div *ngIf="!isLoading" class="row g-4">
+                <!-- Project Info -->
+                <div class="col-lg-4 mb-4">
+                    <div class="info-card">
+                        <div class="card-content">
+                            <h5 class="card-title">Project Overview</h5>
+                            <div class="project-meta">
+                                <div class="meta-item">
+                                    <div class="meta-label">Status</div>
+                                    <div class="meta-value">
+                                        <span class="status-badge" 
+                                            [ngClass]="{
+                                                'status-active': project.status === 'Active',
+                                                'status-hold': project.status === 'On Hold',
+                                                'status-completed': project.status === 'Completed'
+                                            }">
+                                            {{ project.status }}
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <div class="meta-item">
+                                    <div class="meta-label">Due Date</div>
+                                    <div class="meta-value">
+                                        <i class="bi bi-calendar3"></i>
+                                        {{ project.dueDate | date }}
+                                    </div>
+                                </div>
+                                
+                                <div class="meta-item">
+                                    <div class="meta-label">Project Type</div>
+                                    <div class="meta-value">
+                                        <i class="bi bi-folder2"></i>
+                                        {{ project.type }}
+                                    </div>
+                                </div>
+                                
+                                <div class="meta-item">
+                                    <div class="meta-label">Team Members</div>
+                                    <div class="meta-value">
+                                        <i class="bi bi-people"></i>
+                                        {{ project.teamMemberIds?.length || 0 }} members
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="description-section">
+                                <h5 class="section-title">Description</h5>
+                                <p class="description-text">{{ project.description || 'No description provided' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <!-- Your Tasks -->
+                <div class="col-lg-8">
+                    <div class="tasks-card">
+                        <div class="card-content">
+                            <h5 class="card-title">Your Tasks in This Project</h5>
+                            
+                            <div *ngIf="tasks.length === 0" class="empty-state">
+                                <div class="empty-icon">
+                                    <i class="bi bi-check2-circle"></i>
+                                </div>
+                                <h3>No tasks assigned</h3>
+                                <p>You don't have any tasks assigned in this project</p>
+                            </div>
+            
+                            <div class="task-list">
+                                <div *ngFor="let task of tasks" class="task-item" [ngClass]="'task-status-' + task.status.toLowerCase()">
+                                    <div class="status-indicator"></div>
+                                    <div class="task-content">
+                                        <div class="task-header">
+                                            <h6 class="task-title">{{ task.title }}</h6>
+                                            <span class="task-status" 
+                                                [ngClass]="{
+                                                    'status-todo': task.status === 'TODO',
+                                                    'status-in_progress': task.status === 'IN_PROGRESS',
+                                                    'status-done': task.status === 'DONE'
+                                                }">
+                                                {{ task.status }}
+                                            </span>
+                                        </div>
+                                        <div class="task-meta">
+                                            <div class="meta-item">
+                                                <i class="bi bi-calendar3"></i>
+                                                <span>Due: {{ task.deadline | date }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="progress-container">
+                                            <div class="progress">
+                                                <div class="progress-bar" 
+                                                    [style.width.%]="task.status === 'DONE' ? 100 : (task.status === 'IN_PROGRESS' ? 50 : 5)">
+                                                </div>
+                                            </div>
+                                            <a [routerLink]="['/My-tasks', task.id]" class="details-link">
+                                                View Details <i class="bi bi-arrow-right"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-user-footer></app-user-footer>
+
+<!-- CSS for enhanced visual appeal -->
+<style>
+    /* ===== GLOBAL STYLING ===== */
+    body {
+        background-color: #f5f7fa;
+        color: #333;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    
+    .container {
+        max-width: 1200px;
+        padding: 0 20px;
+    }
+    
+    /* ===== DASHBOARD LAYOUT ===== */
+    .project-dashboard {
+        min-height: 100vh;
+        background: linear-gradient(180deg, #f0f4ff 0%, #f5f7fa 100%);
+    }
+    
+    /* ===== HEADER SECTION ===== */
+    .dashboard-header {
+        background: #fff;
+        padding: 40px 0 30px;
+        margin-bottom: 40px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        position: relative;
+    }
+    
+    .dashboard-header:after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: linear-gradient(90deg, #4a6cf7, #6e8cff, #9ab5ff);
+    }
+    
+    .back-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #64748b;
+        font-size: 0.95rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        padding: 8px 16px;
+        border-radius: 8px;
+        background-color: #f8fafc;
+    }
+    
+    .back-button:hover {
+        background-color: #f1f5f9;
+        color: #1e293b;
+    }
+    
+    .bg-primary-soft {
+        background-color: rgba(74, 108, 247, 0.1);
+        color: #4a6cf7;
+        font-weight: 500;
+        font-size: 0.85rem;
+        padding: 6px 12px;
+    }
+    
+    .dashboard-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin: 8px 0;
+        letter-spacing: -0.5px;
+    }
+    
+    .dashboard-subtitle {
+        color: #64748b;
+        font-size: 1.1rem;
+        margin-bottom: 0;
+    }
+    
+    /* ===== DASHBOARD CONTENT ===== */
+    .dashboard-content {
+        padding: 0 0 60px;
+    }
+    
+    /* ===== LOADING ANIMATION ===== */
+    .loading-container {
+        text-align: center;
+        padding: 60px 0;
+    }
+    
+    .loading-animation {
+        display: inline-block;
+        margin-bottom: 20px;
+    }
+    
+    .spinner {
+        width: 60px;
+        height: 60px;
+        border: 4px solid rgba(74, 108, 247, 0.1);
+        border-radius: 50%;
+        border-top-color: #4a6cf7;
+        animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    
+    .loading-text {
+        color: #64748b;
+        font-size: 1.1rem;
+        font-weight: 500;
+    }
+    
+    /* ===== PROJECT INFO CARD ===== */
+    .info-card {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+        height: 100%;
+        transition: all 0.3s ease;
+    }
+    
+    .info-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    }
+    
+    .card-content {
+        padding: 30px;
+    }
+    
+    .card-title {
+        font-size: 1.35rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #f1f5f9;
+    }
+    
+    .project-meta {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+    
+    .meta-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .meta-label {
+        font-weight: 500;
+        color: #64748b;
+        font-size: 0.95rem;
+    }
+    
+    .meta-value {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 500;
+        color: #1e293b;
+    }
+    
+    .meta-value i {
+        color: #64748b;
+    }
+    
+    .status-badge {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .status-active {
+        background-color: #dcfce7;
+        color: #10b981;
+    }
+    
+    .status-hold {
+        background-color: #fef3c7;
+        color: #f59e0b;
+    }
+    
+    .status-completed {
+        background-color: #e2e8f0;
+        color: #64748b;
+    }
+    
+    .description-section {
+        margin-top: 20px;
+    }
+    
+    .section-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 15px;
+    }
+    
+    .description-text {
+        color: #475569;
+        line-height: 1.6;
+        font-size: 0.95rem;
+    }
+    
+    /* ===== TASKS CARD ===== */
+    .tasks-card {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+        height: 100%;
+    }
+    
+    .task-list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin-top: 25px;
+    }
+    
+    .task-item {
+        background: #f8fafc;
+        border-radius: 12px;
+        position: relative;
+        display: flex;
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+    
+    .task-item:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    }
+    
+    .status-indicator {
+        width: 5px;
+        flex-shrink: 0;
+    }
+    
+    .task-status-todo .status-indicator {
+        background: linear-gradient(to bottom, #94a3b8 0%, #cbd5e1 100%);
+    }
+    
+    .task-status-in_progress .status-indicator {
+        background: linear-gradient(to bottom, #4a6cf7 0%, #818cf8 100%);
+    }
+    
+    .task-status-done .status-indicator {
+        background: linear-gradient(to bottom, #10b981 0%, #34d399 100%);
+    }
+    
+    .task-content {
+        padding: 18px 20px;
+        flex-grow: 1;
+    }
+    
+    .task-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    
+    .task-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin: 0;
+    }
+    
+    .task-status {
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .status-todo {
+        background-color: #f1f5f9;
+        color: #64748b;
+    }
+    
+    .status-in_progress {
+        background-color: #e0e7ff;
+        color: #4a6cf7;
+    }
+    
+    .status-done {
+        background-color: #dcfce7;
+        color: #10b981;
+    }
+    
+    .task-meta {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 12px;
+    }
+    
+    .task-meta .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.85rem;
+        color: #64748b;
+        justify-content: flex-start;
+    }
+    
+    .progress-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .progress {
+        height: 5px;
+        flex-grow: 1;
+        margin-right: 16px;
+        background-color: #e2e8f0;
+        border-radius: 10px;
+    }
+    
+    .progress-bar {
+        height: 100%;
+        border-radius: 10px;
+        background: linear-gradient(to right, #4a6cf7, #818cf8);
+    }
+    
+    .details-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: #4a6cf7;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+    }
+    
+    .details-link i {
+        transition: transform 0.2s ease;
+    }
+    
+    .details-link:hover {
+        color: #364fc7;
+    }
+    
+    .details-link:hover i {
+        transform: translateX(4px);
+    }
+    
+    /* ===== EMPTY STATE ===== */
+    .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+    }
+    
+    .empty-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background-color: #f1f5f9;
+        margin-bottom: 20px;
+    }
+    
+    .empty-icon i {
+        font-size: 2.2rem;
+        color: #64748b;
+    }
+    
+    .empty-state h3 {
+        font-size: 1.4rem;
+        color: #1e293b;
+        margin-bottom: 8px;
+        font-weight: 600;
+    }
+    
+    .empty-state p {
+        color: #64748b;
+        margin-bottom: 0;
+        font-size: 1rem;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 767px) {
+        .dashboard-header {
+            padding: 30px 0 20px;
+        }
+        
+        .dashboard-title {
+            font-size: 2rem;
+        }
+        
+        .card-content {
+            padding: 20px;
+        }
+    }
+</style>
+
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
+<!-- Google Font -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Keep all existing JS references -->
+<link rel="shortcut icon" type="image/x-icon" href="/assets/user-template/imgs/theme/favicon.svg" />
+<link rel="stylesheet" href="/assets/user-template/css/plugins/animate.min.css" />
+<link rel="stylesheet" href="/assets/user-template/css/mainc619.css?v=1.0" />
+<script src="/assets/user-template/js/vendor/modernizr-3.6.0.min.js"></script>
+<script src="/assets/user-template/js/vendor/jquery-3.6.0.min.js"></script>
+<script src="/assets/user-template/js/vendor/jquery-migrate-3.3.0.min.js"></script>
+<script src="/assets/user-template/js/vendor/bootstrap.bundle.min.js"></script>
+<script src="/assets/user-template/js/plugins/waypoints.js"></script>
+<script src="/assets/user-template/js/plugins/wow.js"></script>
+<script src="/assets/user-template/js/plugins/magnific-popup.js"></script>
+<script src="/assets/user-template/js/plugins/perfect-scrollbar.min.js"></script>
+<script src="/assets/user-template/js/plugins/select2.min.js"></script>
+<script src="/assets/user-template/js/plugins/isotope.js"></script>
+<script src="/assets/user-template/js/plugins/scrollup.js"></script>
+<script src="/assets/user-template/js/plugins/swiper-bundle.min.js"></script>
+<script src="/assets/user-template/js/mainc619.js?v=1.0"></script>

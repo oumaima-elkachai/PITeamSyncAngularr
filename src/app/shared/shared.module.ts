@@ -1,3 +1,4 @@
+// shared.module.ts
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AdminHeaderComponent } from './components/admin/admin-header/admin-header.component';
@@ -8,7 +9,6 @@ import { UserFooterComponent } from './components/user/user-footer/user-footer.c
 import { UserHomeComponent } from './components/user/user-home/user-home.component';
 import { AdminHomeComponent } from './components/admin/admin-home/admin-home.component';
 import { RouterModule } from '@angular/router';
-import { HighlightPipe } from './pipes/highlight.pipe';
 
 @NgModule({
     declarations: [
@@ -18,8 +18,7 @@ import { HighlightPipe } from './pipes/highlight.pipe';
       UserHeaderComponent,
       UserFooterComponent,
       UserHomeComponent,
-      AdminHomeComponent,
-      HighlightPipe
+      AdminHomeComponent
     ],
     imports: [
       CommonModule,
@@ -32,8 +31,8 @@ import { HighlightPipe } from './pipes/highlight.pipe';
       UserHeaderComponent,
       UserFooterComponent,
       UserHomeComponent,
-      AdminHomeComponent,
-      HighlightPipe
+      AdminHomeComponent
     ]
   })
   export class SharedModule { }
+  

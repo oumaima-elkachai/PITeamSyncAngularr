@@ -1,0 +1,165 @@
+<!-- task-list.component.html -->
+<div class="container py-4">
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="mb-0">Project Tasks</h2>
+      <button class="btn btn-outline-secondary" [routerLink]="['/projects', projectId]">
+        <i class="bi bi-arrow-left"></i> Back to Project
+      </button>
+    </div>
+  
+    <!-- Filters -->
+    <div class="card mb-4">
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-md-4">
+            <label class="form-label">Status</label>
+            <select class="form-select" [(ngModel)]="statusFilter" (change)="loadTasks()">
+              <option value="ALL">All Statuses</option>
+              <option value="TODO">To Do</option>
+              <option value="IN_PROGRESS">In Progress</option>
+              <option value="DONE">Done</option>
+            </select>
+          </div>
+          
+          <div class="col-md-4">
+            <label class="form-label">Assignee</label>
+            <select class="form-select" [(ngModel)]="assigneeFilter" (change)="loadTasks()">
+              <option value="ALL">All Assignees</option>
+              <option *ngFor="let employee of employees" [value]="employee.id">
+                {{ employee.name }}
+              </option>
+            </select>
+          </div>
+          
+          <div class="col-md-4">
+            <label class="form-label">Sort By</label>
+            <select class="form-select" [(ngModel)]="sortBy" (change)="loadTasks()">
+              <option value="deadline">Deadline</option>
+              <option value="title">Title</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status"></div>
+      <p class="mt-2">Loading tasks...</p>
+    </div>
+  
+    <!-- Error State -->
+    <div *ngIf="errorMessage" class="alert alert-danger">
+      {{ errorMessage }}
+    </div>
+  
+    <!-- Task Cards Grid -->
+    <div *ngIf="!isLoading && !errorMessage" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+      <div class="col" *ngFor="let task of filteredTasks">
+        <div class="card h-100 task-card">
+          <div class="card-body">
+            <!-- Task Status Indicator -->
+            <div class="task-status-indicator" [ngClass]="{
+              'task-status-todo': task.status === 'TODO',
+              'task-status-in-progress': task.status === 'IN_PROGRESS',
+              'task-status-done': task.status === 'DONE'
+            }"></div>
+  
+            <!-- Task Header -->
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <h5 class="card-title mb-0">{{ task.title }}</h5>
+              <span class="badge" [ngClass]="{
+                'bg-secondary': task.status === 'TODO',
+                'bg-primary': task.status === 'IN_PROGRESS',
+                'bg-success': task.status === 'DONE'
+              }">
+                {{ task.status }}
+              </span>
+            </div>
+  
+            <!-- Task Details -->
+            <div class="mb-3">
+              <small class="text-muted">
+                <i class="bi bi-person"></i> 
+                {{ getEmployeeName(task.employeeId || '') }}
+              </small>
+              <br>
+              <small class="text-muted">
+                <i class="bi bi-calendar"></i> 
+                Due: {{ task.deadline | date }}
+              </small>
+            </div>
+  
+            <!-- Progress Bar -->
+            <div class="progress mb-3" style="height: 4px;">
+              <div class="progress-bar" [style.width.%]="task.status === 'DONE' ? 100 : 
+                             task.status === 'IN_PROGRESS' ? 50 : 10"></div>
+            </div>
+  
+            <!-- Extension Request -->
+            <div *ngIf="task.extensionStatus === 'PENDING'" 
+                 class="alert alert-warning py-2 mb-3">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <i class="bi bi-clock-history me-2"></i>
+                  Extension requested
+                </div>
+                <div>
+                  <button class="btn btn-sm btn-success me-1" 
+                          (click)="approveExtension(task.id!)">
+                    <i class="bi bi-check-lg"></i>
+                  </button>
+                  <button class="btn btn-sm btn-danger" 
+                          (click)="rejectExtension(task.id!)">
+                    <i class="bi bi-x-lg"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+  
+            <!-- Attachments -->
+            <div class="attachments-section mb-3">
+              <h6 class="text-muted small">Attachments:</h6>
+              <div *ngIf="loadingAttachments[task.id!]; else attachmentsLoaded">
+                <div class="spinner-border spinner-border-sm" role="status"></div>
+              </div>
+              <ng-template #attachmentsLoaded>
+                <div *ngFor="let attachment of task.attachments" 
+                     class="d-flex align-items-center mb-1">
+                  <i class="bi bi-paperclip me-2"></i>
+                  <a href="#" (click)="downloadAttachment(attachment.id)" 
+                     class="text-truncate small">
+                    {{ attachment.fileName }}
+                  </a>
+                  <button class="btn btn-link btn-sm text-danger ms-auto p-0"
+                          (click)="deleteAttachment(attachment.id)">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </ng-template>
+            </div>
+  
+            <!-- Actions -->
+            <div class="d-flex justify-content-end gap-2">
+              <button class="btn btn-sm btn-outline-primary"
+                      [routerLink]="['/projects', projectId, 'tasks', task.id, 'edit']">
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button class="btn btn-sm btn-outline-danger"
+                      (click)="deleteTask(task.id)">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Empty State -->
+    <div *ngIf="!isLoading && !errorMessage && filteredTasks.length === 0" 
+         class="text-center py-5">
+      <i class="bi bi-clipboard-x display-6 text-muted"></i>
+      <p class="mt-3">No tasks found matching your filters</p>
+    </div>
+  </div>

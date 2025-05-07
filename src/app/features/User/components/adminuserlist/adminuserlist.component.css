@@ -1,0 +1,37 @@
+/* Adjust table row colors for clarity */
+tr.odd {
+    background-color: #f9f9f9;
+  }
+  tr.even {
+    background-color: #fff;
+  }
+  
+  /* Ensure the table is fully responsive */
+  .table-responsive {
+    overflow-x: auto;
+  }
+  
+  /* Custom styles for the indicators (modify as needed) */
+  .indicator.active {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background-color: green;
+    border-radius: 50%;
+  }
+  .indicator.inactive {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    border-radius: 50%;
+  }
+  .indicator.pending {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background-color: orange;
+    border-radius: 50%;
+  }
+  
+  

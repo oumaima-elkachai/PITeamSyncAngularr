@@ -82,26 +82,27 @@
 
                     <li class="nav-item nav-author">
                         <a href="#" class="nav-toggler" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="assets/admin-template/img/nav_author.jpg" alt="img" width="54" class="rounded-2">
+                            <img [src]="encodedPhotoUrl" alt="img" width="50" height="70" class="rounded-2">
                             <div class="nav-toggler-content">
-                                <h6 class="mb-0">Franklin Jr.</h6>
-                                <div class="ff-heading fs-14 fw-normal text-gray">Super Admin</div>
+                                <h6 class="mb-0">{{ loggedInUser?.name }}</h6>
+                                <div class="ff-heading fs-14 fw-normal text-gray">{{ loggedInUser?.email }}</div>
                             </div>
                         </a>
                         <div class="dropdown-widget dropdown-menu p-0 admin-card">
                             <div class="dropdown-wrapper">
                                 <div class="card mb-0">
                                     <div class="card-header p-3 text-center">
-                                        <img src="assets/admin-template/img/nav_author.jpg" alt="img" width="80" class="rounded-circle avatar">
+                                        <img [src]="encodedPhotoUrl" alt="Admin Photo" width="80" class="rounded-circle avatar">
+
                                         <div class="mt-2">
-                                            <h6 class="mb-0 lh-18">Franklin Jr.</h6>
-                                            <div class="fs-14 fw-normal text-gray">Super Admin</div>
+                                            <h6 class="mb-0 lh-18">{{ loggedInUser?.name }}</h6>
+                                            <div class="fs-14 fw-normal text-gray">{{ loggedInUser?.email }}</div>
                                         </div>
                                     </div>
                                     <div class="card-body p-3">
                                         <ul class="list-unstyled p-0 m-0">
                                             <li>
-                                                <a href="profile.html" class="fs-14 fw-normal text-dark d-block p-1"><i class="bi bi-person me-2"></i> Profile</a>
+                                                <a href="/admin/adminprofile" class="fs-14 fw-normal text-dark d-block p-1"><i class="bi bi-person me-2"></i> Profile</a>
                                             </li>
                                             <li >
                                                 <a href="email.html" class="fs-14 fw-normal text-dark d-block p-1"><i class="bi bi-envelope me-2 "></i> Inbox</a>
@@ -113,7 +114,7 @@
 
                                     </div>
                                     <div class="card-footer p-3">
-                                        <a href="login.html" class="btn btn-outline-gray bg-transparent w-100 py-1 rounded-1 text-dark fs-14 fw-medium"><i class="bi bi-box-arrow-right"></i> Logout</a>
+                                        <a  (click)="logout()" class="btn btn-outline-gray bg-transparent w-100 py-1 rounded-1 text-dark fs-14 fw-medium"><i class="bi bi-box-arrow-right"></i> Logout</a>
                                     </div>
                                 </div>
                             </div>
@@ -127,8 +128,9 @@
     <div class="small-header d-flex align-items-center justify-content-between d-xl-none">
         <div class="logo">
             <a href="index.html" class="d-flex align-items-center gap-3 flex-shrink-0">
-                <img src="assets/admin-template/img/logoTeamSync.png" alt="logo">
+                <img src="assets/admin-template/img/logo-icon.svg" alt="logo">
                 <div class="position-relative flex-shrink-0">
+                    <img src="assets/admin-template/img/logo-text.svg" alt="" class="logo-text">
                     <img src="assets/admin-template/img/logo-text-white.svg" alt="" class="logo-text-white">
                 </div>
             </a>
@@ -164,7 +166,7 @@
                                             <i class="bi bi-lightning"></i>
                                         </div>
                                         <div class="user-message">
-                                            <h6 class="message"><a href="#">Jackie Kun</a> mentioned you at <a href="#">TeamSync</a></h6>
+                                            <h6 class="message"><a href="#">Jackie Kun</a> mentioned you at <a href="#">Kleon Projects</a></h6>
                                             <p class="message-footer d-flex align-items-center justify-content-between"> <span class="fs-14 text-gray fw-normal">2m ago</span> <span>Mark as read</span></p>
                                         </div>
                                     </li>

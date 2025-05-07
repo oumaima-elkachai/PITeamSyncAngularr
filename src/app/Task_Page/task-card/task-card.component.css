@@ -1,0 +1,22 @@
+/* task-card.component.css */
+.card-grid-2 {
+    min-height: 180px;  /* Minimum card height */
+    transition: all 0.3s ease;
+  }
+  
+  .card-block-info {
+    padding: 1.5rem;
+  }
+  
+  .card-grid-2-img-small {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .card-grid-2:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  }

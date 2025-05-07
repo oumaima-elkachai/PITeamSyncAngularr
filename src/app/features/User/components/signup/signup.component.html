@@ -1,0 +1,159 @@
+<!-- Add this in your component HTML -->
+<div class="signup-page">
+  <div class="signup-container">
+    <div class="signup-card">
+      <div class="text-center mb-4">
+        <a routerLink="/" class="d-inline-block mb-2">
+          <img src="assets/logo.png" alt="Logo" class="logo-img">
+        </a>
+        <h2 class="fw-bold">Welcome to TeamSync!</h2>
+        <p class="text-secondary">Signup here to create your own dashboard.</p>
+      </div>
+
+      <form (ngSubmit)="onSignup()" [formGroup]="signupForm">
+        <div class="row">
+          <!-- Name -->
+          <div class="col-lg-6 mb-3">
+            <input type="text" class="form-control" formControlName="name" placeholder="Your name">
+            <div *ngIf="signupForm.controls['name'].touched && signupForm.controls['name'].invalid" class="text-danger small mt-1">
+              <p *ngIf="signupForm.controls['name'].errors?.['required']">Name is required</p>
+              <p *ngIf="signupForm.controls['name'].errors?.['pattern']">Name should not contain numbers</p>
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="col-lg-6 mb-3">
+            <input type="email" class="form-control" formControlName="email" placeholder="Email">
+            <div *ngIf="signupForm.controls['email'].touched && signupForm.controls['email'].invalid" class="text-danger small mt-1">
+              <p *ngIf="signupForm.controls['email'].errors?.['required']">Email is required</p>
+              <p *ngIf="signupForm.controls['email'].errors?.['email']">Invalid email format</p>
+            </div>
+          </div>
+
+          <!-- Password -->
+          <div class="col-lg-6 mb-3">
+            <input type="password" class="form-control" formControlName="password" placeholder="Password">
+            <div *ngIf="signupForm.controls['password'].touched && signupForm.controls['password'].invalid" class="text-danger small mt-1">
+              <p *ngIf="signupForm.controls['password'].errors?.['required']">Password is required</p>
+              <p *ngIf="signupForm.controls['password'].errors?.['minlength']">Password must be at least 6 characters</p>
+            </div>
+          </div>
+
+          <!-- Confirm Password -->
+          <div class="col-lg-6 mb-3">
+            <input type="password" class="form-control" formControlName="confirmPassword" placeholder="Confirm Password">
+            <div *ngIf="signupForm.controls['confirmPassword'].touched && signupForm.controls['confirmPassword'].invalid" class="text-danger small mt-1">
+              <p>Confirmation is required</p>
+            </div>
+          </div>
+
+          <!-- Photo Upload -->
+          <div class="col-lg-6 mb-3">
+            <input type="file" class="form-control" id="photo" (change)="onFileSelected($event)" accept="image/*">
+          </div>
+
+          <!-- Telephone -->
+          <div class="col-lg-6 mb-3">
+            <input type="text" class="form-control" formControlName="telephone" placeholder="8 digits">
+            <div *ngIf="signupForm.controls['telephone'].touched && signupForm.controls['telephone'].invalid" class="text-danger small mt-1">
+              <p>Telephone must be 8 digits</p>
+            </div>
+          </div>
+
+          <!-- Role Selection -->
+          <div class="col-lg-12 mb-3">
+            <select class="form-control" formControlName="role">
+              <option value="">Select Role</option>
+              <option value="EMPLOYEE">Employer</option>
+              <option value="CANDIDATE">Candidate</option>
+            </select>
+            <div *ngIf="signupForm.controls['role'].touched && signupForm.controls['role'].invalid" class="text-danger small mt-1">
+              <p>Role is required</p>
+            </div>
+          </div>
+
+          <!-- Candidate Specific Fields -->
+          <div class="col-lg-12" *ngIf="signupForm.controls['role'].value === 'CANDIDATE'">
+            <input type="text" class="form-control mb-3" formControlName="linkedIn" placeholder="LinkedIn URL">
+            <input type="text" class="form-control mb-3" formControlName="github" placeholder="GitHub URL">
+            <input type="text" class="form-control mb-3" formControlName="portfolio" placeholder="Portfolio URL">
+          </div>
+
+          <!-- Employee Specific Fields -->
+          <div class="col-lg-12" *ngIf="signupForm.controls['role'].value === 'EMPLOYEE'">
+            <input type="text" class="form-control mb-3" formControlName="job" placeholder="Job Title">
+            <input type="date" class="form-control mb-3" formControlName="hireDate">
+          </div>
+        </div>
+
+        <!-- Submit button -->
+        <button type="submit" class="btn btn-primary w-100 rounded-3 fw-bold shadow submit-btn">
+          Register
+        </button>
+
+        <p class="mt-4 text-center small">
+          Already have an account?
+          <a routerLink="/login" class="text-primary fw-bold text-decoration-underline">Sign In</a>
+        </p>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Beautify with style -->
+<style>
+.signup-page {
+  min-height: 100vh;
+  background: linear-gradient(to right, #74ebd5, #acb6e5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+}
+
+.signup-container {
+  width: 100%;
+  max-width: 800px;
+}
+
+.signup-card {
+  background: #fff;
+  padding: 40px 30px;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.signup-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.form-control {
+  border-radius: 12px;
+  border: 1px solid #ced4da;
+  padding: 12px;
+}
+
+.form-control:focus {
+  border-color: #5dade2;
+  box-shadow: 0 0 5px rgba(93, 173, 226, 0.5);
+}
+
+.submit-btn {
+  background-color: #5dade2;
+  border: none;
+  padding: 12px;
+  font-size: 18px;
+}
+
+.submit-btn:hover {
+  background-color: #3498db;
+}
+
+.logo-img {
+  max-height: 90px;
+  width: auto;
+}
+
+</style>

@@ -1,0 +1,34 @@
+<!-- tasks.component.html -->
+<div class="tasks-container">
+    <h1>My Tasks</h1>
+    
+    <!-- Status filter -->
+     
+    
+    <!-- Loading state -->
+    <div *ngIf="loading" class="loading">Loading tasks...</div>
+    
+    <!-- Error state -->
+    <div *ngIf="error" class="error">Failed to load tasks. Please try again later.</div>
+    
+    <!-- Tasks list -->
+    <div *ngIf="!loading && !error" class="tasks-list">
+      <div *ngFor="let task of filteredTasks" class="task-card" [routerLink]="['/tasks', task.id]">
+        <div class="task-header">
+          <h3>{{ task.title }}</h3>
+          <span class="priority-badge" [ngClass]="task.priority.toLowerCase()">{{ task.priority }}</span>
+        </div>
+        <div class="task-body">
+          <p>{{ task.description | slice:0:100 }}{{ task.description.length > 100 ? '...' : '' }}</p>
+        </div>
+        <div class="task-footer">
+          <span class="deadline">Due: {{ task.deadline | date }}</span>
+          <span class="status" [ngClass]="task.status.toLowerCase()">{{ task.status }}</span>
+        </div>
+      </div>
+      
+      <div *ngIf="filteredTasks.length === 0" class="no-tasks">
+        No tasks found.
+      </div>
+    </div>
+  </div>

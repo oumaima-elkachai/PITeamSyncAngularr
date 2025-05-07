@@ -1,0 +1,585 @@
+<!-- task-list.component.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Tasks</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ===== GLOBAL STYLING ===== */
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        .container {
+            max-width: 1200px;
+            padding: 0 20px;
+        }
+
+        /* ===== MAIN CONTENT AREA ===== */
+        .main-content {
+            margin-left: 280px;
+            min-height: 100vh;
+            background: linear-gradient(180deg, #f0f4ff 0%, #f5f7fa 100%);
+            transition: all 0.3s;
+        }
+
+        .content-wrapper {
+            padding: 0;
+        }
+
+        /* ===== HEADER SECTION ===== */
+        .dashboard-header {
+            background: #fff;
+            padding: 40px 0 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            position: relative;
+        }
+
+        .dashboard-header:after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #4a6cf7, #6e8cff, #9ab5ff);
+        }
+
+        .bg-primary-soft {
+            background-color: rgba(74, 108, 247, 0.1);
+            color: #4a6cf7;
+            font-weight: 500;
+            font-size: 0.85rem;
+            padding: 6px 12px;
+        }
+
+        .dashboard-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 8px 0;
+            letter-spacing: -0.5px;
+        }
+
+        .dashboard-subtitle {
+            color: #64748b;
+            font-size: 1.1rem;
+            margin-bottom: 0;
+        }
+
+        /* ===== BUTTON STYLES ===== */
+        .btn-primary {
+            background: linear-gradient(45deg, #4a6cf7, #6d8bff);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(74, 108, 247, 0.25);
+        }
+
+        .btn-outline-secondary {
+            background: transparent;
+            color: #64748b;
+            border: 1px solid #e2e8f0;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-outline-secondary:hover {
+            background: #f1f5f9;
+        }
+
+        .btn-sm {
+            padding: 8px 12px;
+            font-size: 0.875rem;
+        }
+
+        /* ===== FILTER CARD STYLING ===== */
+        .filter-card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            position: relative;
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+            border: 1px solid #f1f5f9;
+        }
+
+        .filter-card .card-body {
+            padding: 24px;
+        }
+
+        .form-label {
+            color: #64748b;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .form-select {
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-weight: 500;
+            color: #1e293b;
+            background-position: right 16px center;
+        }
+
+        .form-select:focus {
+            border-color: #4a6cf7;
+            box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.1);
+        }
+
+        /* ===== TASK CARD STYLES ===== */
+        .task-card {
+            border-radius: 12px;
+            background: white;
+            transition: all 0.2s;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+            border: 1px solid #f1f5f9;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .task-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .task-status-indicator {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            border-radius: 4px 0 0 4px;
+        }
+
+        .task-status-todo {
+            background: linear-gradient(to bottom, #64748b, #94a3b8);
+        }
+
+        .task-status-in-progress {
+            background: linear-gradient(to bottom, #4a6cf7, #6d8bff);
+        }
+
+        .task-status-done {
+            background: linear-gradient(to bottom, #10b981, #34d399);
+        }
+
+        .task-card .card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+
+        .task-card .card-body {
+            padding: 22px;
+            padding-left: 26px;
+        }
+
+        .task-description {
+            color: #64748b;
+            font-size: 0.925rem;
+            margin-bottom: 16px;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* ===== BADGE STYLES ===== */
+        .badge {
+            font-weight: 500;
+            padding: 0.5em 0.75em;
+            border-radius: 8px;
+        }
+
+        .bg-success {
+            background: linear-gradient(45deg, #10b981, #34d399) !important;
+        }
+
+        .bg-primary {
+            background: linear-gradient(45deg, #4a6cf7, #6d8bff) !important;
+        }
+
+        .bg-secondary {
+            background: linear-gradient(45deg, #64748b, #94a3b8) !important;
+        }
+
+        .bg-warning {
+            background: linear-gradient(45deg, #f59e0b, #fbbf24) !important;
+        }
+
+        /* ===== PROGRESS BAR ===== */
+        .progress {
+            height: 4px;
+            border-radius: 2px;
+            background: #f1f5f9;
+            overflow: hidden;
+            margin: 12px 0;
+        }
+
+        .progress-bar {
+            background: linear-gradient(45deg, #4a6cf7, #6d8bff);
+        }
+
+        /* ===== LOADING SPINNER ===== */
+        .spinner-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 60px 0;
+        }
+
+        .spinner-border {
+            color: #4a6cf7;
+            height: 3rem;
+            width: 3rem;
+        }
+
+        /* ===== ATTACHMENT STYLES ===== */
+        .attachments-section h6 {
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .attachments-section a {
+            color: #4a6cf7;
+            text-decoration: none;
+        }
+
+        .attachments-section a:hover {
+            text-decoration: underline;
+        }
+
+        .btn-link {
+            color: #4a6cf7;
+            text-decoration: none;
+            padding: 0;
+        }
+
+        .btn-link.text-danger {
+            color: #ef4444 !important;
+        }
+
+        /* ===== EMPTY STATE ===== */
+        .empty-state {
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            color: #94a3b8;
+            margin-bottom: 16px;
+        }
+
+        .empty-state p {
+            color: #64748b;
+            font-size: 1.1rem;
+        }
+
+        /* ===== ALERT STYLES ===== */
+        .alert {
+            border-radius: 12px;
+            padding: 16px;
+            border: none;
+        }
+
+        .alert-warning {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+        }
+
+        .alert-danger {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        /* ===== SECTION SEPARATOR ===== */
+        .section-divider {
+            height: 1px;
+            background: #e2e8f0;
+            margin: 16px 0;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 991px) {
+            .main-content {
+                margin-left: 0;
+            }
+
+            .dashboard-header {
+                padding: 30px 0 20px;
+            }
+
+            .dashboard-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Main Structure -->
+    <app-admin-header></app-admin-header>
+    <app-admin-sidebar></app-admin-sidebar>
+
+    <div class="main-content">
+        <div class="content-wrapper">
+            <!-- Header Section -->
+            <div class="dashboard-header">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6">
+                            <div class="header-content">
+                                <span class="badge bg-primary-soft rounded-pill mb-2">Tasks</span>
+                                <h1 class="dashboard-title">Project's Tasks !</h1>
+                                <p class="dashboard-subtitle">View and manage tasks for this project</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 d-flex justify-content-lg-end mt-3 mt-lg-0">
+                            <button class="btn-outline-secondary" [routerLink]="['/projectsadmin', projectId]">
+                                <i class="bi bi-arrow-left"></i> Back to Project
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container">
+                <!-- Filters -->
+                <div class="filter-card">
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label">Status</label>
+                                <select class="form-select" [(ngModel)]="statusFilter" (change)="loadTasks()">
+                                    <option value="ALL">All Statuses</option>
+                                    <option value="TODO">To Do</option>
+                                    <option value="IN_PROGRESS">In Progress</option>
+                                    <option value="DONE">Done</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Assignee</label>
+                                <select class="form-select" [(ngModel)]="assigneeFilter" (change)="loadTasks()">
+                                    <option value="ALL">All Assignees</option>
+                                    <option *ngFor="let employee of employees" [value]="employee.id">
+                                        {{ employee.name }}
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Sort By</label>
+                                <select class="form-select" [(ngModel)]="sortBy" (change)="loadTasks()">
+                                    <option value="deadline">Deadline</option>
+                                    <option value="title">Title</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loading State -->
+                <div *ngIf="isLoading" class="spinner-container">
+                    <div class="spinner-border" role="status"></div>
+                    <p class="mt-3">Loading tasks...</p>
+                </div>
+
+                <!-- Error State -->
+                <div *ngIf="errorMessage" class="alert alert-danger">
+                    {{ errorMessage }}
+                </div>
+
+                <!-- Task Cards Grid -->
+                <div *ngIf="!isLoading && !errorMessage" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                    <div class="col" *ngFor="let task of filteredTasks">
+                        <div class="task-card h-100">
+                            <div class="task-status-indicator" [ngClass]="{
+                'task-status-todo': task.status === 'TODO',
+                'task-status-in-progress': task.status === 'IN_PROGRESS',
+                'task-status-done': task.status === 'DONE'
+              }"></div>
+
+                            <div class="card-body">
+                                <!-- Task Header -->
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h5 class="card-title mb-0">{{ task.title }}</h5>
+                                    <span class="badge" [ngClass]="{
+                  'bg-secondary': task.status === 'TODO',
+                  'bg-primary': task.status === 'IN_PROGRESS',
+                  'bg-success': task.status === 'DONE'
+                }">
+                                        {{ task.status === 'TODO' ? 'To Do' :
+                                        task.status === 'IN_PROGRESS' ? 'In Progress' : 'Done' }}
+                                    </span>
+                                </div>
+
+                                <!-- Task Description -->
+                                <p class="task-description">{{ task.description || 'No description provided' }}</p>
+
+                                <div class="mb-3">
+                                    <h6 class="text-muted">Required Skills:</h6>
+                                    <ng-container *ngIf="task.requiredSkills?.length; else noSkills">
+                                        <span *ngFor="let skill of task.requiredSkills" class="badge bg-secondary me-1">
+                                            {{ skill }}
+                                        </span>
+                                    </ng-container>
+                                    <ng-template #noSkills>
+                                        <small class="text-muted">No skills specified</small>
+                                    </ng-template>
+                                </div>
+
+                                <!-- Task Details -->
+                                <div class="mb-3">
+                                    <small class="text-muted d-block mb-2">
+                                        <i class="bi bi-person me-1"></i>
+                                        {{ getEmployeeName(task.employeeId || '') }}
+                                    </small>
+                                    <small class="text-muted">
+                                        <i class="bi bi-calendar me-1"></i>
+                                        Due: {{ task.deadline | date }}
+                                    </small>
+                                </div>
+
+                                <!-- Progress Bar -->
+                                <div class="progress">
+                                    <div class="progress-bar" [style.width.%]="task.status === 'DONE' ? 100 : 
+                               task.status === 'IN_PROGRESS' ? 50 : 10"></div>
+                                </div>
+
+                                <div class="section-divider"></div>
+
+                                <!-- Extension Request -->
+                                <div *ngIf="task.extensionStatus === 'PENDING'"
+                                    class="alert alert-warning py-2 mt-3 mb-3">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <i class="bi bi-clock-history me-2"></i>
+                                            Extension requested
+                                            <span *ngIf="task.requestedExtensionDate"> until {{
+                                                task.requestedExtensionDate | date }}</span>
+                                        </div>
+                                        <div>
+                                            <button class="btn btn-sm btn-success me-1"
+                                                (click)="approveExtension(task.id!)">
+                                                <i class="bi bi-check-lg"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-danger" (click)="rejectExtension(task.id!)">
+                                                <i class="bi bi-x-lg"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Attachments -->
+                                <div class="attachments-section mb-3">
+                                    <h6 class="text-muted">Attachments:</h6>
+                                    <div *ngIf="loadingAttachments[task.id!]; else attachmentsLoaded">
+                                        <div class="spinner-border spinner-border-sm" role="status"></div>
+                                        <span class="ms-2 small">Loading...</span>
+                                    </div>
+                                    <ng-template #attachmentsLoaded>
+                                        <div *ngIf="task.attachments?.length; else noAttachments">
+                                            <div *ngFor="let attachment of task.attachments"
+                                                class="d-flex align-items-center mb-1">
+                                                <i class="bi bi-paperclip me-2"></i>
+                                                <span class="text-truncate" style="max-width: 150px">
+                                                    {{ attachment.fileName }}
+                                                  </span>
+                                                  <div class="ms-auto">
+                                                    <button class="btn btn-link btn-sm p-0 ms-2"
+                                                      (click)="downloadAttachment(attachment.id)">
+                                                      <i class="bi bi-download"></i>
+                                                    </button>
+                                                    <button class="btn btn-link btn-sm text-danger p-0 ms-2"
+                                                      (click)="deleteAttachment(attachment.id)">
+                                                      <i class="bi bi-trash"></i>
+                                                    </button>
+                                                  </div>
+                                            </div>
+                                        </div>
+                                        <ng-template #noAttachments>
+                                            <div class="text-muted small">No attachments</div>
+                                        </ng-template>
+                                    </ng-template>
+                                </div>
+
+                                <div class="links-section mt-2">
+                                    <h6 class="text-muted">Links:</h6>
+                                    <div *ngFor="let link of task.links" class="link-item">
+                                        <a [href]="link.url" target="_blank" class="text-decoration-none">
+                                            <i class="bi bi-link-45deg me-2"></i>
+                                            {{ link.description || link.url }}
+                                        </a>
+                                    </div>
+                                </div>
+
+
+                                <!-- Actions -->
+                                <div class="d-flex justify-content-end gap-2">
+                                    <button class="btn btn-sm btn-outline-secondary"
+                                        [routerLink]="['/projects', projectId, 'tasks', task.id, 'edit']">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger" (click)="deleteTask(task.id!)">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Empty State -->
+                <div *ngIf="!isLoading && !errorMessage && filteredTasks.length === 0" class="empty-state">
+                    <i class="bi bi-clipboard-x"></i>
+                    <p>No tasks found matching your filters</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <app-admin-footer></app-admin-footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
