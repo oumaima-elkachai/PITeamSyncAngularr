@@ -117,10 +117,16 @@ export class EventService {
   }
 
   createParticipation(eventId: string): Observable<any> {
+<<<<<<< Updated upstream
     const participantId = "6804ad54c942d7524f4c8628";
     console.log(`Attempting to add participant ${participantId} to event ${eventId}`);
     
     // Using the endpoint that matches backend controller
+=======
+    const participantId = "6811762fd5247b53df68b578"; // Updated participant ID
+    console.log(`Attempting to add participant ${participantId} to event ${eventId}`);
+    
+>>>>>>> Stashed changes
     return this.addParticipant(eventId, participantId).pipe(
       map(response => ({
         success: true,

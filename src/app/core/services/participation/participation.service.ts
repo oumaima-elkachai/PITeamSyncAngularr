@@ -9,6 +9,15 @@ import { Participant } from 'src/app/features/participants/models/participant.mo
 import { EventStatistics } from 'src/app/features/participation/models/event-statistics.model';
 import { AuditLog } from 'src/app/features/events/models/AuditLog.model';
 
+<<<<<<< Updated upstream
+=======
+interface ConfirmationResponse {
+  error?: string;
+  message?: string;
+  participationId?: string;
+}
+
+>>>>>>> Stashed changes
 @Injectable({
   providedIn: 'root'
 })
@@ -21,6 +30,7 @@ export class ParticipationService {
 
   confirmParticipation(id: string): Observable<any> {
     const url = `${this.API_URL}/confirm/${id}`;
+<<<<<<< Updated upstream
     const headers = new HttpHeaders()
       .set('Content-Type', 'application/json');
 
@@ -37,6 +47,39 @@ export class ParticipationService {
       catchError(error => {
         console.error('Confirmation failed:', error);
         const errorMessage = error.error?.message || 'Failed to send confirmation email';
+=======
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+
+    console.log('Sending confirmation request:', { url, id });
+
+    return this.http.put<ConfirmationResponse>(url, {}, { headers }).pipe(
+      map(response => {
+        if (response.error === 'Authentication failed') {
+          // Participation was confirmed but email failed
+          console.warn('Participation confirmed but email failed:', response.message);
+          return {
+            success: true,
+            warning: 'Participation confirmed but confirmation email could not be sent',
+            participationId: response.participationId
+          };
+        }
+        return {
+          success: true,
+          message: 'Participation confirmed successfully'
+        };
+      }),
+      catchError(error => {
+        console.error('Confirmation failed:', error);
+        if (error.status === 200 && error.error?.message?.includes('email failed')) {
+          // Handle partial success case
+          return of({
+            success: true,
+            warning: 'Participation confirmed but confirmation email could not be sent',
+            participationId: error.error.participationId
+          });
+        }
+        const errorMessage = error.error?.message || 'Failed to confirm participation';
+>>>>>>> Stashed changes
         return throwError(() => new Error(errorMessage));
       })
     );
@@ -109,6 +152,15 @@ export class ParticipationService {
       .pipe(catchError(this.handleError));
   }
 
+<<<<<<< Updated upstream
+=======
+  getParticipationsByEventId(eventId: string): Observable<Participation[]> {
+    return this.http.get<Participation[]>(`${this.API_URL}/event/${eventId}`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+>>>>>>> Stashed changes
   getAllParticipations(): Observable<Participation[]> {
     return this.http.get<any[]>(this.API_URL).pipe(
       mergeMap(participations => {
@@ -193,6 +245,21 @@ export class ParticipationService {
     return this.http.get<EventStatistics>(`${this.API_URL}/statistics/${eventId}`);
   }
 
+<<<<<<< Updated upstream
+=======
+  getParticipantEmailForParticipation(participantId: string): Observable<string> {
+    return this.getParticipantEmail(participantId);
+  }
+
+  getParticipantNameForParticipation(participantId: string): Observable<string> {
+    return this.http.get<string>(`${this.API_URL}/participant/${participantId}/name`);
+  }
+
+  getEventTitleForParticipation(eventId: string): Observable<string> {
+    return this.getEventTitle(eventId);
+  }
+
+>>>>>>> Stashed changes
   private mapParticipationStatus(status: string): ParticipationStatus {
     switch(status) {
       case 'PENDING':
@@ -208,6 +275,7 @@ export class ParticipationService {
     }
   }
 
+<<<<<<< Updated upstream
   private handleError(error: any): Observable<never> {
     console.error('An error occurred:', error);
     let errorMessage = 'An error occurred while processing your request.';
@@ -219,6 +287,22 @@ export class ParticipationService {
     }
     
     return throwError(() => errorMessage);
+=======
+  private handleError(error: HttpErrorResponse): Observable<never> {
+    let errorMessage = 'An error occurred';
+    if (error.error instanceof ErrorEvent) {
+      // Client-side error
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      // Backend error
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+      if (error.status === 404) {
+        errorMessage = `No participations found. Please verify the event ID.`;
+      }
+    }
+    console.error(errorMessage);
+    return throwError(() => new Error(errorMessage));
+>>>>>>> Stashed changes
   }
 
   private handleDetailedError(error: HttpErrorResponse) {

@@ -17,6 +17,10 @@ import { ScheduleService } from '../../../../core/services/schedule/schedule.ser
   styleUrls: ['./events-calendar.component.css']
 })
 export class EventsCalendarComponent implements OnInit {
+<<<<<<< Updated upstream
+=======
+  currentUserId: string = ''; // Add this property
+>>>>>>> Stashed changes
   @Input() numberOfDays: number = 30;
   @Input() events: Event[] = [];
   @Input() initialView: string = 'dayGridMonth';

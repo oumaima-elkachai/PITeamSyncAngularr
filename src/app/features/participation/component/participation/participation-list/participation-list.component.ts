@@ -517,6 +517,7 @@ export class ParticipationListComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   onConfirm(participationId: string): void {
+<<<<<<< Updated upstream
     console.log('Confirming participation:', participationId);
 
     this.participationService.confirmParticipation(participationId)
@@ -533,6 +534,20 @@ export class ParticipationListComponent implements OnInit, OnDestroy, AfterViewI
           this.snackBar.open('Error confirming participation: ' + error.message, 'Close', {
             duration: 3000
           });
+=======
+    this.loading = true;
+    this.participationService.confirmParticipation(participationId)
+      .subscribe({
+        next: () => {
+          this.loading = false;
+          this.toasterService.success('Participation confirmed successfully. Confirmation email has been sent.');
+          this.loadParticipations(); // Refresh the list
+        },
+        error: (error) => {
+          this.loading = false;
+          this.toasterService.error(error.message || 'Failed to confirm participation');
+          console.error('Error confirming participation:', error);
+>>>>>>> Stashed changes
         }
       });
   }
