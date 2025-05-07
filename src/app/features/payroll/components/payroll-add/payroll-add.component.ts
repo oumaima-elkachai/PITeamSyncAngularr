@@ -18,7 +18,6 @@ export class PayrollsAddComponent implements OnInit {
     bonus: 0,
     payDate: ''
   };
-
   employees: Employee[] = [];
   payrolls: Payroll[] = [];
   message: string = '';

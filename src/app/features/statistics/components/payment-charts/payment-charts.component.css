@@ -24,7 +24,7 @@ canvas {
 
 .badge-title {
  display: inline-block;
- background: linear-gradient(to right, #facc15, #fbbf24);
+ background: linear-gradient(to right, #fbbf24, #fbbf24);
  color: #1f2937;
  padding: 10px 24px;
  font-weight: bold;

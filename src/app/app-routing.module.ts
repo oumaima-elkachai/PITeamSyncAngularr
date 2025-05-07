@@ -18,6 +18,7 @@ import { AnomalyListComponent } from './features/anomaly-list/components/anomaly
 import { PaymentChartsComponent } from './features/statistics/components/payment-charts/payment-charts.component';
 import { CalendartestComponent } from './features/payment/components/calendartest/calendartest.component';
 import { ProjectBudgetAnalyticsComponent } from './features/project-budget/components/project-budget-analytics/project-budget-analytics.component';
+import { UserHomeComponent } from './shared/components/user/user-home/user-home.component';
 
 
 /*const routes: Routes = [
@@ -66,12 +67,16 @@ const routes: Routes = [
     path: 'user',
     component: UserLayoutComponent,
     children: [
+      { path: '', component: UserHomeComponent}, 
       { path: 'payrolls/list', component: PayrollUserComponent },
       { path: 'payment/calendar', component: CalendarComponent },
       { path: 'testcalendar', component: CalendartestComponent },
+     
 
     ]
   },
+  
+  
 ];
 
 @NgModule({

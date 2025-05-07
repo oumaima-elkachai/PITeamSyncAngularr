@@ -1,120 +1,71 @@
-/* Styles du calendrier */
-.fc-event {
- border-radius: 6px;
- padding: 6px;
- background-color: #f8f9fa;
- font-size: 12px;
- line-height: 1.4;
- box-shadow: 0 0 3px rgba(0,0,0,0.1);
+.section-bg {
+  background-color: #f8f9fa;
+  padding-top: 15vh;
+  padding-bottom: 5vh;
 }
 
-/* Personnalisation du contenu des événements */
-.fc-event-title {
- color: #28a745;  /* Titre de l'événement en vert */
- font-weight: bold;
- margin-bottom: 4px;
+.main-wrapper {
+  max-width: 900px;
+  margin: auto;
 }
 
-.fc-event-subtitle {
- color: #17a2b8;  /* Sous-titre en bleu */
- font-weight: normal;
+.calendar {
+  background-color: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
-/* Personnalisation de la sidebar */
-.sidebar {
- background-color: #ffffff;
- border-radius: 10px;
- padding: 20px;
- box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+.status-card {
+  background-color: #ffffff;
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
 }
 
-.sidebar .event-list {
- margin-top: 20px;
+.payroll-card {
+  background-color: #ffffff;
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  padding: 2.5rem;
+  max-width: 900px;
+  margin: auto;
 }
 
-.event-list .d-flex {
- border-bottom: 1px solid #f0f0f0;
- padding-bottom: 10px;
- margin-bottom: 10px;
+.section-title {
+  text-transform: uppercase;
+  color: #6c757d;
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.05rem;
 }
 
-.event-list .date-box {
- width: 60px;
- background-color: #f8f9fa;
- border-radius: 6px;
- padding: 10px;
- text-align: center;
+.download-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease;
 }
 
-.event-info {
- margin-left: 15px;
+.download-btn:hover {
+  transform: scale(1.2);
 }
 
-.event-info .title {
- font-size: 14px;
- font-weight: bold;
- color: #333;
+.notification {
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.event-info .subtitle {
- font-size: 12px;
- color: #666;
+.success {
+  background-color: #28a745;
 }
 
-/* Bouton "New Event" */
-.sidebar .btn {
- margin-top: 20px;
- padding: 12px;
- font-size: 16px;
- background-color: #007bff;
- color: white;
- border: none;
- border-radius: 5px;
+.error {
+  background-color: #dc3545;
 }
-
-.sidebar .btn:hover {
- background-color: #0056b3;
-}
-
-/* Placer le calendrier à droite avec un peu d'espace */
-.calendar-main {
- flex-grow: 1;
- margin-left: 20px;
-}
-.custom-modal {
- position: absolute;
- top: 0;
- left: 0;
- width: 100%;
- height: 100%;
- background-color: rgba(0, 0, 0, 0.4); /* Fond sombre */
- z-index: 1050; /* Au-dessus de tout */
- display: flex;
- justify-content: center;
- align-items: center;
-}
-
-.modal-content {
- background: white;
- border-radius: 1rem;
- max-width: 800px;
- width: 90%;
- box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
- animation: fadeIn 0.3s ease-in-out;
-}
-
-@keyframes fadeIn {
- from {
-   opacity: 0;
-   transform: scale(0.95);
- }
- to {
-   opacity: 1;
-   transform: scale(1);
- }
-}
-
-
-
-
-
