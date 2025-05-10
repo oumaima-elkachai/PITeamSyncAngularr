@@ -1,0 +1,52 @@
+<!-- Main Wrapper -->
+<main class="main-wrapper">
+  <div class="container-fluid">
+    <div class="inner-contents">
+      <div class="page-header d-flex align-items-center justify-content-between mr-bottom-30">
+        <div class="left-part">
+          <h2 class="text-dark">Edit a Payroll</h2>
+          <p class="text-gray mb-0">Please fill in the information below to edit an existing payroll record.</p>
+        </div>
+        <div class="right-part">
+          <form class="search-form w-auto" action="https://wpthemebooster.com/demo/themeforest/html/kleon/search.php">
+            <input type="text" name="search" class="bg-white form-control" placeholder="Search">
+            <button type="submit" class="btn"><img src="assets/img/svg/search.svg" alt=""></button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Edit Form -->
+      <div class="card border-0 p-5">
+        <div class="card-header bg-transparent border-0 p-0 d-flex align-items-center justify-content-between gap-3">
+          <h6 class="mb-0">Payroll Details</h6>
+        </div>
+
+        <div class="card-body p-0 pt-4">
+          <!-- Form is shown only if 'payroll' is defined -->
+          <div *ngIf="payroll">
+            <form (ngSubmit)="onSubmit()" #payrollForm="ngForm">
+              <div class="form-group">
+                <label class="form-label" for="salary">Salary</label>
+                <input type="number" class="form-control" id="salary" [(ngModel)]="payroll.salary" name="salary" placeholder="Salary" required />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="bonus">Bonus</label>
+                <input type="number" class="form-control" id="bonus" [(ngModel)]="payroll.bonus" name="bonus" placeholder="Bonus" />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="payDate">Pay Date</label>
+                <input type="date" class="form-control" id="payDate" [(ngModel)]="payroll.payDate" name="payDate" required />
+              </div>
+
+              <div class="button_group">
+                <button type="submit" class="btn btn-primary" [disabled]="payrollForm.invalid">Update Payroll</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

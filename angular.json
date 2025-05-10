@@ -1,0 +1,121 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "projetttttttt": {
+      "projectType": "application",
+      "schematics": {},
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/projetttttttt",
+            "index": "src/index.html",
+            "main": "src/main.ts",
+            "polyfills": [
+              "zone.js",
+              "src/polyfills.ts"
+            ],
+            "tsConfig": "tsconfig.app.json",
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+
+            ],
+            "styles": [
+             "src/styles.css",
+              "@angular/material/prebuilt-themes/indigo-pink.css",
+              "node_modules/ngx-toastr/toastr.css"
+             
+            ],
+            "scripts": [
+            
+             
+            ],
+
+            "allowedCommonJsDependencies": [
+              "sockjs-client",
+              "@stomp/stompjs"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "browserTarget": "projetttttttt:build:production"
+            },
+            "development": {
+              "browserTarget": "projetttttttt:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "projetttttttt:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
+            "tsConfig": "tsconfig.spec.json",
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "src/styles.css",
+              "@angular/material/prebuilt-themes/indigo-pink.css",
+              "node_modules/ngx-toastr/toastr.css"
+             
+            ],
+            "scripts": [
+             
+
+            ]
+          }
+        }
+        
+      }
+    }
+  },
+   "cli": {
+    "analytics": "02a2d4f9-8242-44a6-b2c7-544e2061a85e"
+  }
+}

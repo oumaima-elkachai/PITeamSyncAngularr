@@ -1,0 +1,221 @@
+<app-admin-header></app-admin-header>
+
+<div class="container-fluid pt-5">
+  <div class="row">
+    <!-- Sidebar -->
+    <div class="col-md-3">
+      <app-admin-sidebar></app-admin-sidebar>
+    </div>
+
+    <!-- Main Content -->
+    <div class="col-md-9">
+      <div class="d-flex justify-content-center">
+        <div class="card border-0 shadow-sm p-4 w-100" style="max-width: 1000px; background: #fff; border-radius: 15px;">
+          <div class="d-flex justify-content-between align-items-center flex-wrap px-3 py-4">
+            
+            <!-- Lines per page -->
+            <div class="d-flex align-items-center mb-3 mb-md-0">
+              <label class="me-2 fw-semibold">Lines per page:</label>
+              <select class="form-select form-select-sm w-auto rounded-pill" [(ngModel)]="itemsPerPage" (change)="changeItemsPerPage(itemsPerPage)">
+                <option *ngFor="let size of pageSizes" [value]="size">{{ size }}</option>
+              </select>
+            </div>
+
+            <!-- Pagination Buttons -->
+            <div class="d-flex align-items-center gap-2">
+              <button class="btn btn-sm btn-outline-primary rounded-pill"
+                      (click)="changePage(currentPage - 1)"
+                      [disabled]="currentPage === 1">
+                Previous
+              </button>
+
+              <ng-container *ngFor="let page of pages">
+                <button class="btn btn-sm rounded-pill"
+                        [ngClass]="{'btn-primary text-white': currentPage === page, 'btn-outline-primary': currentPage !== page}"
+                        (click)="changePage(page)">
+                  {{ page }}
+                </button>
+              </ng-container>
+
+              <button class="btn btn-sm btn-outline-primary rounded-pill"
+                      (click)="changePage(currentPage + 1)"
+                      [disabled]="currentPage === totalPages">
+                Next
+              </button>
+            </div>
+
+          </div>
+
+          <!-- Card Header -->
+          <div class="card-header bg-transparent border-0 pb-3 d-flex align-items-center justify-content-between">
+            <h4 class="fw-bold mb-0">Employee Status</h4>
+          </div>
+
+          <!-- Search -->
+          <div class="d-flex justify-content-end mb-4">
+            <div class="input-group" style="width: 300px;">
+              <input 
+                #searchInput
+                type="text" 
+                class="form-control rounded-pill" 
+                placeholder="Search..."
+                (input)="applyFilter(searchInput.value)">
+              <span class="input-group-text bg-white border-0">
+                <i class="bi bi-search"></i>
+              </span>
+            </div>
+          </div>
+
+          <!-- Table -->
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table align-middle text-center table-hover user-table">
+                <thead class="table-light">
+                  <tr>
+                    <th>Photo</th>
+
+                    <th (click)="sortUsers('name')" class="sortable">
+                      Employee
+                      <i *ngIf="sortField === 'name'" 
+                        class="bi" 
+                        [ngClass]="{'bi-caret-up-fill': sortDirection === 'asc', 'bi-caret-down-fill': sortDirection === 'desc'}"></i>
+                    </th>
+
+                    <th (click)="sortUsers('telephone')" class="sortable">
+                      Telephone
+                      <i *ngIf="sortField === 'telephone'" 
+                        class="bi" 
+                        [ngClass]="{'bi-caret-up-fill': sortDirection === 'asc', 'bi-caret-down-fill': sortDirection === 'desc'}"></i>
+                    </th>
+
+                    <th>Status</th>
+
+                    <th (click)="sortUsers('role')" class="sortable">
+                      Role
+                      <i *ngIf="sortField === 'role'" 
+                        class="bi" 
+                        [ngClass]="{'bi-caret-up-fill': sortDirection === 'asc', 'bi-caret-down-fill': sortDirection === 'desc'}"></i>
+                    </th>
+
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr *ngFor="let user of paginatedUsers">
+                    <td>
+                      <img [src]="user.photoUrl || 'assets/img/default-profile.png'" 
+                        alt="User Photo" 
+                        class="rounded-circle border border-2" 
+                        width="45" 
+                        height="45">
+                    </td>
+
+                    <td>
+                      <div class="d-flex flex-column align-items-center">
+                        <h6 class="fw-bold mb-0">{{ user.name }}</h6>
+                        <small class="text-muted">{{ user.email }}</small>
+                      </div>
+                    </td>
+
+                    <td>{{ user.telephone || 'N/A' }}</td>
+
+                    <td>
+                      <span *ngIf="user.status === 'Active'" class="badge rounded-pill bg-success">
+                        <i class="bi bi-check-circle-fill"></i> Active
+                      </span>
+                      <span *ngIf="user.status === 'Inactive'" class="badge rounded-pill bg-danger">
+                        <i class="bi bi-x-circle-fill"></i> Inactive
+                      </span>
+                      <span *ngIf="user.status !== 'Active' && user.status !== 'Inactive'" class="badge rounded-pill bg-secondary">
+                        <i class="bi bi-question-circle-fill"></i> Unknown
+                      </span>
+                    </td>
+
+                    <td>{{ user.role }}</td>
+
+                    <td>
+                      <div class="d-flex justify-content-center gap-2">
+                        <button class="btn btn-outline-danger btn-sm" (click)="deleteUser(user.id!)" title="Delete">
+                          <i class="bi bi-trash"></i>
+                        </button>
+
+                        <ng-container [ngSwitch]="user.status">
+                          <button *ngSwitchCase="'Active'" 
+                                  class="btn btn-outline-warning btn-sm" 
+                                  (click)="blockUser(user.id!)" 
+                                  title="Block User">
+                            <i class="bi bi-slash-circle"></i>
+                          </button>
+
+                          <button *ngSwitchCase="'Inactive'" 
+                                  class="btn btn-outline-success btn-sm" 
+                                  (click)="unblockUser(user.id!)" 
+                                  title="Unblock User">
+                            <i class="bi bi-check-circle"></i>
+                          </button>
+                        </ng-container>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Pagination + Lines per Page -->
+         
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-admin-footer></app-admin-footer>
+
+<!-- Styles to Make it Beautiful -->
+<style>
+.user-table tbody tr {
+  transition: all 0.3s ease;
+}
+
+.user-table tbody tr:hover {
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.user-table th, .user-table td {
+  vertical-align: middle;
+}
+
+/* Sorting cursor and hover */
+.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.sortable:hover {
+  color: #007bff;
+  text-decoration: underline;
+}
+
+/* Pagination and Select styling */
+.pagination-wrapper select {
+  min-width: 70px;
+}
+
+button.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+button.btn-primary:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
+
+button.btn-outline-primary:hover {
+  background-color: #007bff;
+  color: white;
+}
+</style>

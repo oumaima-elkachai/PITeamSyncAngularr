@@ -1,0 +1,59 @@
+<main class="main-wrapper">
+
+  <main class="dashboard">
+    <!-- Header Section -->
+    <header class="dashboard-header">
+      <div class="header-content">
+        <div class="header-title">
+          <h1>Events Dashboard</h1>
+          <p class="subtitle">Manage your events and calendar</p>
+        </div>
+        <div class="header-actions">
+          <div class="view-toggle">
+            <button [class.active]="viewMode === 'list'" (click)="toggleView('list')">
+              <i class="fas fa-list"></i> List
+            </button>
+            <button [class.active]="viewMode === 'calendar'" (click)="toggleView('calendar')">
+              <i class="fas fa-calendar"></i> Calendar
+            </button>
+            <button [class.active]="viewMode === 'audit'" (click)="toggleView('audit')">
+              <i class="fas fa-history"></i> Audit Log
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </header>
+
+    <!-- Main Content -->
+    <div class="dashboard-content" [class.loading]="isLoading">
+      <div>
+        <!-- Main View Area -->
+        <section class="main-view">
+          <div *ngIf="viewMode === 'list'" class="events-list-container">
+            <app-events-list [events]="events" (editEvent)="loadEventForEdit($event)"
+              (deleteEvent)="handleEventDeletion($event)">
+            </app-events-list>
+          </div>
+
+          <div *ngIf="viewMode === 'calendar'" class="calendar-container">
+            <app-events-calendar [events]="events"></app-events-calendar>
+          </div>
+
+          <div *ngIf="viewMode === 'audit'" class="audit-log-container">
+            <app-audit-log-list></app-audit-log-list>
+          </div>
+        </section>
+
+
+      </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div class="loading-overlay" *ngIf="isLoading">
+      <div class="spinner"></div>
+    </div>
+  </main>
+
+
+</main>

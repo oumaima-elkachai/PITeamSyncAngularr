@@ -1,0 +1,88 @@
+<section class="section-bg">
+  <main class="main-wrapper container">
+
+    <!-- Calendar Display -->
+    <div class="calendar shadow-sm p-4 rounded-4 bg-white">
+      <full-calendar [options]="calendarOptions"></full-calendar>
+    </div>
+
+    <!-- Predicted Status Display -->
+    <div *ngIf="selectedOption === 'prediction' && result === 'prediction'" class="status-card mt-4">
+      <h4 class="mb-3">Prediction Result</h4>
+      <p>
+        <strong>Status:</strong>
+        <span [ngClass]="predictedStatus === 1 ? 'text-success fw-semibold' : 'text-danger fw-semibold'">
+          {{ predictedStatus === 1 ? 'Paid' : 'Late' }}
+        </span>
+      </p>
+    </div>
+
+    <!-- Payroll Slip Display -->
+    <div *ngIf="result === 'payroll'" id="fiche-paie" class="mt-5">
+      <div class="payroll-card">
+        <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+          <div>
+            <h2 class="fw-bold mb-1">Payroll Slip</h2>
+            <small class="text-muted">Reference: {{ selectedPayment.referenceNumber }}</small>
+          </div>
+          <div class="d-flex align-items-center">
+            <span class="badge bg-primary text-white me-3" style="font-size: 1rem;">
+              Status: {{ selectedPayment.status }}
+            </span>
+            <button class="download-btn" title="Download the payroll slip" (click)="downloadPDF()">
+              <i class="fa-solid fa-download fs-5 text-primary"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <h6 class="section-title">Employee Information</h6>
+            <p><strong>Name:</strong> {{ selectedE.name }}</p>
+            <p><strong>ID:</strong> {{ selectedPayment.employeeId }}</p>
+            <p><strong>Email:</strong> {{ selectedE.email }}</p>
+            <p><strong>Department:</strong> {{ selectedE.department }}</p>
+          </div>
+          <div class="col-md-6">
+            <h6 class="section-title">Payment Details</h6>
+            <p><strong>Date:</strong> {{ selectedPayment.paymentDate | date:'longDate' }}</p>
+            <p><strong>Method:</strong> {{ selectedPayment.paymentMethod }}</p>
+            <p><strong>Frequency:</strong> {{ selectedPayment.recurrenceFrequency }}</p>
+            <p><strong>Amount:</strong> {{ selectedPayment.amount | currency:'TND' }}</p>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <h6 class="section-title">Salary Summary</h6>
+          <div class="row">
+            <div class="col-md-6">
+              <p><strong>Base Salary:</strong> {{ payrollE.salary | currency:'TND' }}</p>
+            </div>
+            <div class="col-md-6">
+              <p><strong>Bonus:</strong> {{ payrollE.bonus | currency:'TND' }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h6 class="section-title">Description</h6>
+          <p>{{ selectedPayment.description }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Salary Details -->
+    <div *ngIf="selectedOption === 'details' && result" class="status-card mt-4">
+      <h4 class="mb-3">Salary Details</h4>
+      <p><strong>Base Salary:</strong> {{ result.salary | currency:'TND' }}</p>
+      <p><strong>Bonus:</strong> {{ result.bonus | currency:'TND' }}</p>
+    </div>
+
+    <!-- Payment Status -->
+    <div *ngIf="selectedOption === 'status' && result" class="status-card mt-4">
+      <h4 class="mb-3">Payment Status</h4>
+      <p><strong>Status:</strong> {{ result.status }}</p>
+    </div>
+   
+  </main>
+</section>

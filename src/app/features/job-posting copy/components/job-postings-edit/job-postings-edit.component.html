@@ -1,0 +1,91 @@
+<app-admin-header></app-admin-header>
+<app-admin-sidebar></app-admin-sidebar>
+
+<main class="main-wrapper">
+    <div class="container-fluid">
+        <div class="inner-contents">
+            <div class="page-header d-flex align-items-center justify-content-between mb-4">
+                <div class="left-part">
+                    <h2 class="text-dark">Modifier l'Offre d'Emploi</h2>
+                    <p class="text-gray mb-0">Modifiez les informations de l'offre d'emploi</p>
+                </div>
+                <div class="right-part">
+                    <form class="search-form w-auto" action="https://wpthemebooster.com/demo/themeforest/html/kleon/search.php">
+                        <input type="text" name="search" class="bg-white form-control" placeholder="Rechercher...">
+                        <button type="submit" class="btn">
+                            <img src="assets/admin-template/img/svg/search.svg" alt="Rechercher">
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card border-0 p-5">
+                <div class="card-header bg-transparent border-0 p-0 d-flex align-items-center justify-content-between">
+                    <h6 class="mb-0">Formulaire de modification</h6>
+                </div>
+
+                <div class="card-body p-0 pt-4">
+                    <form id="edit-job-form" (ngSubmit)="updateJob()">
+                        <div class="form-group">
+                            <label for="title" class="form-label">Intitulé du poste</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="title"
+                                name="title"
+                                [(ngModel)]="job.title"
+                                placeholder="Intitulé du poste"
+                                required
+                            />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description" class="form-label">Description du poste</label>
+                            <textarea
+                                rows="5"
+                                class="form-control"
+                                id="description"
+                                name="description"
+                                [(ngModel)]="job.description"
+                                placeholder="Description du poste"
+                                required
+                            ></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="department" class="form-label">Département</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="department"
+                                name="department"
+                                [(ngModel)]="job.department"
+                                placeholder="Département (ex: IT, RH)"
+                                required
+                            />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="category" class="form-label">Catégorie du poste</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="category"
+                                name="category"
+                                [(ngModel)]="job.category"
+                                placeholder="Catégorie (ex: CDI, Stage, CDD)"
+                                required
+                            />
+                        </div>
+
+                        <div class="form-group text-right">
+                            <button type="submit" class="btn btn-primary">Mettre à jour</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<app-admin-footer></app-admin-footer>

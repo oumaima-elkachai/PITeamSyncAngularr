@@ -1,0 +1,152 @@
+<section class="section-box mt-40">
+  <div class="container">
+    <div class="row align-items-end">
+      <div class="col-lg-4">
+        <h2 class="section-title mb-20">Upcoming Events</h2>
+        <p class="text-md-lh28 color-black-5">{{ events.length }} events available</p>
+      </div>
+      <div class="col-lg-8 text-xl-end text-start">
+        <ul role="tablist" class="nav nav-right float-xl-end float-start">
+          <li><button class="active" (click)="filterEvents('all')">All Events</button></li>
+          <li><button (click)="filterEvents('upcoming')">Upcoming</button></li>
+          <li><button (click)="filterEvents('past')">Past Events</button></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-70">
+      <div *ngIf="loading" class="text-center">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+
+      <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+      <div class="row" *ngIf="!loading && !error">
+        <div class="col-lg-4 col-md-6" *ngFor="let event of events">
+          <div class="card-grid-2 hover-up" [style.background-color]="event.backgroundColor || '#ffffff'">
+            <div class="text-center card-grid-2-image">
+              <a [routerLink]="['/events', event.idEvent]">
+                <figure>
+                  <img [src]="event.imageUrl" alt="{{event.title}}" onerror="this.src='assets/images/default-event.jpg'">
+                </figure>
+              </a>
+              <label class="btn-urgent" *ngIf="event.typeS === EventStatus.PLANNED">{{event.typeS}}</label>
+            </div>
+            <div class="card-block-info">
+              <div class="row">
+                <div class="col-lg-7 col-6">
+                  <span class="card-location">
+                    <i class="fas fa-calendar"></i> {{event.startDate | date:'mediumDate'}}
+                  </span>
+                </div>
+                <div class="col-lg-5 col-6 text-end">
+                  <span class="card-time">
+                    {{event.startTime}} - {{event.endTime}}
+                  </span>
+                </div>
+              </div>
+              <h5 class="mt-20">
+                <a [routerLink]="['/events', event.idEvent]">{{event.title}}</a>
+              </h5>
+              <div class="mt-15">
+                <p class="card-description">{{event.description | slice:0:100}}...</p>
+              </div>
+              <div class="card-2-bottom mt-30">
+                <div class="row">
+                  <div class="col-lg-7 col-7">
+                    <div class="d-flex align-items-center">
+                      <i class="fas fa-users me-2"></i>
+                      <span>{{event.participantIds?.length || 0}}/{{event.capacity || 'unlimited'}}</span>
+                    </div>
+                  </div>
+                  <div class="col-lg-5 col-5 text-end">
+                    <button class="btn btn-apply-now" (click)="openEventDetails(event)">
+                      View Details
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Event Details Modal -->
+<div class="modal" [class.show]="showModal" [style.display]="showModal ? 'block' : 'none'">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header border-0">
+        <h5 class="modal-title">Event Details</h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+      <div class="modal-body p-4" *ngIf="selectedEvent">
+        <div class="event-view-card">
+          <div class="event-header mb-4">
+            <h3 class="event-title mb-2">{{ selectedEvent.title }}</h3>
+            <span class="event-badge" [ngClass]="selectedEvent.typeS?.toLowerCase()">
+              {{ selectedEvent.typeS }}
+            </span>
+          </div>
+
+          <div class="event-info-grid">
+            <div class="info-item">
+              <i class="bi bi-calendar-date"></i>
+              <div>
+                <label>Date</label>
+                <p>{{ selectedEvent.startDate | date:'fullDate' }}</p>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <i class="bi bi-clock"></i>
+              <div>
+                <label>Time</label>
+                <p>{{ selectedEvent.startTime }} - {{ selectedEvent.endTime }}</p>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <i class="bi bi-people"></i>
+              <div>
+                <label>Capacity</label>
+                <p>{{ selectedEvent.capacity }} people</p>
+              </div>
+            </div>
+
+            <div class="info-item" *ngIf="selectedEvent.imageUrl">
+              <img [src]="selectedEvent.imageUrl" alt="Event image" class="event-image">
+            </div>
+          </div>
+
+          <div class="description-section mt-4">
+            <h6 class="section-title">Description</h6>
+            <p class="description-text">{{ selectedEvent.description }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeModal()">
+          Close
+        </button>
+        <button type="button" class="btn btn-primary" 
+                (click)="participateInEvent()" 
+                [disabled]="isSubmitting">
+          <i class="bi bi-person-plus-fill me-2"></i>
+          <span *ngIf="!isSubmitting">Want to participate?</span>
+          <span *ngIf="isSubmitting">
+            <i class="spinner-border spinner-border-sm me-2"></i>
+            Submitting...
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Backdrop -->
+<div class="modal-backdrop fade show" *ngIf="showModal"></div>

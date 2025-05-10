@@ -1,0 +1,41 @@
+.text-purple {
+ color: #8e44ec; /* violet */
+}
+
+.status-badge {
+ display: inline-flex;
+ align-items: center;
+ gap: 6px;
+ padding: 6px 14px;
+ border-radius: 16px;
+ font-weight: 500;
+ font-size: 0.9rem;
+}
+
+.status-completed {
+ background-color: #d4f8e8;
+ color: #28a745;
+}
+
+.status-failed {
+ background-color: #ffe2e2;
+ color: #dc3545;
+}
+
+.status-pending {
+ background-color: #ffe7cc;
+ color: #fd7e14;
+}
+/* Réduit la largeur des colonnes en limitant les paddings */
+#paymentsTable td,
+#paymentsTable th {
+  padding: 0.3rem 0.5rem;
+  white-space: nowrap; /* Évite le retour à la ligne */
+  font-size: 0.95rem;   /* Réduit légèrement la taille du texte */
+}
+
+/* Réduit l’icône d'action */
+#paymentsTable .dropdown .fs-24 {
+  font-size: 1rem !important;
+}
+

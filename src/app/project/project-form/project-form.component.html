@@ -1,0 +1,149 @@
+<app-admin-header></app-admin-header>
+<app-admin-sidebar></app-admin-sidebar>
+
+<div class="main-content">
+  <div class="content-wrapper">
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-lg-6">
+            <div class="header-content">
+              <span class="badge bg-primary-soft rounded-pill mb-2">Projects</span>
+              <h1 class="dashboard-title">Create Project</h1>
+              <p class="dashboard-subtitle">Fill in the details for your new project</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Container -->
+    <div class="dashboard-content">
+      <div class="container">
+        <div class="form-container">
+          <div class="project-card">
+            <div class="status-indicator"></div>
+            <div class="card-content">
+              <form [formGroup]="projectForm" (ngSubmit)="onSubmit()" class="elegant-form">
+                <!-- Title & Department -->
+                <div class="row">
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <label class="input-label">Project Title</label>
+                      <div class="input-with-icon">
+                        <i class="bi bi-pencil-square input-icon"></i>
+                        <input type="text" formControlName="title" class="modern-input"
+                          placeholder="Enter project title"
+                          [class.invalid]="projectForm.get('title')?.invalid && projectForm.get('title')?.touched">
+                      </div>
+                      <div class="error-message"
+                        *ngIf="projectForm.get('title')?.invalid && projectForm.get('title')?.touched">
+                        <i class="bi bi-exclamation-triangle"></i> Title is required
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="input-label">Department</label>
+                      <div class="select-wrapper">
+                        <select formControlName="department" class="modern-select" required>
+                          <option value="" disabled>Select Department</option>
+                          <option *ngFor="let dept of departments" [value]="dept">{{dept | titlecase}}</option>
+                        </select>
+                        <div class="select-chevron">
+                          <i class="bi bi-chevron-down"></i>
+                        </div>
+                      </div>
+                      <div class="error-message"
+                        *ngIf="projectForm.get('department')?.invalid && projectForm.get('department')?.touched">
+                        <i class="bi bi-exclamation-triangle"></i> Department is required
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Description -->
+                <div class="form-group">
+                  <label class="input-label">Description</label>
+                  <div class="input-with-icon">
+                    <i class="bi bi-text-paragraph input-icon"></i>
+                    <textarea formControlName="description" class="modern-input textarea" rows="4"
+                      placeholder="Describe the project goals and objectives"
+                      [class.invalid]="projectForm.get('description')?.invalid && projectForm.get('description')?.touched"></textarea>
+                  </div>
+                  <div class="error-message"
+                    *ngIf="projectForm.get('description')?.invalid && projectForm.get('description')?.touched">
+                    <i class="bi bi-exclamation-triangle"></i> Description is required
+                  </div>
+                </div>
+
+                <!-- Details Row -->
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="input-label">Due Date</label>
+                      <div class="input-with-icon">
+                        <i class="bi bi-calendar input-icon"></i>
+                        <input type="date" formControlName="dueDate" class="modern-input"
+                          [class.invalid]="projectForm.get('dueDate')?.invalid && projectForm.get('dueDate')?.touched">
+                      </div>
+                      <div class="error-message"
+                        *ngIf="projectForm.get('dueDate')?.invalid && projectForm.get('dueDate')?.touched">
+                        <i class="bi bi-exclamation-triangle"></i> Valid date required
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="input-label">Status</label>
+                      <div class="select-wrapper">
+                        <select formControlName="status" class="modern-select">
+                          <option *ngFor="let status of statusOptions" [value]="status">{{status | titlecase}}</option>
+                        </select>
+                        <div class="select-chevron">
+                          <i class="bi bi-chevron-down"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="input-label">Project Type</label>
+                      <div class="select-wrapper">
+                        <select formControlName="type" class="modern-select">
+                          <option *ngFor="let type of typeOptions" [value]="type">{{type | titlecase}}</option>
+                        </select>
+                        <div class="select-chevron">
+                          <i class="bi bi-chevron-down"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                  <button type="button" class="btn-outline-secondary" (click)="router.navigate(['/projects'])">
+                    <i class="bi bi-x-lg me-2"></i>
+                    Cancel
+                  </button>
+                   
+                  <button type="submit" class="btn-primary" [disabled]="projectForm.invalid">
+                    <i class="bi bi-check2-circle me-2"></i>Create Project
+                  </button>
+
+
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-admin-footer></app-admin-footer>

@@ -1,0 +1,71 @@
+<main class="main-wrapper py-4" style="background-color: #f9f9f9;">
+  <div class="container">
+    <div class="inner-contents">
+      
+      <!-- Header -->
+      <div class="page-header d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between mb-4">
+        <div class="left-part">
+          <app-budget-prediction></app-budget-prediction>
+          <h2 class="text-dark fw-bold mt-3 mt-md-0">Add a Project Budget</h2>
+          <p class="text-muted mb-0">Please fill in the information below to add a project budget.</p>
+        </div>
+      </div>
+
+      <!-- Form Card -->
+      <div class="card shadow-sm rounded-4 border-0 p-4">
+        <div class="card-header bg-white border-0 p-0 mb-3">
+          <h5 class="mb-0 fw-semibold text-primary">Project Budget Details</h5>
+        </div>
+
+        <div class="card-body p-0">
+          <form (ngSubmit)="onSubmit()" [formGroup]="budgetForm" novalidate>
+
+            <!-- Project -->
+            <div class="mb-4">
+              <label for="projetId" class="form-label fw-medium">Project</label>
+              <select class="form-select" id="projetId" formControlName="projetId">
+                <option value="">Select a Project</option>
+                <option *ngFor="let projet of projets" [value]="projet.id">{{ projet.name }}</option>
+              </select>
+              <div *ngIf="budgetForm.get('projetId')?.touched && budgetForm.get('projetId')?.invalid" class="text-danger mt-1">
+                The project is required.
+              </div>
+              <div *ngIf="erreurProjet" class="text-danger mt-1">
+                {{ erreurProjet }}
+              </div>
+            </div>
+
+            <!-- Allocated Funds -->
+            <div class="mb-4">
+              <label for="allocatedFunds" class="form-label fw-medium">Allocated Funds</label>
+              <input type="number" class="form-control" id="allocatedFunds" formControlName="allocatedFunds" placeholder="Enter allocated funds" />
+              <div *ngIf="budgetForm.get('allocatedFunds')?.touched && budgetForm.get('allocatedFunds')?.invalid" class="text-danger mt-1">
+                <div *ngIf="budgetForm.get('allocatedFunds')?.errors?.['required']">This field is required.</div>
+                <div *ngIf="budgetForm.get('allocatedFunds')?.errors?.['min']">Must be greater than 0.</div>
+              </div>
+            </div>
+
+            <!-- Used Funds -->
+            <div class="mb-4">
+              <label for="usedFunds" class="form-label fw-medium">Used Funds</label>
+              <input type="number" class="form-control" id="usedFunds" formControlName="usedFunds" placeholder="Enter used funds" />
+              <div *ngIf="budgetForm.get('usedFunds')?.touched && budgetForm.get('usedFunds')?.invalid" class="text-danger mt-1">
+                <div *ngIf="budgetForm.get('usedFunds')?.errors?.['required']">This field is required.</div>
+                <div *ngIf="budgetForm.get('usedFunds')?.errors?.['min']">Cannot be negative.</div>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="text-end mt-4">
+              <button type="submit" class="btn btn-primary px-4 py-2" [disabled]="budgetForm.invalid">
+                <i class="bi bi-plus-circle me-2"></i>Add Project Budget
+              </button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>

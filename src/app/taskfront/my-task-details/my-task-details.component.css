@@ -1,0 +1,140 @@
+.extension-form {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 0.5rem;
+  }
+  
+  .attachment-item {
+    padding: 0.5rem;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    transition: all 0.2s ease;
+  }
+  
+  .attachment-item:hover {
+    background-color: #f8f9fa;
+  }
+  
+  .badge {
+    font-size: 0.875em;
+    padding: 0.5em 0.75em;
+  }
+
+  .upload-progress {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #64748b;
+  }
+  
+  .upload-progress .spinner-border {
+    color: #4a6cf7;
+  }
+  /* Extension Status Styles */
+.extension-status {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-pending {
+  background-color: #fef3c7;
+  color: #d97706;
+}
+
+.status-approved {
+  background-color: #dcfce7;
+  color: #059669;
+}
+
+.status-rejected {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.alert-info {
+  background-color: #e0f2fe;
+  border: 1px solid #7dd3fc;
+  color: #0369a1;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+}
+
+.alert {
+  padding: 12px;
+  border-radius: 8px;
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+}
+
+.alert-success {
+  background-color: #dcfce7;
+  border: 1px solid #86efac;
+  color: #059669;
+}
+
+.alert-danger {
+  background-color: #fee2e2;
+  border: 1px solid #fca5a5;
+  color: #dc2626;
+}
+
+.bi-check-circle-fill {
+  color: #059669;
+}
+
+.bi-exclamation-circle-fill {
+  color: #dc2626;
+}
+
+.extension-form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+/* Links Section */
+.links-section {
+  border-top: 1px solid #f1f5f9;
+  padding-top: 1rem;
+}
+
+.link-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  background-color: #f8fafc;
+  border-radius: 8px;
+}
+
+.link-url {
+  color: #3b82f6;
+  text-decoration: none;
+}
+
+.link-url:hover {
+  text-decoration: underline;
+}
+
+.no-links {
+  color: #94a3b8;
+  text-align: center;
+  padding: 1rem;
+}
+

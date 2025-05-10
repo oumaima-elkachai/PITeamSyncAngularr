@@ -1,0 +1,100 @@
+<body class="d-flex flex-column min-vh-100" style="margin: 0; font-family: 'Segoe UI', sans-serif; background-color: #ffffff;">
+
+  <main class="flex-grow-1 d-flex align-items-start justify-content-center" style="padding-top: 150px;"> <!-- Moved down -->
+    <div class="container">
+
+      <!-- Profile Card -->
+      <div class="card profile-card shadow-lg animate-card mx-auto" style="max-width: 700px; padding: 2.5rem; border-radius: 1.5rem; background: linear-gradient(to bottom right, #ffffff, #f9f9f9); border: none; transition: all 0.5s ease;">
+        <div class="text-center">
+
+          <div class="profile-image mb-4">
+            <img [src]="encodedPhotoUrl" alt="User Image" class="img-fluid rounded-circle" style="width: 130px; height: 130px; object-fit: cover; border: 5px solid #e3e3e3; background: #f8f9fa;">
+          </div>
+
+          <h2 class="fw-bold mb-1">{{ loggedInUser?.name || 'User Name' }}</h2>
+          <p class="text-muted mb-2"><i class="bi bi-envelope"></i> {{ loggedInUser?.email || 'user@example.com' }}</p>
+          <p class="text-muted mb-2"><i class="bi bi-telephone"></i> {{ loggedInUser?.telephone || 'N/A' }}</p>
+          <p class="text-muted mb-4"><i class="bi bi-person-check"></i> Role: <strong>{{ loggedInUser?.role || 'EMPLOYEE' }}</strong></p>
+
+          <p class="small text-muted mb-4">Welcome to your personal dashboard. Manage your information and explore new features!</p>
+
+        </div>
+
+        <div class="text-center d-flex flex-wrap justify-content-center gap-3 mt-3">
+          <a href="/user/edituserprofile" class="btn btn-primary rounded-pill px-4 py-2 profile-btn">Edit Profile</a>
+          <a (click)="logout()" class="btn btn-warning rounded-pill px-4 py-2 profile-btn">Logout</a>
+          <a (click)="deleteProfile()" class="btn btn-danger rounded-pill px-4 py-2 profile-btn">Delete Profile</a>
+          <a href="/user/askchat" class="btn btn-info text-white rounded-pill px-4 py-2 profile-btn">Ask Chat</a>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-dark text-white text-center py-3 mt-auto">
+    <div class="container">
+      <p class="mb-0">&copy; 2025 Your Company. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Styles -->
+  <style>
+    /* Animate card on page load */
+    .animate-card {
+      opacity: 0;
+      transform: translateY(50px);
+      animation: fadeInUp 1s forwards;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Profile Card Hover - Stronger and smoother */
+    .profile-card {
+      transition: all 0.5s ease, box-shadow 0.5s ease;
+    }
+
+    .profile-card:hover {
+      transform: translateY(-10px) scale(1.03);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+    }
+
+    /* Profile Image Hover */
+    .profile-image img {
+      transition: all 0.4s ease;
+    }
+    .profile-image:hover img {
+      transform: scale(1.07);
+      box-shadow: 0 0 25px rgba(0, 123, 255, 0.5);
+      border-color: #007bff;
+    }
+
+    /* Profile Button hover */
+    .profile-btn {
+      transition: all 0.3s ease;
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .profile-btn:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 576px) {
+      .profile-card {
+        padding: 2rem;
+      }
+      .profile-btn {
+        width: 100%;
+      }
+    }
+  </style>
+</body>

@@ -1,0 +1,57 @@
+<main class="main-wrapper">
+  <div class="container-fluid">
+    <div class="inner-contents">
+      <div class="page-header d-flex align-items-center justify-content-between mr-bottom-30">
+        <div class="left-part">
+          <h2 class="text-dark">Payroll List</h2>
+          <p class="text-gray mb-0">Here is the list of registered payrolls.</p>
+        </div>
+        <div class="right-part">
+          <button class="btn btn-primary" (click)="onAddPayroll()">
+            <i class="bi bi-plus-circle me-1"></i> Add Payroll
+          </button>
+        </div>
+      </div>
+
+      <div class="card border-0 p-5">
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table id="payrollTable" class="display text-center table table-striped">
+              <thead>
+                <tr>
+                  <th>Employee Name</th>
+                  <th>Salary</th>
+                  <th>Bonus</th>
+                  <th>Payment Date</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let payroll of payrolls">
+                  <td>{{ getEmployeeName(payroll.employeeId) }}</td>
+                  <td><span class="text-purple fw-bold">{{ payroll.salary | currency:'EUR' }}</span></td>
+                  <td><span class="text-purple fw-bold">{{ payroll.bonus | currency:'EUR' }}</span></td>
+                  <td>{{ payroll.payDate | date:'dd/MM/yyyy' }}</td>
+                  <td>
+                    <div class="dropdown">
+                      <a href="#" data-bs-toggle="dropdown" class="fs-24 text-gray">
+                        <i class="bi bi-three-dots-vertical"></i>
+                      </a>
+                      <div class="dropdown-menu p-0">
+                        <button class="dropdown-item" (click)="onEdit(payroll)">Edit</button>
+                        <button *ngIf="payroll.id" (click)="onDelete(payroll.id)" class="dropdown-item">Delete</button>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr *ngIf="payrolls.length === 0">
+                  <td colspan="5" class="text-center text-muted">No payrolls found.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

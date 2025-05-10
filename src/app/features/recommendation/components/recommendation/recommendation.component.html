@@ -1,0 +1,90 @@
+<div class="recommendation-container">
+  <!-- Participation Pattern Section -->
+  <!--mat-card *ngIf="participationPattern" class="pattern-card mat-elevation-z4">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon class="pattern-icon">analytics</mat-icon>
+        Your Event Participation Pattern
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="pattern-stats">
+        <div class="stat-item">
+          <span class="stat-label">Most Active In</span>
+          <strong class="stat-value">{{participationPattern.most_frequent_event_type || 'No events yet'}}</strong>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Total Participations</span>
+          <strong class="stat-value">{{participationPattern.total_participations}}</strong>
+        </div>
+      </div>
+      
+      <div class="type-distribution">
+        <h4>Event Type Distribution</h4>
+        <div class="distribution-grid">
+          <div class="distribution-item" *ngFor="let item of participationPattern.type_distribution | keyvalue">
+            <div class="custom-chip">{{item.value}}</div>
+            <span class="type-label">{{item.key}}</span>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card-->
+
+  <!-- Recommendations Section -->
+  <section class="recommendations">
+    <header class="section-header">
+      <h2>
+        <mat-icon>stars</mat-icon>
+        Recommended Events
+      </h2>
+    </header>
+
+    <div class="carousel-wrapper">
+      <button mat-icon-button class="nav-button prev" (click)="slideLeft()" [class.disabled]="isLeftEnd">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+
+      <div class="cards-container" #cardsContainer>
+        <div class="card-wrapper" *ngFor="let recommendation of recommendations">
+          <mat-card class="recommendation-card mat-elevation-z2" [class.active]="recommendation.isActive">
+            <div class="card-image-container">
+              <img [src]="recommendation.imageUrl" 
+                   [alt]="recommendation.title"
+                   (error)="handleImageError($event)">
+              <div class="match-badge">
+                <mat-icon>thumb_up</mat-icon>
+                {{(recommendation.score * 100).toFixed(0)}}% Match
+              </div>
+            </div>
+
+            <mat-card-content>
+              <h3 class="event-title">{{recommendation.title}}</h3>
+              <div class="event-meta">
+                <span class="event-type">
+                  <mat-icon>category</mat-icon>
+                  {{recommendation.event_type}}
+                </span>
+                <span class="event-datetime">
+                  <mat-icon>schedule</mat-icon>
+                  {{recommendation.start_date | date:'MMM d'}} at {{recommendation.start_time}}
+                </span>
+              </div>
+            </mat-card-content>
+
+            <mat-card-actions>
+              <button mat-flat-button color="primary" [routerLink]="['/events', recommendation.event_id]">
+                <mat-icon>info</mat-icon>
+                Learn More
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      </div>
+
+      <button mat-icon-button class="nav-button next" (click)="slideRight()" [class.disabled]="isRightEnd">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+  </section>
+</div>

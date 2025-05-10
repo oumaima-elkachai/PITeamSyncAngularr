@@ -1,0 +1,39 @@
+<!-- upcoming-events.component.html -->
+<div class="col-xxl-12 col-md-6">
+    <div class="card border-0">
+        <div class="card-header p-5 pb-0 border-0">
+            <h4 class="mb-0">Upcoming Events</h4>
+        </div>
+        <div class="card-body">
+            <!-- Current Date -->
+            <div class="current-date d-flex align-items-center justify-content-between gap-3 mb-5">
+                <h5 class="mb-0 flex-shrink-0">{{ todayFormatted }}</h5>
+                <div class="line w-100 bg-light-200"></div>
+            </div>
+
+            <!-- Loading State -->
+            <div *ngIf="isLoading" class="text-center">
+                <p>Loading today's events...</p>
+            </div>
+
+            <!-- No Events -->
+            <div *ngIf="!isLoading && todaysEvents.length === 0" class="text-center">
+                <p>No events scheduled for today</p>
+            </div>
+
+            <!-- Events List -->
+            <div class="current-event-list" *ngIf="!isLoading && todaysEvents.length > 0">
+                <ul class="list-unstyled p-0 mb-0">
+                    <li *ngFor="let event of todaysEvents">
+                        <h5 class="mb-4">
+                <span class="text-gray fw-semibold">
+                  {{ event.startTime | date: 'hh:mm a' }}
+                </span>
+                            {{ event.title }}
+                        </h5>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

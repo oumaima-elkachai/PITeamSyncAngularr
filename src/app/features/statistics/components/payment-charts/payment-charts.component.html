@@ -1,0 +1,42 @@
+<main class="main-wrapper">
+  <div class="charts-container">
+    <!-- Bar Chart: Payments per Month -->
+    <div class="chart-wrapper">
+      <h3>Payments per Month</h3>
+      <canvas id="barChart"></canvas>
+    </div>
+
+    <!-- Line Chart: Salary Evolution -->
+    <div class="chart-wrapper">
+      <h3>Salary Evolution</h3>
+      <canvas id="lineChart"></canvas>
+    </div>
+  </div>
+
+<!-- Stylish header for anomalies -->
+<div *ngIf="anomalies.length > 0" class="anomaly-section">
+  <div class="anomaly-badge">
+    <span class="badge-title">🚨 Detected Anomalies</span>
+  </div>
+  <div *ngFor="let a of anomalies" class="anomaly-card">
+    <div class="anomaly-header">
+      <h5><strong>{{ a.amount }} TND</strong> – {{ a.month}}</h5>
+    </div>
+    <div class="anomaly-body">
+      <div class="reference-number">
+        <small><em>Reference: {{ a.referenceNumber }}</em></small>
+      </div>
+      <p [ngClass]="{'text-danger': a.anomaly === 'HIGH', 'text-warning': a.anomaly === 'LOW'}">
+        <i *ngIf="a.anomaly === 'HIGH'" class="bi bi-exclamation-triangle-fill"></i>
+        <i *ngIf="a.anomaly === 'LOW'" class="bi bi-arrow-down-circle-fill"></i>
+        {{ a.reason }}
+      </p>
+    </div>
+  </div>
+</div>
+
+
+  <div *ngIf="anomalies.length === 0">
+    No anomalies detected.
+  </div>
+</main>

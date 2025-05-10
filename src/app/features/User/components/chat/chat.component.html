@@ -1,0 +1,191 @@
+<!-- CHAT LAYOUT -->
+<div class="chat-layout-wrapper">
+  <div class="chat-layout">
+    <!-- Sidebar -->
+    <aside class="chat-sidebar shadow-sm">
+      <button class="new-chat-button" (click)="startNewChat()">+ New Chat</button>
+      <h3>Conversations</h3>
+      <ul class="chat-session-list">
+        <li class="chat-session">Chat 1</li>
+        <li class="chat-session">Chat 2</li>
+      </ul>
+    </aside>
+
+    <!-- Main Chat Area -->
+    <div class="chat-container">
+      <div class="chat-window">
+        <div *ngFor="let msg of messages" class="chat-bubble" [ngClass]="msg.sender">
+          {{ msg.message }}
+        </div>
+      </div>
+
+      <div class="chat-input">
+        <input [(ngModel)]="userInput" (keyup.enter)="sendMessage()" placeholder="Type your question..." />
+        <button class="send-button" (click)="sendMessage()" [disabled]="isLoading || !userInput.trim()">&#10148;</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BEAUTIFUL CSS -->
+<style>
+/* Main wrapper */
+.chat-layout-wrapper {
+  padding-top: 150px; /* bring the whole layout much lower */
+  min-height: 100vh;
+  background: #eef2f7;
+}
+
+/* Layout inside */
+.chat-layout {
+  display: flex;
+  height: calc(100vh - 200px); /* lower full chat */
+  width: 95%;
+  margin: 0 auto;
+  background: #eef2f7;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Sidebar */
+.chat-sidebar {
+  width: 270px;
+  background: linear-gradient(to bottom right, #ffffff, #e9ecef);
+  padding: 1.5rem 1rem;
+  overflow-y: auto;
+}
+
+.chat-sidebar h3 {
+  margin-bottom: 1rem;
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+}
+
+.chat-session-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.chat-session {
+  padding: 12px 15px;
+  cursor: pointer;
+  border-radius: 12px;
+  transition: all 0.3s;
+  font-size: 16px;
+}
+
+.chat-session:hover {
+  background-color: #d6e4f0;
+}
+
+/* New Chat Button */
+.new-chat-button {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 1.5rem;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.new-chat-button:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}
+
+/* Chat Container */
+.chat-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #f4f6f9;
+}
+
+/* Chat Window */
+.chat-window {
+  flex: 1;
+  overflow-y: auto;
+  padding: 2rem;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Chat Bubbles */
+.chat-bubble {
+  padding: 1rem 1.5rem;
+  border-radius: 20px;
+  max-width: 75%;
+  word-wrap: break-word;
+  font-size: 16px;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  animation: fadeInChat 0.5s ease;
+}
+
+.user {
+  align-self: flex-end;
+  background-color: #d1f5d3;
+  color: #333;
+}
+
+.bot {
+  align-self: flex-start;
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+@keyframes fadeInChat {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Chat Input */
+.chat-input {
+  display: flex;
+  padding: 1rem;
+  border-top: 1px solid #ccc;
+  background: #f8f9fa;
+}
+
+.chat-input input {
+  flex: 1;
+  padding: 12px 18px;
+  border-radius: 25px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  transition: all 0.3s;
+}
+
+.chat-input input:focus {
+  border-color: #5dade2;
+  box-shadow: 0 0 6px rgba(93, 173, 226, 0.5);
+}
+
+.send-button {
+  background: #007bff;
+  border: none;
+  margin-left: 0.8rem;
+  font-size: 22px;
+  padding: 8px 12px;
+  color: white;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.send-button:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}
+</style>

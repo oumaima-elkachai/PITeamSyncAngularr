@@ -1,0 +1,12 @@
+.container {
+    max-width: 600px;
+  }
+  
+  .form-label {
+    font-weight: 600;
+  }
+  
+  .btn-primary {
+    width: 100%;
+  }
+  

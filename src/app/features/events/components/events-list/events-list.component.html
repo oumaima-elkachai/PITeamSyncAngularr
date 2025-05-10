@@ -1,0 +1,227 @@
+<div class="events-container">
+  <!-- Header Section -->
+  <div class="events-header">
+    <div class="header-left">
+      <h2 class="section-title">Events Calendar</h2>
+      <p class="text-muted">Manage and view your upcoming events</p>
+    </div>
+    <div class="modern-search-bar">
+      <div class="search-input-wrapper">
+        <i class="bi bi-search search-icon"></i>
+        <input 
+          type="text" 
+          class="search-input" 
+          placeholder="Search events..."
+          [(ngModel)]="searchQuery"
+          (input)="onSearch()">
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-icon" (click)="refreshEvents()" title="Refresh">
+        <i class="bi bi-arrow-clockwise"></i>
+      </button>
+      <button class="btn btn-primary" (click)="openAddModal()">
+        <i class="bi bi-plus-lg"></i> New Event
+      </button>
+    </div>
+  </div>
+
+  <!-- States (Loading, Error, Empty) -->
+  <div *ngIf="isLoading" class="loading-state">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <div *ngIf="errorMessage && !isLoading" class="alert alert-danger fade show">
+    <i class="bi bi-exclamation-triangle-fill"></i>
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="!isLoading && events.length === 0 && !errorMessage" class="empty-state">
+    <i class="bi bi-calendar-x fs-1"></i>
+    <h3>No Events Found</h3>
+    <p>Start by creating your first event</p>
+    <button class="btn btn-primary" (click)="openAddModal()">Create Event</button>
+  </div>
+
+  <!-- Events Table -->
+  <div class="table-responsive" *ngIf="!isLoading && events.length > 0">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th class="text-center">Event's Image</th>
+          <th scope="col" (click)="toggleSort('startDate')" class="sortable">
+            Date
+            <i class="bi" [ngClass]="{
+              'bi-arrow-up': sortField === 'startDate' && sortDirection === 'asc',
+              'bi-arrow-down': sortField === 'startDate' && sortDirection === 'desc'
+            }"></i>
+          </th>
+          <th scope="col">
+            Title
+          </th>
+          <th scope="col">Description</th>
+          <th scope="col" (click)="toggleSort('capacity')" class="sortable">
+            Capacity
+            <i class="bi" [ngClass]="{
+              'bi-arrow-up': sortField === 'capacity' && sortDirection === 'asc',
+              'bi-arrow-down': sortField === 'capacity' && sortDirection === 'desc'
+            }"></i>
+          </th>
+          <th scope="col">Type</th>
+          <th scope="col" (click)="toggleSort('startTime')" class="sortable">
+            Time
+            <i class="bi" [ngClass]="{
+              'bi-arrow-up': sortField === 'startTime' && sortDirection === 'asc',
+              'bi-arrow-down': sortField === 'startTime' && sortDirection === 'desc'
+            }"></i>
+          </th>
+          <th scope="col" class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let event of paginatedEvents">
+          <td class="text-center">
+            <img *ngIf="event.imageUrl" [src]="event.imageUrl" [ngStyle]="imageStyle" alt="Event image" (click)="openImageModal(event.imageUrl)" class="clickable-image">
+            <span *ngIf="!event.imageUrl">No image</span>
+          </td>
+          <td>
+            <span class="fw-bold">{{ event.startDate | date:'MMM d, yyyy' }}</span>
+          </td>
+          <td>{{ event.title | highlight:searchQuery }}</td>
+          <td [innerHTML]="event.description | highlight:searchQuery"></td>
+          <td>{{ event.capacity }}</td>
+          <td>{{ event.eventType || 'N/A' | highlight:searchQuery }}</td>
+          <td>{{ event.startTime }} - {{ event.endTime }}</td>
+          <td class="text-end">
+            <div class="btn-group">
+              <button class="btn btn-sm btn-outline-secondary" (click)="openView(event.idEvent!)" title="View">
+                <i class="bi bi-eye"></i>
+              </button>
+              <button class="btn btn-sm btn-outline-primary" (click)="navigateToEdit(event.idEvent!)" title="Edit">
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button class="btn btn-sm btn-outline-danger" (click)="removeEvent(event.idEvent!)" title="Delete">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <div *ngIf="totalPages > 1" class="pagination-container">
+    <nav aria-label="Events pagination">
+      <ul class="pagination">
+        <li class="page-item" [class.disabled]="currentPage === 1">
+          <button class="page-link" (click)="changePage(currentPage - 1)">
+            <i class="bi bi-chevron-left"></i>
+          </button>
+        </li>
+        <li class="page-item" *ngFor="let page of [].constructor(totalPages); let i = index"
+            [class.active]="currentPage === i + 1">
+          <button class="page-link" (click)="changePage(i + 1)">{{i + 1}}</button>
+        </li>
+        <li class="page-item" [class.disabled]="currentPage === totalPages">
+          <button class="page-link" (click)="changePage(currentPage + 1)">
+            <i class="bi bi-chevron-right"></i>
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  <!-- Modals -->
+  <!-- Edit/Add Modal -->
+  <div class="modal" [class.show]="showEditModal || showAddModal" 
+       [style.display]="showEditModal || showAddModal ? 'block' : 'none'">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ showEditModal ? 'Edit Event' : 'Add New Event' }}</h5>
+          <button type="button" class="btn-close" (click)="closeModals()"></button>
+        </div>
+        <div class="modal-body">
+          <app-events-edit *ngIf="showEditModal && selectedEvent"
+            [event]="selectedEvent"
+            (eventUpdated)="handleEventUpdated($event)"
+            (cancel)="closeModals()">
+          </app-events-edit>
+          <app-events-add *ngIf="showAddModal"
+            (eventAdded)="handleEventAdded($event)"
+            (cancel)="closeModals()">
+          </app-events-add>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- View Modal -->
+  <div class="modal" [class.show]="showViewModal" 
+       [style.display]="showViewModal ? 'block' : 'none'">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header border-0">
+          <h5 class="modal-title">Event Details</h5>
+          <button type="button" class="btn-close" (click)="closeViewModal()"></button>
+        </div>
+        <div class="modal-body p-4" *ngIf="viewingEvent">
+          <div class="event-view-card">
+            <div class="event-header mb-4">
+              <h3 class="event-view-title mb-2">{{ viewingEvent.title }}</h3>
+              <span class="event-badge" [ngClass]="viewingEvent.typeS?.toLowerCase()">
+                {{ viewingEvent.typeS }}
+              </span>
+            </div>
+
+            <div class="event-info-grid">
+              <div class="info-item">
+                <i class="bi bi-calendar-date"></i>
+                <div>
+                  <label>Date</label>
+                  <p>{{ viewingEvent.startDate | date:'fullDate' }}</p>
+                </div>
+              </div>
+
+              <div class="info-item">
+                <i class="bi bi-clock"></i>
+                <div>
+                  <label>Time</label>
+                  <p>{{ viewingEvent.startTime }} - {{ viewingEvent.endTime }}</p>
+                </div>
+              </div>
+
+              <div class="info-item">
+                <i class="bi bi-people"></i>
+                <div>
+                  <label>Capacity</label>
+                  <p>{{ viewingEvent.capacity }} people</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="description-section mt-4">
+              <h6 class="section-title">Description</h6>
+              <p class="description-text">{{ viewingEvent.description }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Single Modal Backdrop -->
+  <div class="modal-backdrop fade show" 
+       *ngIf="showEditModal || showAddModal || showViewModal">
+  </div>
+
+  <!-- Image Modal -->
+  <app-image-modal 
+    *ngIf="selectedImage" 
+    [imageUrl]="selectedImage"
+    (closeModal)="closeImageModal()">
+  </app-image-modal>
+</div>

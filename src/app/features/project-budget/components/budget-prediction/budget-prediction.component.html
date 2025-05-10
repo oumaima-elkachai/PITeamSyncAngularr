@@ -1,0 +1,24 @@
+<div class="container">
+  <h2>Project Budget Prediction</h2>
+ 
+  <div class="form-group">
+    <label for="allocatedFunds">Allocated Funds</label>
+    <input type="number" id="allocatedFunds" [(ngModel)]="allocatedFunds" class="form-control" placeholder="Enter allocated funds" />
+  </div>
+ 
+  <div class="form-group">
+    <label for="usedFunds">Used Funds</label>
+    <input type="number" id="usedFunds" [(ngModel)]="usedFunds" class="form-control" placeholder="Enter used funds" />
+  </div>
+ 
+  <button (click)="predictBudget()" class="btn btn-primary">Predict Budget Score</button>
+ 
+  <div *ngIf="predictionResult" class="alert alert-success mt-4">
+    {{ predictionResult }}
+  </div>
+ 
+  <div *ngIf="errorMessage" class="alert alert-danger mt-4">
+    {{ errorMessage }}
+  </div>
+ </div>
+ 

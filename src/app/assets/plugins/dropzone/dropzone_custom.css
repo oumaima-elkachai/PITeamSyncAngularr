@@ -1,0 +1,91 @@
+.dropzone{
+    position:relative;
+    border: 2px dashed #c2c2c2;
+    border-radius: 14px;
+    width: auto;
+    height: auto;
+    padding: 13px;
+    min-height: auto;
+    display: flex !important;
+    align-items: flex-start;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+.dropzone .dz-preview {
+    min-height: auto;
+    margin: 0px;
+}
+.dropzone .dz-preview:hover {
+    z-index: 90;
+}
+.dropzone .dz-preview .dz-image {
+    position: relative;
+    z-index: 10;
+    display: block;
+    width: 90px;
+    height: 90px;
+    border-radius: 20px;
+}
+.dropzone .dz-preview .dz-image img {
+    width: 100%;
+}
+.dropzone .dz-preview.dz-file-preview .dz-details {
+    opacity: 0;
+}
+.dropzone .dz-preview.dz-file-preview:hover .dz-details {
+    opacity: 1;
+}
+.dropzone .dz-preview .dz-error-message{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 0px 5px;
+}
+.dropzone .dz-preview .dz-error-mark, .dropzone .dz-preview .dz-success-mark {
+    margin: 0px;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+}
+.dropzone .dz-preview.dz-error .dz-error-mark {
+    opacity: 0;
+}
+.dropzone .dz-preview:hover .dz-error-mark, .dropzone .dz-preview:hover .dz-success-mark,
+.dropzone .dz-preview.dz-error:hover .dz-error-mark {
+    opacity: 1;
+}
+.dropzone .dz-preview .dz-error-mark svg, .dropzone .dz-preview .dz-success-mark svg {
+    display: block;
+    width: 24px;
+    height: 24px;
+}
+.dropzone .dz-preview .dz-remove {
+    position: absolute;
+    top: -5px;
+    right: 0px;
+    z-index: 90;
+    font-size: 20px;
+    color: #FF4A55;
+    cursor: pointer;
+    opacity: 0;
+}
+.dropzone .dz-preview:hover .dz-remove {
+    opacity: 1;
+}
+
+.dropzone.dz-clickable * {
+    cursor: unset;
+}
+.dropzone .dz-message {
+    margin: 0px;
+}
+/* .dropzone.dz-started .dz-message {
+    display: block;
+} */
+.file-upload.dropzone .dz-message .dz-button {
+    opacity: 0;
+    visibility: hidden;
+    display: none;
+}
+.file-upload.dropzone .dz-message:before {
+    display: none;
+}

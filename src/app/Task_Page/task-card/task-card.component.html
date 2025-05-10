@@ -1,0 +1,18 @@
+<!-- task-card.component.html -->
+<div class="card-grid-2 hover-up wow animate__animated animate__fadeIn">
+  <div class="card-block-info">
+    <div class="row">
+      <div class="col-lg-12 col-12">
+        <a [routerLink]="['/task', task?.id]" class="card-2-img-text card-grid-2-img-medium">
+          <span class="card-grid-2-img-small">
+            <img [src]="task?.icon || 'assets/imgs/page/job/ui-ux2.svg'" alt="Task Icon" />
+          </span>
+          <span>{{ task?.title }}</span>
+        </a>
+        <!-- Dropdown menu... -->
+      </div>
+    </div>
+
+    <!-- Card body content... -->
+  </div>
+</div>

@@ -1,0 +1,97 @@
+<!-- Beautified Login Page -->
+<div class="login-page">
+  <div class="login-container">
+    <div class="login-card">
+      <div class="text-center mb-4">
+        <a routerLink="/" class="d-inline-block mb-2">
+          <img src="assets/logo.png" alt="Logo" class="logo-img" style="max-height: 100px;">
+        </a>
+        <h2 class="fw-bold">Welcome Back!</h2>
+        <p class="text-secondary">Please login to access your account.</p>
+      </div>
+
+      <form (ngSubmit)="onLogin()" #loginForm="ngForm">
+        <div class="mb-3">
+          <input type="email" class="form-control" name="email" [(ngModel)]="credentials.email" placeholder="Email" required>
+        </div>
+
+        <div class="mb-3">
+          <input type="password" class="form-control" name="password" [(ngModel)]="credentials.password" placeholder="Password" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 rounded-3 fw-bold shadow submit-btn">
+          Login
+        </button>
+
+        <p class="text-center mt-3 small">
+          <a routerLink="/forgotpassword" class="text-primary fw-bold text-decoration-underline">Forgot Password?</a>
+        </p>
+
+        <p class="text-center mt-3 small">
+          Don't have an account?
+          <a routerLink="/signup" class="text-primary fw-bold text-decoration-underline">Sign Up</a>
+        </p>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Styles for Amazing Look -->
+<style>
+.login-page {
+  min-height: 100vh;
+  background: linear-gradient(to right, #74ebd5, #acb6e5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+}
+
+.login-container {
+  width: 100%;
+  max-width: 400px;
+}
+
+.login-card {
+  background: #fff;
+  padding: 40px 30px;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.form-control {
+  border-radius: 12px;
+  border: 1px solid #ced4da;
+  padding: 12px;
+}
+
+.form-control:focus {
+  border-color: #5dade2;
+  box-shadow: 0 0 5px rgba(93, 173, 226, 0.5);
+}
+
+.submit-btn {
+  background-color: #5dade2;
+  border: none;
+  padding: 12px;
+  font-size: 18px;
+  margin-top: 10px;
+}
+
+.submit-btn:hover {
+  background-color: #3498db;
+}
+
+.logo-img {
+  max-height: 90px;
+  width: auto;
+}
+
+
+</style>

@@ -1,0 +1,76 @@
+<main class="main-wrapper">
+  <div class="container-fluid">
+    <div class="inner-contents">
+      <div class="page-header d-flex align-items-center justify-content-between mr-bottom-30">
+        <div class="left-part">
+          <h2 class="text-dark">Payment List</h2>
+          <p class="text-gray mb-0">Here is the list of completed payments.</p>
+        </div>
+        <!-- Bouton Add Payment -->
+        <div class="right-part">
+          <button class="btn btn-primary" (click)="onAddPayment()">
+            <i class="bi bi-plus-circle me-1"></i> Add Payment
+          </button>
+        </div>
+      </div>
+
+      <div class="card border-0 p-5">
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table id="paymentsTable" class="display text-center table table-striped">
+              <thead>
+                <tr>
+                  <th>Employee Name</th>
+                  <th>Payment Ref</th> 
+                  <th>Amount</th>
+                  <th>Payment Date</th>
+                  <th>Payment Method</th>
+                  <th>Status</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let payment of payments">
+                  <td>{{ getEmployeeName(payment.employeeId) }}</td>
+                  <td><span class="text-dark fw-bold">{{ payment.referenceNumber || 'Unavailable' }}</span></td>
+                  <td><span class="text-purple fw-bold">{{ payment.amount | currency:'EUR' }}</span></td>
+                  <td>{{ payment.paymentDate | date:'dd/MM/yyyy' }}</td>
+                  <td>{{ payment.paymentMethod }}</td>
+                  <td>
+                    <span class="status-badge" [ngClass]="{
+                      'status-completed': payment.status === 'COMPLETED',
+                      'status-failed': payment.status === 'FAILED',
+                      'status-pending': payment.status === 'PENDING'
+                    }">
+                      <i class="bi me-1" [ngClass]="{
+                        'bi-check-circle': payment.status === 'COMPLETED',
+                        'bi-x-circle': payment.status === 'FAILED',
+                        'bi-clock': payment.status === 'PENDING'
+                      }"></i>
+                      {{ payment.status }}
+                    </span>
+                  </td>
+                  <td>
+                    <div class="dropdown">
+                      <a href="#" data-bs-toggle="dropdown" class="fs-24 text-gray">
+                        <i class="bi bi-three-dots-vertical"></i>
+                      </a>
+                      <div class="dropdown-menu p-0">
+                        <button class="dropdown-item" (click)="onDetails(payment)">Details</button>
+                        <button class="dropdown-item" (click)="onEdit(payment)">Edit</button>
+                        <button class="dropdown-item text-danger" (click)="onDelete(payment.id)">Delete</button>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr *ngIf="payments.length === 0">
+                  <td colspan="7" class="text-center text-muted">No payments found.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

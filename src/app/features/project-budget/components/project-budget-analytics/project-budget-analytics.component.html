@@ -1,0 +1,21 @@
+<main class="main-wrapper">
+  <div class="budget-analytics-container px-2">
+    <h2 class="text-lg font-semibold mb-4 text-center">Project Budget Analytics</h2>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div *ngFor="let budget of projectBudgets; let i = index"
+           class="budget-card bg-white border border-gray-200 rounded-xl shadow text-center">
+
+        <h3 class="text-sm font-medium truncate">{{ budget.projet.name }}</h3>
+
+        <canvas [id]="'gaugeChart-' + i"></canvas>
+
+        <div class="text-[10px] md:text-[11px] text-gray-700 leading-tight space-y-[2px]">
+          <p><strong>Allocated:</strong> {{ budget.allocatedFunds | number:'1.0-0' }} TND</p>
+          <p><strong>Spent:</strong> {{ budget.usedFunds | number:'1.0-0' }} TND</p>
+          <p><strong>The ratio of spent funds to allocated funds:</strong> {{ (budget.usedFunds / budget.allocatedFunds * 100) | number:'1.0-1' }}%</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

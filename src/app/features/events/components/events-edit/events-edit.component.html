@@ -1,0 +1,126 @@
+<form [formGroup]="eventForm" (ngSubmit)="saveEvent()" class="event-form">
+      <!-- Basic Information Section -->
+      <div class="form-section">
+        <h4 class="section-title">Basic Information</h4>
+        <div class="input-group">
+          <div class="form-floating">
+            <input type="text" class="form-control" id="eventTitle" formControlName="title"
+                   [ngClass]="{ 'is-invalid': f['title'].errors }" placeholder="Event Title">
+            <label for="eventTitle">Event Title</label>
+            <div class="invalid-feedback">{{ getErrorMessage('title') }}</div>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <div class="form-floating">
+            <textarea class="form-control" id="eventDescription" formControlName="description"
+                     [ngClass]="{ 'is-invalid': f['description'].errors }" 
+                     placeholder="Event Description" style="height: 100px"></textarea>
+            <label for="eventDescription">Event Description</label>
+            <div class="invalid-feedback">{{ getErrorMessage('description') }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Event Type Section -->
+      <div class="form-group">
+        <label for="eventType" class="form-label">Event Type</label>
+        <select 
+          id="eventType" 
+          class="form-control" 
+          formControlName="eventType">
+          <option value="">Select an event type</option>
+          <option *ngFor="let type of eventTypes" [value]="type">
+            {{type}}
+          </option>
+        </select>
+        <div *ngIf="eventTypeControl?.touched && eventTypeControl?.invalid" 
+             class="alert alert-danger mt-2">
+          <div *ngIf="eventTypeControl?.errors?.['required']">
+            Event type is required
+          </div>
+        </div>
+      </div>
+
+      <!-- Date and Time Section -->
+      <div class="form-section">
+        <h4 class="section-title">Date & Time</h4>
+        <div class="date-time-grid">
+          <div class="form-floating">
+            <input type="date" class="form-control" id="startDate" formControlName="startDate"
+                   [ngClass]="{ 'is-invalid': f['startDate'].errors }">
+            <label for="startDate">Start Date</label>
+            <div class="invalid-feedback">{{ getErrorMessage('startDate') }}</div>
+          </div>
+          <div class="form-floating">
+            <input type="date" class="form-control" id="endDate" formControlName="endDate"
+                   [ngClass]="{ 'is-invalid': f['endDate'].errors }">
+            <label for="endDate">End Date</label>
+            <div class="invalid-feedback">{{ getErrorMessage('endDate') }}</div>
+          </div>
+          
+          <div class="form-floating">
+            <input type="time" class="form-control" id="startTime" formControlName="startTime"
+                   [ngClass]="{ 'is-invalid': f['startTime'].errors }">
+            <label for="startTime">Start Time</label>
+            <div class="invalid-feedback">{{ getErrorMessage('startTime') }}</div>
+          </div>
+
+          <div class="form-floating">
+            <input type="time" class="form-control" id="endTime" formControlName="endTime"
+                   [ngClass]="{ 'is-invalid': f['endTime'].errors }">
+            <label for="endTime">End Time</label>
+            <div class="invalid-feedback">{{ getErrorMessage('endTime') }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Event Image Section -->
+      <div class="form-group">
+        <label for="image">Event Image</label>
+        <input 
+          type="file" 
+          id="image"
+          class="form-control" 
+          (change)="onFileSelected($event)"
+          accept="image/*">
+      </div>
+
+      <div *ngIf="imagePreviewUrl" class="image-preview mt-3">
+        <img [src]="imagePreviewUrl" alt="New event image preview" style="max-width: 200px;">
+      </div>
+
+      <div *ngIf="event.imageUrl && !imagePreviewUrl" class="image-preview mt-3">
+        <img [src]="event.imageUrl" alt="Current event image" style="max-width: 200px;">
+      </div>
+
+      <!-- Capacity Section -->
+      <div class="form-section">
+        <h4 class="section-title">Capacity</h4>
+        <div class="input-group">
+          <div class="form-floating">
+            <input type="number" class="form-control" id="capacity" formControlName="capacity" 
+                   min="1" [ngClass]="{ 'is-invalid': f['capacity'].errors }" 
+                   placeholder="Event Capacity">
+            <label for="capacity">Event Capacity (number of participants)</label>
+            <div class="invalid-feedback">{{ getErrorMessage('capacity') }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Error Message -->
+      <div *ngIf="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button type="button" class="btn btn-outline-secondary" (click)="cancelEdit()">
+          Cancel
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="eventForm.invalid">
+          <i class="bi bi-save"></i>
+          Save Changes
+        </button>
+      </div>
+    </form>
