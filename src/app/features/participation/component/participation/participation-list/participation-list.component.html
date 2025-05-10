@@ -1,0 +1,176 @@
+<main class="main-wrapper">
+<div class="container mt-4">
+    <!-- Header with view toggle -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Participations List</h2>
+        <div class="btn-group" role="group">
+            <button type="button" class="btn" [class.btn-primary]="currentView === 'list'" 
+                    [class.btn-outline-primary]="currentView !== 'list'"
+                    (click)="currentView = 'list'">
+                <i class="bi bi-list"></i> List View
+            </button>
+            <button type="button" class="btn" [class.btn-primary]="currentView === 'stats'" 
+                    [class.btn-outline-primary]="currentView !== 'stats'"
+                    (click)="currentView = 'stats'">
+                <i class="bi bi-pie-chart"></i> Statistics
+            </button>
+        </div>
+    </div>
+
+    <!-- List View -->
+    <div *ngIf="currentView === 'list'">
+
+        <!-- Loading and Error Messages -->
+        <div *ngIf="loading" class="text-center">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+
+        <div *ngIf="error" class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+
+        <!-- Filters -->
+        <div class="search-container">
+            <div class="search-box">
+                <i class="bi bi-search search-icon"></i>
+                <input 
+                    type="text" 
+                    [(ngModel)]="searchTerm"
+                    (ngModelChange)="onSearchChange($event)"
+                    placeholder="Search by event title or participant email"
+                    class="search-input">
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="defaultTable text-center w-100">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" class="form-check-input" id="selectAll"></th>
+                            <th>Participant</th>
+                            <th>Event</th>
+                            <th style="cursor: pointer;" (click)="toggleSort()">
+                                Date
+                                <i class="bi" [ngClass]="{
+                                    'bi-arrow-down': sortDirection === 'desc',
+                                    'bi-arrow-up': sortDirection === 'asc'
+                                }"></i>
+                            </th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let participation of paginatedParticipations"
+                            [class.table-warning]="participation.participationS === ParticipationStatus.PENDING">
+                            <td><input type="checkbox" class="form-check-input"></td>
+                            <td>
+                                <div class="employee d-flex gap-3">
+                                    <div class="profilepicture flex-shrink-0">
+                                        <img src="assets/img/default-avatar.jpg" alt="participant" width="50">
+                                    </div>
+                                    <div class="description">
+                                        <h6 class="mb-0">{{participation.participantEmail || 'Loading...'}}</h6>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="description">
+                                    <h6 class="mb-0">{{participation.eventTitle || 'Loading...'}}</h6>
+                                </div>
+                            </td>
+                            <td>{{ participation.participationDate | date:'medium' }}</td>
+                            <td>
+                                <i class="bi" [ngClass]="{
+                                    'bi-hourglass-split text-warning': participation.participationS === ParticipationStatus.PENDING,
+                                    'bi-check-circle-fill text-success': participation.participationS === ParticipationStatus.CONFIRMED,
+                                    'bi-x-circle-fill text-danger': participation.participationS === ParticipationStatus.CANCELLED,
+                                    'bi-clock-fill text-secondary': participation.participationS === ParticipationStatus.WAITLISTED
+                                }" style="font-size: 1.2rem;"></i>
+                            </td>
+                            <td>
+                                <button class="btn btn-outline-danger btn-sm me-1" 
+                                    (click)="$event.stopPropagation(); participation.id && updateStatus(participation.id, ParticipationStatus.CANCELLED)"
+                                    [disabled]="participation.participationS === ParticipationStatus.CANCELLED">
+                                    <i class="bi bi-x-lg"></i>
+                                </button>
+                                <button class="btn btn-primary btn-sm"
+                                    (click)="$event.stopPropagation(); participation.id && updateStatus(participation.id, ParticipationStatus.CONFIRMED)"
+                                    [disabled]="participation.participationS === ParticipationStatus.CONFIRMED">
+                                    <i class="bi bi-check-lg"></i>
+                                </button>
+                            </td>
+                            <td>
+                                <!--div class="dropdown text-end">
+                                    <a href="#" data-bs-toggle="dropdown" class="fs-24 text-gray">
+                                        <i class="bi bi-three-dots-vertical"></i>
+                                    </a>
+                                    <div class="dropdown-menu p-0">
+                                        <a class="dropdown-item" href="#">View Participation Statistics</a>
+                                        <a class="dropdown-item" href="#">Edit</a>
+                                        <a class="dropdown-item text-danger" href="#">Delete</a>
+                                    </div>
+                                </div-->
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <div class="mt-5 d-flex justify-content-center justify-content-md-between align-items-center flex-wrap">
+                <p class="mb-0">
+                    Showing <span class="fw-bold">{{((currentPage-1)*pageSize)+1}}-{{(currentPage*pageSize > totalItems ? totalItems : currentPage*pageSize)}}</span> 
+                    from <span class="fw-bold">{{totalItems}}</span> data
+                </p>
+
+                <nav *ngIf="totalPages > 1">
+                    <ul class="pagination mb-0">
+                        <li class="page-item" [class.disabled]="currentPage === 1">
+                            <a class="page-link" (click)="onPageChange(currentPage - 1)" aria-label="Previous">
+                                <span aria-hidden="true">«</span>
+                            </a>
+                        </li>
+                        <li class="page-item" *ngFor="let page of [].constructor(totalPages); let i = index"
+                            [class.active]="currentPage === i + 1">
+                            <a class="page-link" (click)="onPageChange(i + 1)">{{i + 1}}</a>
+                        </li>
+                        <li class="page-item" [class.disabled]="currentPage === totalPages">
+                            <a class="page-link" (click)="onPageChange(currentPage + 1)" aria-label="Next">
+                                <span aria-hidden="true">»</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
+        <!-- No Data Message -->
+        <div *ngIf="!loading && participations.length === 0" class="alert alert-info">
+            No participations found.
+        </div>
+    </div>
+
+    <!-- Statistics View -->
+    <div *ngIf="currentView === 'stats'" class="card">
+        <div class="card-body">
+            <div class="row justify-content-center">
+                <!-- Centered Pie Chart -->
+                <div class="col-md-8 text-center">
+                    <div class="card-body">
+                        <div class="card-content">
+                            <div>
+                                <div #eventTypePieChart style="min-height: 400px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</main>

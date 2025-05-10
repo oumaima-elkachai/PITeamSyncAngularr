@@ -1,0 +1,56 @@
+<div class="calendar-container">
+  <div *ngIf="loading" class="loading-overlay">
+    <div class="loader"></div>
+  </div>
+  
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
+
+  <full-calendar [options]="calendarOptions"></full-calendar>
+
+  <!-- Add Event Modal -->
+  <div class="modal" [class.show]="showAddEventModal" [style.display]="showAddEventModal ? 'block' : 'none'">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add New Event</h5>
+          <button type="button" class="btn-close" (click)="closeAddEventModal()"></button>
+        </div>
+        <div class="modal-body">
+          <app-events-add 
+            *ngIf="showAddEventModal && selectedDate"
+            [preselectedDate]="selectedDate"
+            (cancel)="closeAddEventModal()"
+            (eventAdded)="closeAddEventModal()">
+          </app-events-add>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Event Details Modal -->
+  <div class="modal" [class.show]="showEventDetailsModal" [style.display]="showEventDetailsModal ? 'block' : 'none'">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Event Details</h5>
+          <button type="button" class="btn-close" (click)="closeEventDetailsModal()"></button>
+        </div>
+        <div class="modal-body" *ngIf="selectedEvent">
+          <h4>{{selectedEvent.title}}</h4>
+          <p><strong>Start:</strong> {{selectedEvent.start | date:'medium'}}</p>
+          <p><strong>End:</strong> {{selectedEvent.end | date:'medium'}}</p>
+          <p *ngIf="selectedEvent.description"><strong>Description:</strong> {{selectedEvent.description}}</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeEventDetailsModal()">Close</button>
+          <button type="button" class="btn btn-primary" (click)="participateInEvent()">Want to participate?</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Backdrop -->
+  <div class="modal-backdrop fade show" *ngIf="showAddEventModal || showEventDetailsModal"></div>
+</div>

@@ -1,0 +1,11 @@
+.custom-chip {
+  display: inline-flex;
+  padding: 4px 12px;
+  border-radius: 16px;
+  background-color: #673ab7;  /* Material primary color */
+  color: white;
+  font-size: 14px;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+}

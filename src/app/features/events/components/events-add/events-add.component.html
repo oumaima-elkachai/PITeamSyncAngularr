@@ -1,0 +1,176 @@
+<form [formGroup]="eventForm" (ngSubmit)="onSubmit()" class="event-form">
+      <!-- Basic Information Section -->
+      <div class="form-section">
+        <h4 class="section-title">Basic Information</h4>
+        <div class="input-group">
+          <div class="form-floating">
+            <input type="text" class="form-control" id="eventTitle" formControlName="title"
+                   [ngClass]="{ 'is-invalid': submitted && f['title'].errors }" placeholder="Event Title">
+            <label for="eventTitle">Event Title</label>
+            <div class="invalid-feedback">{{ getErrorMessage('title') }}</div>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <div class="form-floating">
+            <textarea class="form-control" id="eventDescription" formControlName="description"
+                     [ngClass]="{ 'is-invalid': submitted && f['description'].errors }" 
+                     placeholder="Event Description" style="height: 100px"></textarea>
+            <label for="eventDescription">Event Description</label>
+            <div class="invalid-feedback">{{ getErrorMessage('description') }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Event Type Section -->
+      <div class="form-group">
+        <label for="eventType" class="form-label">Event Type</label>
+        <select 
+          id="eventType" 
+          class="form-control" 
+          formControlName="eventType">
+          <option value="">Select an event type</option>
+          <option *ngFor="let type of eventTypes" [value]="type">
+            {{type}}
+          </option>
+        </select>
+        <div *ngIf="eventForm.get('eventType')?.touched && eventForm.get('eventType')?.invalid" 
+             class="alert alert-danger mt-2">
+          <div *ngIf="eventForm.get('eventType')?.errors?.['required']">
+            Event type is required
+          </div>
+        </div>
+      </div>
+
+      <!-- Date and Time Section -->
+      <div class="form-section">
+        <h4 class="section-title">Date & Time</h4>
+        <div class="date-time-grid">
+          <div class="form-floating">
+            <input type="date" class="form-control" id="startDate" formControlName="startDate"
+                   [ngClass]="{ 'is-invalid': submitted && f['startDate'].errors }">
+            <label for="startDate">Start Date</label>
+            <div class="invalid-feedback">{{ getErrorMessage('startDate') }}</div>
+          </div>
+          <div class="form-floating">
+            <input type="date" class="form-control" id="endDate" formControlName="endDate"
+                   [ngClass]="{ 'is-invalid': submitted && f['endDate'].errors }">
+            <label for="endDate">End Date</label>
+            <div class="invalid-feedback">{{ getErrorMessage('endDate') }}</div>
+          </div>
+          
+          <div class="form-floating">
+            <input type="time" class="form-control" id="startTime" formControlName="startTime"
+                   [ngClass]="{ 'is-invalid': submitted && f['startTime'].errors }">
+            <label for="startTime">Start Time</label>
+            <div class="invalid-feedback">{{ getErrorMessage('startTime') }}</div>
+          </div>
+
+        
+
+          <div class="form-floating">
+            <input type="time" class="form-control" id="endTime" formControlName="endTime"
+                   [ngClass]="{ 'is-invalid': submitted && f['endTime'].errors }">
+            <label for="endTime">End Time</label>
+            <div class="invalid-feedback">{{ getErrorMessage('endTime') }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Event Image Section -->
+      <div class="form-group">
+        <label for="image">Event Image*</label>
+        <input 
+          type="file" 
+          id="image"
+          class="form-control" 
+          (change)="onFileSelected($event)"
+          accept="image/*"
+          [class.is-invalid]="submitted && !selectedFile"
+          required>
+        <div class="invalid-feedback" *ngIf="submitted && !selectedFile">
+          Event image is required
+        </div>
+      </div>
+
+      <div *ngIf="imagePreviewUrl" class="image-preview mt-3">
+        <img [src]="imagePreviewUrl" alt="Event image preview" style="max-width: 200px;">
+      </div>
+
+      <div *ngIf="error" class="alert alert-danger">
+        {{ error }}
+      </div>
+
+      <!-- Capacity Section -->
+      <div class="form-section">
+        <h4 class="section-title">Capacity</h4>
+        <div class="input-group">
+          <div class="form-floating">
+            <input type="number" class="form-control" id="capacity" formControlName="capacity" 
+                   min="1" [ngClass]="{ 'is-invalid': submitted && f['capacity'].errors }" 
+                   placeholder="Event Capacity">
+            <label for="capacity">Event Capacity (number of participants)</label>
+            <div class="invalid-feedback">{{ getErrorMessage('capacity') }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Participants Section -->
+      <div class="form-section">
+        <h4 class="section-title">Participants</h4>
+        <div class="participants-container">
+          <div class="search-box">
+            <div class="form-floating">
+              <input type="text" class="form-control" id="participantSearch"
+                     [(ngModel)]="searchTerm" [ngModelOptions]="{standalone: true}"
+                     (ngModelChange)="onSearchInput($event)" placeholder="Search participants">
+              <label for="participantSearch">Search Participants</label>
+            </div>
+
+            <div class="search-results" *ngIf="searchTerm && filteredParticipants.length > 0">
+              <div class="participant-list">
+                <button *ngFor="let participant of filteredParticipants"
+                        class="participant-item"
+                        [class.selected]="participant.id ? isParticipantSelected(participant.id) : false"
+                        (click)="selectParticipant(participant)"
+                        [disabled]="participant.id ? isParticipantSelected(participant.id) : false">
+                  <i class="bi bi-person-circle"></i>
+                  <div class="participant-info">
+                    <span class="name">{{participant.name}}</span>
+                    <span class="email">{{participant.email}}</span>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="selected-participants">
+            <h5>Selected Participants</h5>
+            <div class="selected-list" [class.empty]="selectedParticipants.length === 0">
+              <div *ngIf="selectedParticipants.length === 0" class="empty-message">
+                No participants selected
+              </div>
+              <div *ngFor="let participant of selectedParticipants" class="selected-participant">
+                <i class="bi bi-person-check"></i>
+                <span>{{participant.name}}</span>
+                <button class="remove-btn" (click)="participant.id && removeParticipant(participant.id)">
+                  <i class="bi bi-x"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button type="button" class="btn btn-outline-secondary" (click)="returnToList()">
+          Cancel
+        </button>
+        <button type="submit" class="btn btn-primary">
+          <i class="bi bi-calendar-plus"></i>
+          Create Event
+        </button>
+      </div>
+    </form>
+

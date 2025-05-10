@@ -1,0 +1,26 @@
+<div class="combined-container">
+    <div class="tab-navigation">
+      <button class="tab-button" [class.active]="activeTab === 'recommendations'" (click)="switchTab('recommendations')">
+        <mat-icon>recommend</mat-icon>
+        Recommendations
+      </button>
+      <button class="tab-button" [class.active]="activeTab === 'events'" (click)="switchTab('events')">
+        <mat-icon>event</mat-icon>
+        Events
+      </button>
+    </div>
+
+    <div class="content-area" [@fadeAnimation]="activeTab">
+        <ng-container [ngSwitch]="activeTab">
+            <div *ngSwitchCase="'recommendations'" class="recommendations-section">
+                <app-recommendation></app-recommendation>
+            </div>
+            <div *ngSwitchCase="'events'" class="events-section">
+                <app-events-list-front></app-events-list-front>
+            </div>
+            <div *ngSwitchDefault class="error-section">
+                Invalid tab selected
+            </div>
+        </ng-container>
+    </div>
+</div>

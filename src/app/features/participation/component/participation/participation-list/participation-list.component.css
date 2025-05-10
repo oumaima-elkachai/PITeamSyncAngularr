@@ -1,0 +1,94 @@
+/* Chart Container Styles */
+#participationChart {
+    min-height: 365px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* Statistics Card Styles */
+.card--statistics {
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    border-radius: 12px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.card--statistics:hover {
+    transform: translateY(-2px);
+}
+
+.statistics-details {
+    padding: 20px;
+}
+
+/* Stats Summary Cards */
+.stat-card {
+    text-align: center;
+    padding: 1.25rem;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
+
+.stat-card h6 {
+    margin-bottom: 10px;
+    color: #6c757d;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-card h3 {
+    margin-bottom: 0;
+    font-weight: 700;
+    font-size: 1.75rem;
+    color: #212529;
+}
+
+/* Status Colors */
+.stat-card.confirmed h3 { color: #28a745; }
+.stat-card.pending h3 { color: #ffc107; }
+.stat-card.cancelled h3 { color: #dc3545; }
+.stat-card.waitlisted h3 { color: #6c757d; }
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    #participationChart {
+        min-height: 300px;
+    }
+
+    .statistics-details {
+        padding: 15px;
+    }
+
+    .stat-card {
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .stat-card h3 {
+        font-size: 1.5rem;
+    }
+}
+
+.page-link {
+    cursor: pointer;
+}
+
+.table-warning {
+    background-color: rgba(255, 193, 7, 0.1);
+}
+
+.pagination {
+    margin-bottom: 0;
+}
+
+.page-item.disabled .page-link {
+    cursor: not-allowed;
+}
