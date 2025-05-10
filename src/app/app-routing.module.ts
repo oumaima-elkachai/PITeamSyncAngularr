@@ -26,8 +26,46 @@ import { TaskPageComponent } from './Task_Page/task-page/task-page.component';
 import { MyProjectDetailsComponent } from './taskfront/my-project-details/my-project-details.component';
 import { MyTasksComponent } from './taskfront/my-tasks/my-tasks.component';
 import { TasksComponent } from './taskfront/tasks/tasks.component';
+import { AnomalyListComponent } from './features/anomaly-list/components/anomaly-list/anomaly-list.component';
+import { PaymentAddComponent } from './features/payment/components/payment-add/payment-add.component';
+import { PaymentDetailComponent } from './features/payment/components/payment-detail/payment-detail.component';
+import { PaymentEditComponent } from './features/payment/components/payment-edit/payment-edit.component';
+import { PaymentListComponent } from './features/payment/components/payment-list/payment-list.component';
+import { PayrollsAddComponent } from './features/payroll/components/payroll-add/payroll-add.component';
+import { PayrollEditComponent } from './features/payroll/components/payroll-edit/payroll-edit.component';
+import { PayrollListComponent } from './features/payroll/components/payroll-list/payroll-list.component';
+import { ProjectBudgetsAddComponent } from './features/project-budget/components/project-budget-add/project-budget-add.component';
+import { ProjectBudgetAnalyticsComponent } from './features/project-budget/components/project-budget-analytics/project-budget-analytics.component';
+import { ProjectBudgetEditComponent } from './features/project-budget/components/project-budget-edit/project-budget-edit.component';
+import { ProjectBudgetsListComponent } from './features/project-budget/components/project-budget-list/project-budget-list.component';
+import { PaymentChartsComponent } from './features/statistics/components/payment-charts/payment-charts.component';
+import { PayrollUserComponent } from './features/payroll/components/payroll-user/payroll-user.component';
+import { CalendarComponent } from './features/payment/components/calendar/calendar.component';
+import { CalendartestComponent } from './features/payment/components/calendartest/calendartest.component';
 
 const routes: Routes = [
+
+
+  //
+  { path: 'payrolls/add', component: PayrollsAddComponent },
+  { path: 'payrolls', component: PayrollListComponent },
+  { path: 'payrolls/edit/:id', component: PayrollEditComponent },
+  { path: 'project-budget/add', component: ProjectBudgetsAddComponent },
+  { path: 'project-budget', component: ProjectBudgetsListComponent },
+  { path: 'project-budgets/edit/:id', component: ProjectBudgetEditComponent },
+  { path: 'payments', component: PaymentListComponent },
+  { path: 'payments/edit/:id', component: PaymentEditComponent },
+  { path: 'payment/add', component: PaymentAddComponent },
+  { path: 'payments/details/:id', component: PaymentDetailComponent },
+  { path: 'anomaly', component: AnomalyListComponent },
+  { path: 'paymentCharts', component: PaymentChartsComponent },
+  { path: 'projectBudgetAnalytics', component: ProjectBudgetAnalyticsComponent },
+
+
+  { path: 'payrolls/list', component: PayrollUserComponent },
+  { path: 'payment/calendar', component: CalendarComponent },
+  { path: 'testcalendar', component: CalendartestComponent },
+
 
   {
     path: 'projects/:id/tasks',
@@ -79,44 +117,49 @@ const routes: Routes = [
   },
 
 
-  { path: 'admin',
-    component: AdminLayoutComponent, 
-  children: [
+  {
+    path: 'admin',
+    component: AdminLayoutComponent,
+    children: [
 
 
-    { path: 'adminprofile', component: AdminprofileComponent },
-  ]},
-  { path: 'user',
+      { path: 'adminprofile', component: AdminprofileComponent },
+    ]
+  },
+  {
+    path: 'user',
     component: UserLayoutComponent,
-    children : [
+    children: [
       { path: 'userprofile', component: UserprofileComponent },
       { path: 'edituserprofile', component: EdituserprofileComponent },
       { path: 'askchat', component: ChatComponent },
     ]
   },
-  { path: 'signup',
+  {
+    path: 'signup',
     component: SignupComponent
   },
-  { path: 'login',
+  {
+    path: 'login',
     component: LoginComponent
   },
- 
-  
+
+
   { path: 'editadminprofile', component: EditAdminProfileComponent },
- 
+
   { path: 'adminuserlist', component: AdminuserlistComponent },
   { path: 'addadmin', component: AddadminComponent },
   { path: 'forgotpassword', component: ForgetpasswordComponent },
   { path: 'resetpassword', component: ResetpasswordComponent },
- 
 
-  
-  
-  
-  
-  
-  
-  
+
+
+
+
+
+
+
+
   { path: '', redirectTo: '/user', pathMatch: 'full' }
 ];
 

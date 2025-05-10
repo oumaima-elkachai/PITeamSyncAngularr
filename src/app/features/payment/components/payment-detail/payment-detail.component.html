@@ -1,0 +1,51 @@
+<main class="main-wrapper">
+  <div class="container-fluid">
+    <div class="inner-contents">
+      <div class="page-header d-flex align-items-center justify-content-between mr-bottom-30">
+        <div class="left-part">
+          <h2 class="text-dark">Détails du Paiement</h2>
+          <p class="text-gray mb-0">Référence : <strong>{{ selectedPayment.referenceNumber }}</strong></p>
+        </div>
+        <div class="right-part">
+          <a routerLink="/admin/payments" class="btn btn-outline-primary">← Retour</a>
+        </div>
+      </div>
+
+      <!-- Infos générales -->
+      <div class="card mb-4 p-4 border-0 shadow-sm">
+        <div class="row">
+          <div class="col-md-6">
+            <p class="mb-1"><strong>Date de paiement :</strong></p>
+            <p class="text-muted">{{ selectedPayment.paymentDate | date: 'longDate' }}</p>
+            <p class="mb-1"><strong>Méthode de paiement :</strong></p>
+            <p class="text-muted">{{ selectedPayment.paymentMethod }}</p>
+            <p class="mb-1"><strong>Montant :</strong></p>
+            <p class="text-muted">{{ selectedPayment.amount }}</p>
+          </div>
+          <div class="col-md-6">
+            <p class="mb-1"><strong>Statut :</strong></p>
+            <span class="badge"
+              [ngClass]="{
+                'bg-success': selectedPayment.status === 'COMPLETED',
+                'bg-warning': selectedPayment.status === 'PENDING',
+                'bg-danger': selectedPayment.status === 'FAILED'
+              }">{{ selectedPayment.status }}</span>
+            <p class="mt-3 mb-1"><strong>Employé :</strong></p>
+            <p class="text-muted" *ngIf="selectedPayment.employee">
+             {{ selectedPayment.employee.name }} <br>
+             <small>{{ selectedPayment.employee.email }}</small>
+           </p>
+          </div>
+        </div>
+      </div>
+
+
+      
+
+      <div *ngIf="!selectedPayment" class="text-center text-muted py-5">
+        Chargement des données...
+      </div>
+    </div>
+  </div>
+</main>
+

@@ -1,0 +1,39 @@
+<!-- Main Wrapper -->
+<main class="main-wrapper">
+  <div class="container-fluid">
+    <div class="inner-contents">
+      <div class="page-header d-flex align-items-center justify-content-between mr-bottom-30">
+        <div class="left-part">
+          <h2 class="text-dark">Edit Project Budget</h2>
+          <p class="text-gray mb-0">Please update the information below to modify an existing project budget.</p>
+        </div>
+        <div class="right-part">
+          <form class="search-form w-auto">
+            <input type="text" name="search" class="bg-white form-control" placeholder="Search">
+            <button type="submit" class="btn"><img src="assets/img/svg/search.svg" alt=""></button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Edit Form -->
+      <div class="card-body p-0 pt-4">
+        <form (ngSubmit)="onSubmit()" [formGroup]="budgetForm">
+
+          <div class="form-group">
+            <label class="form-label" for="allocatedFunds">Allocated Funds</label>
+            <input type="number" class="form-control" id="allocatedFunds" formControlName="allocatedFunds" placeholder="Allocated Funds" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="usedFunds">Used Funds</label>
+            <input type="number" class="form-control" id="usedFunds" formControlName="usedFunds" placeholder="Used Funds" required />
+          </div>
+
+          <div class="button_group">
+            <button type="submit" class="btn btn-primary" [disabled]="budgetForm.invalid">Update Project Budget</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</main>

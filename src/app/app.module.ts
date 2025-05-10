@@ -39,6 +39,12 @@ import { AdminSidebarComponent } from './shared/components/admin/admin-sidebar/a
 import { UserFooterComponent } from './shared/components/user/user-footer/user-footer.component';
 import { UserHeaderComponent } from './shared/components/user/user-header/user-header.component';
 import { UserHomeComponent } from './shared/components/user/user-home/user-home.component';
+import { AnomalyListComponent } from './features/anomaly-list/components/anomaly-list/anomaly-list.component';
+import { JobPostingModule } from './features/job-posting/job-posting.module';
+import { PaymentModule } from './features/payment/payment.module';
+import { PayrollModule } from './features/payroll/payroll.module';
+import { ProjectBudgetngModule } from './features/project-budget/project-budget.module';
+import { PaymentChartsComponent } from './features/statistics/components/payment-charts/payment-charts.component';
 
 
       
@@ -67,7 +73,9 @@ import { UserHomeComponent } from './shared/components/user/user-home/user-home.
     MyTaskDetailsComponent,
     FileSizePipe,
     UpcomingDeadlinesComponent,
-    TaskListingComponent
+    TaskListingComponent,
+    AnomalyListComponent,
+    PaymentChartsComponent
   ],
   imports: [
     BrowserModule,
@@ -79,6 +87,10 @@ import { UserHomeComponent } from './shared/components/user/user-home/user-home.
     SharedModule, // Import UserModule
     // Import SharedModule for shared components
     HttpClientModule,
+    JobPostingModule,
+    PayrollModule,
+    ProjectBudgetngModule,
+    PaymentModule 
     
   ],
   providers: [ProjectService,

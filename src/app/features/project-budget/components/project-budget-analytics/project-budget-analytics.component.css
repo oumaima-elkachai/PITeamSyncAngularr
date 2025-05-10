@@ -1,0 +1,15 @@
+.budget-card {
+ min-height: 170px;
+ justify-content: space-between;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ padding: 1rem;
+}
+
+canvas {
+ width: 250px !important;
+ height: 250px !important;
+ display: block;
+ margin: auto;
+}

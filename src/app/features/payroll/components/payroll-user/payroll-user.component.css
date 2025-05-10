@@ -1,0 +1,58 @@
+.card {
+ border-radius: 20px;
+ box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.badge.bg-info {
+ background-color: #c0efff;
+ color: #007bff;
+ font-weight: 600;
+}
+
+h6.text-muted {
+ font-size: 0.85rem;
+ letter-spacing: 1px;
+}
+.badge.bg-primary {
+ background-color: #007bff !important;
+ font-weight: 500;
+ padding: 6px 12px;
+ border-radius: 0.5rem;
+}
+/* Style général du bouton */
+.download-btn {
+ background-color: transparent; /* Fond transparent */
+ border: 2px solid #007bff; /* Bordure bleue */
+ border-radius: 5px; /* Coins arrondis */
+ padding: 10px 15px; /* Espacement autour de l'icône */
+ cursor: pointer; /* Curseur en forme de main */
+ display: flex; /* Pour centrer l'icône à l'intérieur du bouton */
+ align-items: center; /* Alignement vertical centré */
+ justify-content: center; /* Alignement horizontal centré */
+ transition: all 0.3s ease-in-out; /* Transition douce */
+}
+
+/* Style de l'icône */
+.download-btn i {
+ font-size: 24px; /* Assure-toi que l'icône a une taille visible */
+ color: #007bff; /* Couleur de l'icône (bleu) */
+}
+
+/* Effet au survol */
+.download-btn:hover i {
+ color: white; /* Change la couleur de l'icône au survol */
+}
+
+.download-btn:hover i {
+ color: white; /* Change la couleur de l'icône au survol */
+}
+
+/* Augmenter la taille du texte du badge Statut */
+.badge.bg-primary {
+ font-size: 1rem; /* Augmente la taille du texte */
+ font-weight: 600; /* Poids de la police plus important */
+ padding: 8px 12px; /* Un peu plus d'espace autour du texte */
+}
+
+
+

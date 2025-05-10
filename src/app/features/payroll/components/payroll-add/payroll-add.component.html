@@ -1,0 +1,101 @@
+<main class="main-wrapper">
+  <div class="container-fluid">
+    <div class="inner-contents">
+      <div class="page-header d-flex align-items-center justify-content-between mr-bottom-30">
+        <div class="left-part">
+          <h2 class="text-dark">Add Payroll Entry</h2>
+          <p class="text-gray mb-0">Please fill in the details below to add a new payroll entry.</p>
+        </div>
+      </div>
+
+      <div class="card border-0 p-5">
+        <div class="card-header bg-transparent border-0 p-0 d-flex align-items-center justify-content-between gap-3">
+          <h6 class="mb-0">Payroll Details</h6>
+        </div>
+
+        <div class="card-body p-0 pt-4">
+          <form (ngSubmit)="onSubmit()" #payrollForm="ngForm" novalidate>
+
+            <!-- Employee -->
+            <div class="form-group">
+              <label for="employeeId">Employee</label>
+              <select
+                class="form-control"
+                id="employeeId"
+                [(ngModel)]="payroll.employeeId"
+                name="employeeId"
+                required
+                #employeeId="ngModel">
+                <option value="">Select an Employee</option>
+                <option *ngFor="let employee of employees" [value]="employee.id">{{ employee.name }}</option>
+              </select>
+              <div *ngIf="employeeId.invalid && (employeeId.touched || payrollForm.submitted)" class="text-danger">
+                Please select an employee.
+              </div>
+            </div>
+
+            <!-- Salary -->
+            <div class="form-group">
+              <label for="salary">Salary</label>
+              <input
+                type="number"
+                class="form-control"
+                id="salary"
+                [(ngModel)]="payroll.salary"
+                name="salary"
+                placeholder="Salary"
+                required
+                min="1"
+                #salary="ngModel" />
+              <div *ngIf="salary.invalid && (salary.touched || payrollForm.submitted)" class="text-danger">
+                Salary is required and must be greater than 0.
+              </div>
+            </div>
+
+            <!-- Bonus -->
+            <div class="form-group">
+              <label for="bonus">Bonus</label>
+              <input
+                type="number"
+                class="form-control"
+                id="bonus"
+                [(ngModel)]="payroll.bonus"
+                name="bonus"
+                placeholder="Bonus"
+                required
+                min="0"
+                #bonus="ngModel" />
+              <div *ngIf="bonus.invalid && (bonus.touched || payrollForm.submitted)" class="text-danger">
+                Bonus is required and cannot be negative.
+              </div>
+            </div>
+
+            <!-- Payment Date -->
+            <div class="form-group">
+              <label for="payDate">Payment Date</label>
+              <input
+                type="date"
+                class="form-control"
+                id="payDate"
+                [(ngModel)]="payroll.payDate"
+                name="payDate"
+                required
+                #payDate="ngModel" />
+              <div *ngIf="payDate.invalid && (payDate.touched || payrollForm.submitted)" class="text-danger">
+                Please enter a valid payment date.
+              </div>
+            </div>
+
+            <!-- Button -->
+            <div class="button_group">
+              <button type="submit" class="btn btn-primary" [disabled]="payrollForm.invalid">
+                Add Payroll
+              </button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
