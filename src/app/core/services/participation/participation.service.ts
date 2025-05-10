@@ -9,15 +9,12 @@ import { Participant } from 'src/app/features/participants/models/participant.mo
 import { EventStatistics } from 'src/app/features/participation/models/event-statistics.model';
 import { AuditLog } from 'src/app/features/events/models/AuditLog.model';
 
-<<<<<<< Updated upstream
-=======
 interface ConfirmationResponse {
   error?: string;
   message?: string;
   participationId?: string;
 }
 
->>>>>>> Stashed changes
 @Injectable({
   providedIn: 'root'
 })
@@ -30,24 +27,6 @@ export class ParticipationService {
 
   confirmParticipation(id: string): Observable<any> {
     const url = `${this.API_URL}/confirm/${id}`;
-<<<<<<< Updated upstream
-    const headers = new HttpHeaders()
-      .set('Content-Type', 'application/json');
-
-    console.log('Sending confirmation request:', {
-      url,
-      id,
-      headers: headers.keys()
-    });
-
-    return this.http.put(url, {}, { headers }).pipe(
-      tap(response => {
-        console.log('Server response:', response);
-      }),
-      catchError(error => {
-        console.error('Confirmation failed:', error);
-        const errorMessage = error.error?.message || 'Failed to send confirmation email';
-=======
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
 
     console.log('Sending confirmation request:', { url, id });
@@ -79,7 +58,6 @@ export class ParticipationService {
           });
         }
         const errorMessage = error.error?.message || 'Failed to confirm participation';
->>>>>>> Stashed changes
         return throwError(() => new Error(errorMessage));
       })
     );
@@ -152,15 +130,12 @@ export class ParticipationService {
       .pipe(catchError(this.handleError));
   }
 
-<<<<<<< Updated upstream
-=======
   getParticipationsByEventId(eventId: string): Observable<Participation[]> {
     return this.http.get<Participation[]>(`${this.API_URL}/event/${eventId}`).pipe(
       catchError(this.handleError)
     );
   }
 
->>>>>>> Stashed changes
   getAllParticipations(): Observable<Participation[]> {
     return this.http.get<any[]>(this.API_URL).pipe(
       mergeMap(participations => {
@@ -245,8 +220,6 @@ export class ParticipationService {
     return this.http.get<EventStatistics>(`${this.API_URL}/statistics/${eventId}`);
   }
 
-<<<<<<< Updated upstream
-=======
   getParticipantEmailForParticipation(participantId: string): Observable<string> {
     return this.getParticipantEmail(participantId);
   }
@@ -259,7 +232,6 @@ export class ParticipationService {
     return this.getEventTitle(eventId);
   }
 
->>>>>>> Stashed changes
   private mapParticipationStatus(status: string): ParticipationStatus {
     switch(status) {
       case 'PENDING':
@@ -275,19 +247,6 @@ export class ParticipationService {
     }
   }
 
-<<<<<<< Updated upstream
-  private handleError(error: any): Observable<never> {
-    console.error('An error occurred:', error);
-    let errorMessage = 'An error occurred while processing your request.';
-    
-    if (error.error instanceof ErrorEvent) {
-      errorMessage = error.error.message;
-    } else {
-      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
-    }
-    
-    return throwError(() => errorMessage);
-=======
   private handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'An error occurred';
     if (error.error instanceof ErrorEvent) {
@@ -302,7 +261,6 @@ export class ParticipationService {
     }
     console.error(errorMessage);
     return throwError(() => new Error(errorMessage));
->>>>>>> Stashed changes
   }
 
   private handleDetailedError(error: HttpErrorResponse) {

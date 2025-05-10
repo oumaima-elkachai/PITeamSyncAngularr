@@ -4,11 +4,7 @@ import { EventService } from 'src/app/core/services/events/events.service';
 import { firstValueFrom } from 'rxjs';
 import { Event } from '../../models/event.model';
 import { HttpErrorResponse } from '@angular/common/http';
-<<<<<<< Updated upstream
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-=======
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
->>>>>>> Stashed changes
 import { TypeEvent } from '../../models/event-type.enum';
 
 @Component({
@@ -64,18 +60,6 @@ export class EventsEditComponent implements OnInit {
     });
   }
 
-<<<<<<< Updated upstream
-  initForm(): void {
-    this.eventForm = this.fb.group({
-      title: [this.event?.title || '', Validators.required],
-      description: [this.event?.description || '', Validators.required],
-      startDate: [this.event?.startDate || '', Validators.required],
-      endDate: [this.event?.endDate || '', Validators.required],
-      startTime: [this.event?.startTime || '', Validators.required],
-      endTime: [this.event?.endTime || '', Validators.required],
-      capacity: [this.event?.capacity || 1, [Validators.required, Validators.min(1)]],
-      eventType: [this.event?.eventType || '', Validators.required]
-=======
   get f() { 
     return this.eventForm.controls; 
   }
@@ -164,7 +148,6 @@ export class EventsEditComponent implements OnInit {
         console.log(`${key} valid:`, control?.valid);
         console.log(`${key} errors:`, control?.errors);
       });
->>>>>>> Stashed changes
     });
   }
 

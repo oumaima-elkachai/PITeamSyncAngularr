@@ -1,100 +1,3 @@
-<<<<<<< Updated upstream
-<div class="container">
-  <h2>Edit Event</h2>
-
-  <!-- Loading spinner -->
-  <div *ngIf="isLoading" class="text-center my-4">
-    <p>Loading event...</p>
-  </div>
-
-  <!-- Error -->
-  <div *ngIf="errorMessage && !isLoading" class="alert alert-danger">
-    {{ errorMessage }}
-  </div>
-
-  <!-- Event Edit Form -->
-  <div *ngIf="!isLoading && event">
-    <form (ngSubmit)="saveEvent()" #eventForm="ngForm">
-
-      <!-- Event Title -->
-      <div class="mb-3">
-        <label for="title" class="form-label">Event Title</label>
-        <input
-          type="text"
-          class="form-control"
-          id="title"
-          [(ngModel)]="event.title"
-          name="title"
-          required
-        />
-      </div>
-
-      <!-- Event Start Date -->
-      <div class="mb-3">
-        <label for="startDate" class="form-label">Start Date</label>
-        <input
-          type="date"
-          class="form-control"
-          id="startDate"
-          [(ngModel)]="event.startDate"
-          name="startDate"
-          required
-        />
-      </div>
-
-      <div class="mb-3">
-        <label for="endDate" class="form-label">End Date</label>
-        <input
-          type="date"
-          class="form-control"
-          id="endDate"
-          [(ngModel)]="event.endDate"
-          name="endDate"
-          required
-        />
-      </div>
-
-      <!-- Event Start Time -->
-      <div class="mb-3">
-        <label for="startTime" class="form-label">Start Time</label>
-        <input
-          type="time"
-          class="form-control"
-          id="startTime"
-          [(ngModel)]="event.startTime"
-          name="startTime"
-          required
-        />
-      </div>
-
-      <!-- Event End Time -->
-      <div class="mb-3">
-        <label for="endTime" class="form-label">End Time</label>
-        <input
-          type="time"
-          class="form-control"
-          id="endTime"
-          [(ngModel)]="event.endTime"
-          name="endTime"
-          required
-        />
-      </div>
-
-      <!-- Capacity -->
-      <div class="mb-3">
-        <label for="capacity" class="form-label">Capacity</label>
-        <input 
-          type="number" 
-          class="form-control" 
-          id="capacity" 
-          [(ngModel)]="event.capacity"
-          name="capacity"
-          required
-          min="1">
-      </div>
-
-      <!-- Event Type -->
-=======
 <form [formGroup]="eventForm" (ngSubmit)="saveEvent()" class="event-form">
       <!-- Basic Information Section -->
       <div class="form-section">
@@ -120,7 +23,6 @@
       </div>
 
       <!-- Event Type Section -->
->>>>>>> Stashed changes
       <div class="form-group">
         <label for="eventType" class="form-label">Event Type</label>
         <select 
@@ -140,32 +42,6 @@
         </div>
       </div>
 
-<<<<<<< Updated upstream
-      <!-- Image Upload -->
-      <div class="form-group">
-        <label for="image">Event Image</label>
-        <input 
-          type="file"
-          id="image"
-          (change)="onFileSelected($event)"
-          accept="image/*"
-          class="form-control">
-      </div>
-
-      <!-- Image Preview -->
-      <div class="image-preview mt-3">
-        <div *ngIf="imagePreviewUrl">
-          <label>New Image Preview:</label>
-          <img [src]="imagePreviewUrl" 
-               alt="New event image preview" 
-               class="preview-image">
-        </div>
-        <div *ngIf="event.imageUrl && !imagePreviewUrl">
-          <label>Current Image:</label>
-          <img [src]="event.imageUrl" 
-               alt="Current event image" 
-               class="preview-image">
-=======
       <!-- Date and Time Section -->
       <div class="form-section">
         <h4 class="section-title">Date & Time</h4>
@@ -229,27 +105,10 @@
             <label for="capacity">Event Capacity (number of participants)</label>
             <div class="invalid-feedback">{{ getErrorMessage('capacity') }}</div>
           </div>
->>>>>>> Stashed changes
         </div>
       </div>
 
       <!-- Error Message -->
-<<<<<<< Updated upstream
-      <div *ngIf="errorMessage" class="alert alert-danger mt-3">
-        {{ errorMessage }}
-      </div>
-
-      <!-- Submit Button -->
-      <button type="submit" class="btn btn-primary" [disabled]="eventForm.invalid">
-        Save Changes
-      </button>
-      <button type="button" class="btn btn-secondary" (click)="cancelEdit()">
-        Cancel
-      </button>
-    </form>
-  </div>
-</div>
-=======
       <div *ngIf="errorMessage" class="alert alert-danger">
         {{ errorMessage }}
       </div>
@@ -265,4 +124,3 @@
         </button>
       </div>
     </form>
->>>>>>> Stashed changes
